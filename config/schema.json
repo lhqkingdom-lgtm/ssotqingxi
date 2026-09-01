@@ -1,0 +1,57 @@
+{
+  "version": 2,
+  "metadata_fields": ["pdf_source_file", "evidence_pages", "ingested_by", "ingested_at", "is_reviewed"],
+  "sheets": {
+    "chips": {
+      "fields": ["chip_id", "series", "core", "flash_kb", "ram_kb", "max_freq_mhz", "package_types", "voltage_min", "voltage_max", "pdf_source_file", "evidence_pages", "ingested_by", "ingested_at", "is_reviewed"],
+      "key": ["chip_id"]
+    },
+    "pin_mux": {
+      "fields": ["chip_id", "pin_name", "pin_number", "function_name", "is_supported", "af_code", "default_function", "constraints", "pdf_source_file", "evidence_pages", "ingested_by", "ingested_at", "is_reviewed"],
+      "key": ["chip_id", "pin_name", "function_name"],
+      "ignored_fields": ["af_code", "constraints"]
+    },
+    "peripherals": {
+      "fields": ["chip_id", "peripheral_type", "instance_count", "max_resolution", "max_frequency_mhz", "features", "pdf_source_file", "evidence_pages", "ingested_by", "ingested_at", "is_reviewed"],
+      "key": ["chip_id", "peripheral_type"],
+      "ignored_fields": ["features"]
+    },
+    "electrical": {
+      "fields": ["chip_id", "param_name", "min_value", "max_value", "unit", "conditions", "pdf_source_file", "evidence_pages", "ingested_by", "ingested_at", "is_reviewed"],
+      "key": ["chip_id", "param_name"],
+      "ignored_fields": ["conditions"]
+    },
+    "memory": {
+      "fields": ["chip_id", "memory_type", "size_kb", "organization", "features", "pdf_source_file", "evidence_pages", "ingested_by", "ingested_at", "is_reviewed"],
+      "key": ["chip_id", "memory_type"],
+      "ignored_fields": ["organization", "features"]
+    }
+  },
+  "header_aliases": {
+    "chip_id": ["芯片型号", "产品型号", "型号"],
+    "flash": ["FLASH容量", "FLASHROM容量", "程序FLASH", "FLASH"],
+    "mtp": ["MTPROM容量", "MTP容量", "MTP"],
+    "external_ram": ["外部RAM", "外部SRAM", "SRAM容量", "SRAM"],
+    "eeprom": ["EEPROM容量", "EEPROM"],
+    "voltage": ["工作电压", "电压范围"],
+    "package": ["封装形式", "封装类型", "封装"],
+    "uart": ["UART数量", "UART"],
+    "i2c": ["I2C数量", "I2C通道数量", "I2C"],
+    "spi": ["SPI数量", "SPI"],
+    "pwm": ["PWM通道数量", "16BITPWM通道数量", "PWM"],
+    "adc": ["ADC通道数量", "12BITADC通道数量", "12位ADC", "ADC"],
+    "touch": ["触摸按键数量", "触摸按键数", "电容式触摸按键", "TOUCHKEY"]
+  },
+  "value_aliases": {
+    "supported": ["√", "Y", "YES", "支持", "有", "1"],
+    "unsupported": ["×", "X", "--", "---", "无", "不支持", "0"]
+  },
+  "limits": {
+    "voltage_min": [-1.0, 20.0],
+    "voltage_max": [0.0, 20.0],
+    "temperature": [-100.0, 200.0],
+    "frequency_mhz": [0.01, 1000.0],
+    "memory_kb": [0.001, 1048576.0],
+    "pin_number": [1, 1000]
+  }
+}

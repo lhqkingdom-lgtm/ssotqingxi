@@ -1,0 +1,18 @@
+{
+  "ca_miai": [
+    {"sheet": "chips", "key": {"chip_id": "CA32F0156L1"}, "field": "flash_kb", "source_file": "CA32F0156系列数据手册V1.0.0_20230620(1).pdf", "pages": [6]},
+    {"sheet": "chips", "key": {"chip_id": "CA32F0156L1"}, "field": "max_freq_mhz", "source_file": "CA32F0156系列数据手册V1.0.0_20230620(1).pdf", "pages": [5]},
+    {"sheet": "pin_mux", "key": {"chip_id": "MiAi-6099A1", "pin_name": "P0.5", "function_name": "ADC5"}, "field": "function_name", "source_file": "MiAi-6099A1 MCU用户手册_REV1.0.pdf", "pages": [15]}
+  ],
+  "stm32": [
+    {"sheet": "chips", "key": {"chip_id": "STM32C031C4"}, "field": "flash_kb", "source_file": "stm32c031c4.pdf", "pages": [9]},
+    {"sheet": "chips", "key": {"chip_id": "STM32C031C4"}, "field": "ram_kb", "source_file": "stm32c031c4.pdf", "pages": [9]},
+    {"sheet": "chips", "key": {"chip_id": "STM32C031C4"}, "field": "max_freq_mhz", "source_file": "stm32c031c4.pdf", "pages": [9]},
+    {"sheet": "chips", "key": {"chip_id": "STM32C031C4"}, "field": "package_types", "source_file": "stm32c031c4.pdf", "pages": [10]},
+    {"sheet": "chips", "key": {"chip_id": "STM32C031C4"}, "field": "voltage_min", "source_file": "stm32c031c4.pdf", "pages": [42]},
+    {"sheet": "pin_mux", "key": {"chip_id": "STM32C031C4", "pin_name": "PA0", "function_name": "ADC_IN0"}, "field": "function_name", "source_file": "stm32c031c4.pdf", "pages": [32]},
+    {"sheet": "chips", "key": {"chip_id": "STM32F103C8"}, "field": "package_types", "source_file": "stm32f103c8.pdf", "pages": [10]},
+    {"sheet": "chips", "key": {"chip_id": "STM32F103C8"}, "field": "voltage_min", "source_file": "stm32f103c8.pdf", "pages": [38]},
+    {"sheet": "pin_mux", "key": {"chip_id": "STM32F103C8", "pin_name": "PB14", "function_name": "USART3_RTS"}, "field": "function_name", "source_file": "stm32f103c8.pdf", "pages": [30]}
+  ]
+}

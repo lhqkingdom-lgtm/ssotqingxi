@@ -1,0 +1,7 @@
+{
+  "registry_version": 1,
+  "profiles": [
+    "profiles/ca_miai_v1.json",
+    "profiles/stm32_v1.json"
+  ]
+}

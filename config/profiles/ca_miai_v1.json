@@ -1,0 +1,43 @@
+{
+  "profile_version": 1,
+  "profile_id": "ca_miai_v1",
+  "description": "CA32/CA51/CA51M/MiAi/MJ PDF文字版手册规则包，保持重构前行为。",
+  "rules_file": "../parameter_rules.json",
+  "aliases_file": "../chip_aliases.json",
+  "extractor_module": "family_extractors.ca_miai",
+  "case_insensitive": true,
+  "detection": {
+    "filename_any": ["CA32", "CA51", "MiAi", "MIAI", "MJ", "SQ-CA"],
+    "text_any": ["基本特性", "芯片型号", "器件型号", "管脚功能", "引脚功能"],
+    "filename_weight": 10,
+    "text_weight": 2,
+    "minimum_score": 4,
+    "scan_pages": 3
+  },
+  "patterns": {
+    "model": "(?:CA(?:32|51)[FM]\\d+[A-Z0-9]*|(?:MiAi|MIAI|MJ)[-‐–—]?\\d+[A-Z0-9]*|SQ[-‐–—]?CA51F\\d+[A-Z0-9]*)",
+    "package": "(?:LQFP|TSSOP|SSOP|MSOP|SOP|QFN|DFN|DIP|SOT)\\s*\\d+(?:\\([^)]*\\))?",
+    "pin": "P\\d+\\.\\d+",
+    "concatenation_boundary": "(?<=[A-Z0-9])(?=(?:CA32F|CA51F|CA51M|MiAi-|MIAI-|MJ\\d))"
+  },
+  "model_rules": {
+    "strip_prefixes": ["SQ-"],
+    "skip_suffixes": ["XX"],
+    "exact": [
+      {"prefix": "CA32F", "min_suffix_length": 3, "require_alpha": true, "require_digit": true},
+      {"prefix": "CA51F", "min_suffix_length": 3, "require_alpha": true, "require_digit": true},
+      {"prefix": "CA51M", "min_suffix_length": 3, "require_alpha": true, "require_digit": true},
+      {"prefix": "MIAI-", "min_suffix_length": 5, "require_alpha": true},
+      {"prefix": "MJ", "min_total_length": 7, "require_alpha": true}
+    ]
+  },
+  "series_rules": [
+    {"kind": "prefix", "prefix": "CA32F"},
+    {"kind": "prefix", "prefix": "CA51F"},
+    {"kind": "prefix", "prefix": "CA51M"},
+    {"kind": "code", "prefix": "MiAi-", "code_length": 3, "output_prefix": "MiAi-"},
+    {"kind": "code", "prefix": "MJ", "code_length": 3, "output_prefix": "MJ"}
+  ],
+  "function_replacements": {"IIC": "I2C", "12C": "I2C"},
+  "extractors": ["basic_text", "model_row_table", "model_transposed_table", "pin_table", "electrical_text_table"]
+}

@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+.venv/
+node_modules/
+tmp/
+output/
+outputs/
+tests/baselines/
+*.pdf
+*.xlsx
+*.xls
+*.docx
+*.log
+.env
+

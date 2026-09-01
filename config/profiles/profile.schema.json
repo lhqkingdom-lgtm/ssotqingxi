@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "MCU PDF document-family profile",
+  "type": "object",
+  "required": ["profile_version", "profile_id", "rules_file", "aliases_file", "extractor_module", "detection", "patterns", "model_rules", "series_rules"],
+  "properties": {
+    "profile_version": {"type": "integer", "minimum": 1},
+    "profile_id": {"type": "string", "minLength": 1},
+    "rules_file": {"type": "string", "minLength": 1},
+    "aliases_file": {"type": "string", "minLength": 1},
+    "extractor_module": {"type": "string", "minLength": 1},
+    "detection": {"type": "object"},
+    "patterns": {
+      "type": "object",
+      "required": ["model", "package", "pin", "concatenation_boundary"],
+      "additionalProperties": {"type": "string"}
+    },
+    "model_rules": {"type": "object"},
+    "series_rules": {"type": "array", "items": {"type": "object"}},
+    "function_replacements": {"type": "object", "additionalProperties": {"type": "string"}}
+  },
+  "additionalProperties": true
+}

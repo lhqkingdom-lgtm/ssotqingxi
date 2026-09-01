@@ -1,0 +1,82 @@
+{
+  "version": 1,
+  "description": "STM32 cross-family generality probe. These are diagnostic cases, not frozen success baselines.",
+  "cases": [
+    {
+      "file": "stm32f303re.pdf",
+      "series_group": "F3",
+      "topology": "single-page matrix with split SRAM and separate USART/UART rows",
+      "expected_chip_id": "STM32F303RE",
+      "expected": {
+        "flash_kb": 512,
+        "max_freq_mhz": 72,
+        "package_types": ["LQFP64"],
+        "voltage_min": 2.0,
+        "voltage_max": 3.6
+      },
+      "expected_peripherals": {"ADC": 4, "I2C": 3, "SPI": 4, "UART": 5}
+    },
+    {
+      "file": "stm32g071c8.pdf",
+      "series_group": "G0",
+      "topology": "wide suffix matrix with conditional SRAM and LPUART row",
+      "expected_chip_id": "STM32G071C8",
+      "expected": {
+        "flash_kb": 64,
+        "max_freq_mhz": 64,
+        "voltage_min": 1.7,
+        "voltage_max": 3.6
+      },
+      "required_nonempty": ["package_types"],
+      "expected_peripherals": {"ADC": 1, "I2C": 2, "SPI": 2, "UART": 5}
+    },
+    {
+      "file": "stm32f405zg.pdf",
+      "series_group": "F4",
+      "topology": "rotated multi-page matrix with split SRAM banks",
+      "expected_chip_id": "STM32F405ZG"
+    },
+    {
+      "file": "stm32f777bi.pdf",
+      "series_group": "F7",
+      "topology": "multi-page high-density matrix",
+      "expected_chip_id": "STM32F777BI"
+    },
+    {
+      "file": "stm32l476je.pdf",
+      "series_group": "L4",
+      "topology": "multi-page low-power family matrix",
+      "expected_chip_id": "STM32L476JE"
+    },
+    {
+      "file": "stm32h743vi.pdf",
+      "series_group": "H7",
+      "topology": "four-page matrix with multiple RAM domains",
+      "expected_chip_id": "STM32H743VI"
+    },
+    {
+      "file": "stm32u585ai.pdf",
+      "series_group": "U5",
+      "topology": "multi-page matrix using Mbyte memory units",
+      "expected_chip_id": "STM32U585AI"
+    },
+    {
+      "file": "stm32wb55cc.pdf",
+      "series_group": "WB",
+      "topology": "wireless dual-core matrix with hierarchical memory rows",
+      "expected_chip_id": "STM32WB55CC"
+    },
+    {
+      "file": "stm32n657a0.pdf",
+      "series_group": "N6",
+      "topology": "multiple family matrices and extended ordering code",
+      "expected_chip_id": "STM32N657A0"
+    },
+    {
+      "file": "stm32mp157c.pdf",
+      "series_group": "MP1",
+      "topology": "MPU matrix with external DDR and heterogeneous cores",
+      "expected_chip_id": "STM32MP157C"
+    }
+  ]
+}

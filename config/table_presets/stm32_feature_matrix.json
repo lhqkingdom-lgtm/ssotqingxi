@@ -1,0 +1,61 @@
+{
+  "preset_version": 1,
+  "preset_id": "stm32_feature_matrix",
+  "topology": "model_column_matrix",
+  "title_any": [
+    "features and peripheral counts",
+    "device features and peripheral counts",
+    "features and peripheral",
+    "features and",
+    "family device features"
+  ],
+  "locator": {
+    "required_all": [],
+    "required_any": ["sram", "ram", "memorydensity"]
+  },
+  "continuation": {
+    "enabled": true,
+    "match_table_number": true,
+    "inherit_model_columns": true
+  },
+  "fields": {
+    "flash_kb": {
+      "rows": ["flashmemory", "flash"],
+      "match_scope": "path",
+      "reducer": "first_nonempty",
+      "cell_reducer": "max"
+    },
+    "ram_kb": {
+      "rows": ["sram", "ccmram", "ccm(corecoupledmemory)ram", "dtcmram", "itcmram", "axiram"],
+      "match_scope": "path",
+      "exclude_rows": ["backup", "cache"],
+      "reducer": "sum",
+      "cell_reducer": "max"
+    },
+    "max_freq_mhz": {
+      "rows": ["cpufrequency", "max.cpufrequency", "maximumcpufrequency"],
+      "rows_all": [["cpu", "frequency"]],
+      "match_scope": "path",
+      "value_parser": "frequency_mhz",
+      "reducer": "max"
+    },
+    "operating_voltage": {
+      "rows": ["operatingvoltage", "standardoperatingvoltage"],
+      "match_scope": "path",
+      "exclude_rows": ["vdd12", "dd12", "corevoltage", "vcap"],
+      "reducer": "range"
+    },
+    "package_types": {
+      "rows": ["package", "packages"],
+      "match_scope": "row",
+      "exclude_rows": ["bodysize", "pitch", "ballsize", "thickness", "ballcount"],
+      "reducer": "union"
+    }
+  },
+  "peripherals": {
+    "SPI": {"rows": ["spi", "spi[i2s]"], "exclude_rows": ["qspi", "quadspi", "quad-spi", "octospi", "octo-spi"], "value_parser": "first_integer", "reducer": "max"},
+    "I2C": {"rows": ["i2c"], "value_parser": "first_integer", "reducer": "max"},
+    "UART": {"rows": ["usart", "uart", "lpuart"], "value_parser": "sum_components", "reducer": "sum"},
+    "ADC": {"rows": ["adc"], "exclude_rows": ["vref", "reference"], "value_parser": "adc_instance_count", "reducer": "sum_distinct_labels", "resolution_from_label": true}
+  }
+}

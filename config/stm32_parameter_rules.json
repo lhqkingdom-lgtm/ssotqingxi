@@ -1,0 +1,70 @@
+{
+  "rule_version": "stm32-0.2.0",
+  "principle": "文件名确定目标基础型号；只从同一数据手册的系列特性矩阵、通用工作条件和目标封装管脚列提取，不把其他系列成员的容量或管脚复制给目标型号。",
+  "header_aliases": {
+    "flash": ["Flash memory (Kbyte)", "Flash - Kbytes"],
+    "external_ram": ["SRAM (Kbyte)", "SRAM - Kbytes"],
+    "voltage": ["Operating voltage", "Standard operating voltage"],
+    "package": ["Package", "Packages"],
+    "UART": ["USART", "UART"],
+    "I2C": ["I2C"],
+    "SPI": ["SPI", "SPI [I2S]"],
+    "ADC": ["ADC channels", "12-bit synchronized ADC"]
+  },
+  "document_locators": {
+    "feature_table": {
+      "required_all": ["flash"],
+      "required_any": ["sram", "ram", "memorydensity"]
+    },
+    "operating_conditions": {
+      "page_any": ["generaloperatingconditions"],
+      "table_any": ["standardoperatingvoltage", "supplyvoltage", "operatingvoltage"],
+      "primary_voltage_symbols": ["VDD"],
+      "temperature_any": ["ambienttemperature"],
+      "temperature_exclude_any": ["suffix"]
+    },
+    "ordering_information": {
+      "page_any": ["orderinginformation"],
+      "flash_label_any": ["flashmemorysize"]
+    },
+    "pin_table": {
+      "page_any": ["pin"],
+      "header_scan_rows": 4,
+      "header_all": ["alternatefunctions"],
+      "header_term_groups": [["pin", "name"]]
+    }
+  },
+  "pin_header_aliases": {
+    "pin_name": ["pinname"],
+    "pin_name_all": [["pin", "name"]],
+    "alternate_functions": ["alternatefunctions"],
+    "main_function": ["mainfunction"]
+  },
+  "field_labels": {
+    "flash": ["flash"],
+    "ram": ["sram"],
+    "cpu_frequency": ["cpufrequency", "max.cpufrequency"],
+    "operating_voltage": ["operatingvoltage", "standardoperatingvoltage"],
+    "package": ["package", "packages"],
+    "SPI": ["spi"],
+    "I2C": ["i2c"],
+    "UART": ["usart", "uart"],
+    "ADC": ["adc"],
+    "channel": ["channel", "numberofchannels"]
+  },
+  "unit_conversions": {
+    "memory_kb": {
+      "aliases": {"KBYTE": "KB", "KBYTES": "KB", "MBYTE": "MB", "MBYTES": "MB"},
+      "factors": {"BYTE": 0.0009765625, "KB": 1, "MB": 1024},
+      "default_unit": "KB"
+    },
+    "frequency_mhz": {
+      "factors": {"HZ": 0.000001, "KHZ": 0.001, "MHZ": 1},
+      "default_unit": "MHZ"
+    },
+    "voltage_v": {
+      "factors": {"MV": 0.001, "V": 1},
+      "default_unit": "V"
+    }
+  }
+}

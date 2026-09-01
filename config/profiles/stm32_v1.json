@@ -1,0 +1,53 @@
+{
+  "profile_version": 1,
+  "profile_id": "stm32_v1",
+  "description": "STMicroelectronics STM32 PDF文字版数据手册规则包，使用通用表格预设。",
+  "rules_file": "../stm32_parameter_rules.json",
+  "aliases_file": "../stm32_aliases.json",
+  "extractor_module": "family_extractors.stm32",
+  "case_insensitive": true,
+  "detection": {
+    "filename_any": ["stm32"],
+    "text_any": ["STM32", "device features and peripheral counts", "Pin name", "General operating conditions"],
+    "filename_weight": 10,
+    "text_weight": 2,
+    "minimum_score": 4,
+    "scan_pages": 3
+  },
+  "patterns": {
+    "model": "STM32[A-Z]{1,2}[0-9A-Z]{4,12}",
+    "package": "(?:LQFP|TSSOP|UFQFPN|VFQFPN|TFBGA|UFBGA|LFBGA|VFBGA|WLCSP|BGA)\\s*\\d+",
+    "pin": "P[A-Z]\\d{1,2}",
+    "concatenation_boundary": "(?=STM32)"
+  },
+  "model_rules": {
+    "strip_prefixes": [],
+    "skip_suffixes": ["XX"],
+    "exact": [
+      {"prefix": "STM32", "min_suffix_length": 6, "require_alpha": true, "require_digit": true}
+    ]
+  },
+  "series_rules": [
+    {"kind": "regex", "pattern": "^(STM32[A-Z]{1,2}[0-9]{2,3})", "group": 1}
+  ],
+  "function_replacements": {"IIC": "I2C"},
+  "extractors": ["document_target_model", "stm32_feature_matrix", "general_operating_conditions", "package_pin_definition"],
+  "table_presets": {
+    "feature_matrix": "../table_presets/stm32_feature_matrix.json"
+  },
+  "document_semantics": {
+    "filename_model_pattern": "STM32[A-Z]{1,2}[0-9A-Z]{4,12}",
+    "series_pattern": "^(STM32[A-Z]{1,2}[0-9]{2,3})",
+    "verification_scan_pages": 25,
+    "core_scan_pages": 30,
+    "core_pattern": "Cortex\\s*[-–]?\\s*([AMR]\\d{1,2}\\+?)"
+  },
+  "stm32": {
+    "filename_model_pattern": "STM32[A-Z]{1,2}[0-9A-Z]{4,12}",
+    "feature_page_limit": 45,
+    "pin_count_codes": {"F": 20, "G": 28, "K": 32, "C": 48, "R": 64, "V": 100, "Z": 144, "I": 176, "B": 208, "N": 32, "T": 36, "Q": 132, "A": 169, "J": 72},
+    "package_code_preferences": {"C": ["LQFP48", "LQFP"]},
+    "pin_column_variant_preferences": ["unqualified", "smps"],
+    "flash_code_kb": {"0": 0, "4": 16, "6": 32, "8": 64, "B": 128, "C": 256, "D": 384, "E": 512, "F": 768, "G": 1024, "H": 1536, "I": 2048, "Z": 192}
+  }
+}
