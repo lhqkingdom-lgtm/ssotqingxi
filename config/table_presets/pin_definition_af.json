@@ -1,0 +1,25 @@
+{
+  "preset_version": 1,
+  "preset_id": "pin_definition_af",
+  "topologies": {
+    "pin_definition": {
+      "required_header_terms": ["alternatefunctions"],
+      "required_header_groups": [["pin", "name"]],
+      "pin_name_aliases": ["pinname"],
+      "pin_name_alias_groups": [["pin", "name"]],
+      "pin_name_exclude": ["pinnumber", "lqfp", "tssop", "ufqfpn", "vfqfpn", "bga", "wlcsp"],
+      "pin_name_preference": "rightmost",
+      "function_aliases": ["alternatefunctions"],
+      "default_function_aliases": ["mainfunction"],
+      "column_qualifier_preferences": ["unqualified", "smps"]
+    },
+    "af_matrix": {
+      "title_any": ["alternate function"],
+      "required_any": ["AF0", "AF1"],
+      "header_pattern": "^AF\\d+$",
+      "identity_pattern": "STM32[A-Z]{1,2}[0-9]{2,3}",
+      "minimum_af_columns": 8,
+      "pin_scan_columns": 3
+    }
+  }
+}

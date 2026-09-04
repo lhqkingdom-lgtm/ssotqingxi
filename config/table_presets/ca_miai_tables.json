@@ -1,0 +1,22 @@
+{
+  "preset_version": 1,
+  "preset_id": "ca_miai_tables",
+  "topologies": {
+    "basic_text": {
+      "minimum_score": 6,
+      "scored_terms": [
+        {"weight": 4, "any": ["基本特性"]}, {"weight": 3, "any": ["工作电压", "电源电压"]},
+        {"weight": 2, "any": ["存储器", "SRAM", "FLASH"]}, {"weight": 2, "any": ["内核", "CORTEX", "8051"]},
+        {"weight": 1, "any": ["描述"]}, {"weight": 1, "any": ["封装类型"]}
+      ]
+    },
+    "model_matrix": {
+      "required_any": ["芯片型号", "器件型号", "产品型号"],
+      "supporting_any": ["封装", "Flash", "FLASH", "MTP"]
+    },
+    "pin_definition": {
+      "required_any": ["默认功能", "管脚功能", "引脚功能", "通用双向"],
+      "minimum_pin_tokens": 3
+    }
+  }
+}

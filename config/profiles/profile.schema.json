@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Compact MCU document-family profile v2",
+  "type": "object",
+  "required": ["profile_version", "profile_id", "config_version", "adapter", "detection", "dictionary", "model", "syntax", "topologies"],
+  "properties": {
+    "profile_version": {"const": 2},
+    "profile_id": {"type": "string", "minLength": 1},
+    "config_version": {"type": "string", "minLength": 1},
+    "description": {"type": "string"},
+    "adapter": {"type": "string", "pattern": "^family_extractors\\.[a-z0-9_]+$"},
+    "detection": {
+      "type": "object",
+      "required": ["filename_any", "text_any", "minimum_score", "scan_pages"],
+      "properties": {
+        "filename_any": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "text_any": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "exclude_text_all": {"type": "array", "items": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}},
+        "filename_weight": {"type": "number"},
+        "text_weight": {"type": "number"},
+        "minimum_score": {"type": "number"},
+        "scan_pages": {"type": "integer", "minimum": 1}
+      },
+      "additionalProperties": false
+    },
+    "dictionary": {
+      "type": "object",
+      "required": ["base", "aliases"],
+      "properties": {
+        "base": {"type": "string", "minLength": 1},
+        "aliases": {"type": "object", "additionalProperties": {"type": "array", "items": {"type": "string", "minLength": 1}}}
+      },
+      "additionalProperties": false
+    },
+    "model": {
+      "type": "object",
+      "required": ["pattern", "concatenation_boundary", "exact", "series", "aliases_file"],
+      "properties": {
+        "pattern": {"type": "string", "minLength": 1},
+        "concatenation_boundary": {"type": "string"},
+        "strip_prefixes": {"type": "array", "items": {"type": "string"}},
+        "skip_suffixes": {"type": "array", "items": {"type": "string"}},
+        "exact": {"type": "array", "items": {"type": "object"}},
+        "series": {"type": "array", "items": {"type": "object"}},
+        "filename_rules": {"type": "array", "items": {"type": "object"}},
+        "aliases_file": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "syntax": {
+      "type": "object",
+      "required": ["package_pattern", "pin_pattern"],
+      "properties": {
+        "package_pattern": {"type": "string", "minLength": 1},
+        "pin_pattern": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "normalization": {
+      "type": "object",
+      "properties": {"function_aliases": {"type": "object", "additionalProperties": {"type": "string"}}},
+      "additionalProperties": false
+    },
+    "topologies": {
+      "type": "object",
+      "required": ["pipeline", "presets"],
+      "properties": {
+        "pipeline": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "presets": {"type": "object", "minProperties": 1, "additionalProperties": {"type": "string", "minLength": 1}}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

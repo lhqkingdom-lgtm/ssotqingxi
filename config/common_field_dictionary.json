@@ -1,0 +1,90 @@
+{
+  "dictionary_version": 1,
+  "fields": {
+    "chip_id": {
+      "aliases": ["芯片型号", "器件型号", "产品型号", "devicepartnumber", "partnumber"],
+      "exact_aliases": ["型号", "model"],
+      "unit": null
+    },
+    "flash_kb": {
+      "aliases": ["flash", "flashmemory", "flash容量", "程序flash"],
+      "exclude_aliases": ["mtp"],
+      "unit": "memory_kb"
+    },
+    "ram_kb": {
+      "aliases": ["sram", "ram", "外部ram", "内部ram"],
+      "exclude_aliases": ["backup", "cache"],
+      "unit": "memory_kb"
+    },
+    "max_freq_mhz": {
+      "aliases": ["cpufrequency", "maximumcpufrequency", "max.cpufrequency", "cpu频率", "最高频率", "最高主频"],
+      "aliases_all": [["cpu", "frequency"]],
+      "unit": "frequency_mhz"
+    },
+    "mtp_kb": {
+      "aliases": ["mtprom容量", "mtp容量", "mtp"],
+      "unit": "memory_kb"
+    },
+    "eeprom_kb": {
+      "aliases": ["eeprom容量", "eeprom"],
+      "unit": "memory_kb"
+    },
+    "operating_voltage": {
+      "aliases": ["工作电压", "电压范围", "operatingvoltage", "standardoperatingvoltage", "supplyvoltage"],
+      "exclude_aliases": ["corevoltage", "vcap", "vdd12", "dd12"],
+      "unit": "voltage_v"
+    },
+    "package_types": {
+      "aliases": ["封装形式", "封装类型", "封装", "package", "packages"],
+      "exclude_aliases": ["bodysize", "pitch", "ballsize", "thickness", "ballcount"],
+      "unit": null
+    },
+    "peripheral_uart": {
+      "aliases": ["uart数量", "uart", "usart", "lpuart"],
+      "unit": null
+    },
+    "peripheral_i2c": {
+      "aliases": ["i2c数量", "i2c通道数量", "i2c", "i²c", "iic"],
+      "unit": null
+    },
+    "peripheral_spi": {
+      "aliases": ["spi数量", "spi[i2s]", "spi"],
+      "exclude_aliases": ["qspi", "quadspi", "quad-spi", "octospi", "octo-spi"],
+      "unit": null
+    },
+    "peripheral_pwm": {
+      "aliases": ["pwm通道数量", "16bitpwm通道数量", "pwm"],
+      "unit": null
+    },
+    "peripheral_adc": {
+      "aliases": ["adc通道数量", "12bitadc通道数量", "12位adc", "adcchannels", "adc"],
+      "exclude_aliases": ["vref", "reference"],
+      "unit": null
+    },
+    "peripheral_touch": {
+      "aliases": ["触摸按键数量", "触摸按键数", "电容式触摸按键", "touchkey", "touchchannels", "touch"],
+      "unit": null
+    }
+  },
+  "units": {
+    "memory_kb": {
+      "aliases": {
+        "BYTE": "BYTE", "BYTES": "BYTE", "B": "BYTE", "字节": "BYTE",
+        "K": "KB", "KB": "KB", "KBYTE": "KB", "KBYTES": "KB",
+        "M": "MB", "MB": "MB", "MBYTE": "MB", "MBYTES": "MB"
+      },
+      "factors": {"BYTE": 0.0009765625, "KB": 1, "MB": 1024},
+      "output_unit": "KB"
+    },
+    "frequency_mhz": {
+      "aliases": {"HZ": "HZ", "赫兹": "HZ", "KHZ": "KHZ", "千赫兹": "KHZ", "MHZ": "MHZ", "兆赫兹": "MHZ"},
+      "factors": {"HZ": 0.000001, "KHZ": 0.001, "MHZ": 1},
+      "output_unit": "MHz"
+    },
+    "voltage_v": {
+      "aliases": {"MV": "MV", "V": "V"},
+      "factors": {"MV": 0.001, "V": 1},
+      "output_unit": "V"
+    }
+  }
+}

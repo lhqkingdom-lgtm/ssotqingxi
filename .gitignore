@@ -1,0 +1,24 @@
+# Runtime output and transient state
+/output/*
+!/output/.gitkeep
+/logs/
+/tmp/
+
+# Local dependency links and caches
+/node_modules/
+__pycache__/
+*.py[cod]
+
+# Local environment and editor files
+.env
+.env.*
+.venv/
+venv/
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Generated inspection sidecars
+*.inspect.ndjson
+

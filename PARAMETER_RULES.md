@@ -1,0 +1,28 @@
+# MCU SSOT 参数提取规则
+
+本文保留为重构前的人读规则说明。`config/parameter_rules.json` 仅作只读历史对照，当前运行时以 `config/schema.json`、`config/common_field_dictionary.json`、profile v2 和 table preset 为准。
+
+## 规则原则
+
+- 只处理模板中曾被人工填写过的字段。
+- 先定位文档章节和表格，再提取值；不使用固定页码。
+- 型号功能表和器件一览表优先于概述性文字。
+- 任何正式写入值必须具有 PDF 文件、页码和页面坐标。
+- 型号归属不明、跨页表头丢失或同一主键值冲突时，不自动覆盖。
+- `af_code`、`constraints`、`features`、`conditions`、`organization` 当前禁用。
+
+## 数据层次
+
+1. `chips`：型号级基础参数。
+2. `pin_mux`：型号、封装、引脚和复用功能的组合关系。
+3. `peripherals`：型号级外设数量及位宽/频率。
+4. `electrical`：目前只提取 VDD 极限和工作温度。
+5. `memory`：区分 Flash、MTP、EEPROM、内部 SRAM 和外部 SRAM。
+
+## 置信度
+
+- A：结构化表格中型号与值位于同一行或同一列。
+- B：来自明确文字，或使用了文档级通用默认值。
+- C：存在歧义，只记录到待复核清单，不写入 SSOT 表。
+
+所有字段的详细规则以 JSON 配置为准，文档仅用于阅读说明，避免出现两套不一致的规则源。

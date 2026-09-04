@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>SSOT 文档与审核</title>
+  <link rel="stylesheet" href="/review-console/styles.css?v=2">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">SSOT 本地服务</p>
+      <h1>文档与审核</h1>
+      <p class="subtitle">查看输入 PDF、解析状态及其生成的芯片；已解析芯片进入五张业务表审核。</p>
+    </div>
+    <button id="refreshAll" type="button">刷新</button>
+  </header>
+
+  <main>
+    <section class="section-heading">
+      <div>
+        <h2>PDF 文档</h2>
+        <p id="inputDirectory">正在读取输入目录…</p>
+      </div>
+      <span id="documentLoadState" class="load-state" aria-live="polite">正在读取文档…</span>
+    </section>
+    <section id="documentSummary" class="summary" aria-label="文档汇总"></section>
+
+    <section id="parsePanel" class="parse-panel" hidden aria-live="polite">
+      <div><strong id="parseTitle">解析任务</strong><span id="parseDetail"></span></div>
+      <pre id="parseLogs"></pre>
+      <a id="parseReviewLink" class="open-button" hidden>进入新审核批次</a>
+    </section>
+
+    <section class="panel document-panel">
+      <div class="filters document-filters">
+        <label>
+          <span>搜索文档或芯片</span>
+          <input id="documentSearch" type="search" placeholder="文件名、路径或芯片型号">
+        </label>
+        <label>
+          <span>文档族</span>
+          <select id="familyFilter">
+            <option value="all">全部</option>
+            <option value="ca_miai_v1">CA / MiAi</option>
+            <option value="stm32_v1">STM32</option>
+            <option value="unknown">未分类</option>
+          </select>
+        </label>
+        <label>
+          <span>解析状态</span>
+          <select id="documentStatusFilter">
+            <option value="all">全部</option>
+            <option value="pending">待解析</option>
+            <option value="complete">完成</option>
+            <option value="partial">部分完成</option>
+            <option value="parse_failed">解析失败</option>
+            <option value="unclassified">无法分类</option>
+            <option value="classification_conflict">分类冲突</option>
+          </select>
+        </label>
+        <label>
+          <span>重复文件</span>
+          <select id="duplicateFilter">
+            <option value="all">全部</option>
+            <option value="duplicate">只看重复</option>
+            <option value="unique">只看唯一</option>
+          </select>
+        </label>
+      </div>
+      <div class="table-wrap">
+        <table class="document-table">
+          <thead><tr><th>PDF 文件</th><th>文档族</th><th>解析状态</th><th>芯片</th><th>大小</th><th>更新时间</th><th></th></tr></thead>
+          <tbody id="documentRows"></tbody>
+        </table>
+      </div>
+      <div id="documentEmptyState" class="empty" hidden>没有符合当前筛选条件的 PDF。</div>
+    </section>
+
+    <section class="section-heading batch-heading">
+      <div><h2>审核批次</h2><p>批次只保存数据、证据和 Excel，统一使用当前页面及审核界面。</p></div>
+      <span id="batchLoadState" class="load-state" aria-live="polite">正在读取批次…</span>
+    </section>
+    <section id="batchSummary" class="summary batch-summary" aria-label="批次汇总"></section>
+
+    <section class="panel">
+      <div class="filters batch-filters">
+        <label><span>搜索批次</span><input id="batchSearch" type="search" placeholder="批次名或运行编号"></label>
+        <label><span>批次状态</span><select id="statusFilter"><option value="all">全部</option><option value="ready">可审核</option><option value="error">异常</option></select></label>
+        <label><span>审核进度</span><select id="reviewFilter"><option value="all">全部</option><option value="unreviewed">存在未审核</option><option value="issue">审核有问题</option><option value="pending_export">待导出</option><option value="exported">已导出</option></select></label>
+      </div>
+      <div class="table-wrap"><table class="batch-table"><thead><tr><th>批次</th><th>内容</th><th>审核进度</th><th>状态</th><th>更新时间</th><th></th></tr></thead><tbody id="batchRows"></tbody></table></div>
+      <div id="batchEmptyState" class="empty" hidden>没有符合当前筛选条件的批次。</div>
+    </section>
+  </main>
+
+  <script src="/review-console/app.js?v=4" defer></script>
+</body>
+</html>

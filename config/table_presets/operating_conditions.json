@@ -1,0 +1,13 @@
+{
+  "preset_version": 1,
+  "preset_id": "operating_conditions",
+  "topology": "min_typ_max_conditions",
+  "table_any": ["standardoperatingvoltage", "supplyvoltage", "operatingvoltage"],
+  "primary_voltage_symbols": ["VDD"],
+  "temperature_any": ["ambienttemperature"],
+  "temperature_exclude_any": ["suffix"],
+  "ordering_legend": {
+    "page_any": ["orderinginformation"],
+    "flash_label_any": ["flashmemorysize"]
+  }
+}

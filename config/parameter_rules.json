@@ -1,0 +1,224 @@
+{
+  "rule_version": "1.0.0",
+  "principle": "只提取模板中至少出现过一个人工值的字段；整列从未填写的字段保持空白。优先表格，次选明确文字；无法定位页码或坐标的值不写入。",
+  "document_locators": {
+    "basic": {
+      "positive_terms": ["基本特性", "工作电压", "存储器", "内核", "封装类型"],
+      "negative_terms": ["目录"],
+      "minimum_score": 6,
+      "scored_terms": [
+        {"weight": 4, "any": ["基本特性"]},
+        {"weight": 3, "any": ["工作电压", "电源电压"]},
+        {"weight": 2, "any": ["存储器", "SRAM", "FLASH"]},
+        {"weight": 2, "any": ["内核", "CORTEX", "8051"]},
+        {"weight": 1, "any": ["描述"]},
+        {"weight": 1, "any": ["封装类型"]}
+      ]
+    },
+    "model_table": {
+      "required_any": ["芯片型号", "器件型号", "产品型号"],
+      "supporting_any": ["封装", "Flash", "FLASH", "MTP"]
+    },
+    "pin_table": {
+      "required_any": ["默认功能", "管脚功能", "引脚功能", "通用双向"],
+      "minimum_gpio_tokens": 3
+    },
+    "electrical": {
+      "required_any": ["直流供电电压", "工作环境温度", "工作温度"],
+      "preferred_section_terms": ["极限参数", "电气特性"]
+    }
+  },
+  "header_aliases": {
+    "chip_id": ["芯片型号", "器件型号", "产品型号", "型号"],
+    "mtp": ["MTPROM容量", "MTP容量", "MTP"],
+    "eeprom": ["EEPROM容量", "EEPROM"],
+    "voltage": ["工作电压", "电压范围", "工作环境"],
+    "package": ["封装形式", "封装类型", "封装"],
+    "UART": ["UART数量", "UART", "USART"],
+    "I2C": ["I2C数量", "I2C通道数量", "I2C", "IIC"],
+    "SPI": ["SPI数量", "SPI"],
+    "PWM": ["PWM通道数量", "16BITPWM通道数量", "PWM"],
+    "ADC": ["ADC通道数量", "12BITADC通道数量", "12位ADC", "ADC"],
+    "Touch": ["触摸按键数量", "触摸按键数", "电容式触摸按键", "TOUCHKEY", "TOUCHCHANNELS"]
+  },
+  "unit_conversions": {
+    "voltage_v": {
+      "factors": {"MV": 0.001, "V": 1},
+      "default_unit": "V"
+    }
+  },
+  "parameters": {
+    "chips.chip_id": {
+      "enabled": true,
+      "source_priority": ["型号功能表", "器件一览表", "文件名（仅限唯一完整型号）"],
+      "rule": "识别完整器件型号；系列名、XX占位符和章节页眉不能作为chip_id。",
+      "normalization": ["统一各种连字符", "去除SQ-文档前缀", "应用可选的人工确认别名表"],
+      "validation": ["必须含数字和型号后缀", "在所有子表中作为外键"]
+    },
+    "chips.series": {
+      "enabled": true,
+      "source_priority": ["chip_id派生"],
+      "rule": "CA32F/CA51F/CA51M取产品前缀；MiAi/MJ取前三位系列代码。",
+      "normalization": ["保持品牌大小写一致"],
+      "validation": ["不能为空"]
+    },
+    "chips.core": {
+      "enabled": true,
+      "source_priority": ["基本特性", "描述", "器件一览表"],
+      "patterns": ["1T 8051", "8051", "Cortex-M0/M0+", "ARM"],
+      "rule": "只接受明确写出的内核名称，不根据频率或外设推断。",
+      "validation": ["文本字段"]
+    },
+    "chips.flash_kb": {
+      "enabled": true,
+      "source_priority": ["型号功能表的Flash列", "器件一览表的Flash容量"],
+      "rule": "MTP不能写入flash_kb；MTP只写memory表。",
+      "normalization": ["Byte除以1024", "KB保持数值", "MB乘以1024"],
+      "validation": ["0.001~1048576 KB"]
+    },
+    "chips.ram_kb": {
+      "enabled": true,
+      "source_priority": ["型号功能表的外部RAM/SRAM列", "器件一览表SRAM容量", "基本特性"],
+      "rule": "8051手册优先取外部RAM；ARM器件的一体化SRAM取SRAM总容量。",
+      "normalization": ["Byte除以1024", "KB保持数值"],
+      "validation": ["0.001~1048576 KB"]
+    },
+    "chips.max_freq_mhz": {
+      "enabled": true,
+      "source_priority": ["CPU频率/最高工作主频", "器件一览表CPU频率"],
+      "rule": "不能把RC振荡器频率、PWM频率或外设时钟误作CPU最高频率。",
+      "normalization": ["Hz/1000000", "kHz/1000", "MHz保持数值"],
+      "validation": ["0.01~1000 MHz"]
+    },
+    "chips.package_types": {
+      "enabled": true,
+      "source_priority": ["型号功能表封装形式", "器件一览表封装行"],
+      "rule": "封装必须与具体型号同列或同行；系列支持的全部封装不能直接复制给每个型号。",
+      "normalization": ["统一LQFP/TSSOP/SSOP/MSOP/SOP/QFN/DFN名称", "保留尺寸括号"],
+      "validation": ["JSON数组", "至少包含封装名和引脚数"]
+    },
+    "chips.voltage_min": {
+      "enabled": true,
+      "source_priority": ["型号功能表工作电压", "器件一览表工作环境", "基本特性工作电压"],
+      "rule": "多个频率条件下取文档给出的总工作范围下限，并保留证据供复核。",
+      "normalization": ["V数值"],
+      "validation": ["-1~20 V", "不得大于voltage_max"]
+    },
+    "chips.voltage_max": {
+      "enabled": true,
+      "source_priority": ["型号功能表工作电压", "器件一览表工作环境", "基本特性工作电压"],
+      "rule": "与voltage_min来自同一范围。",
+      "normalization": ["V数值"],
+      "validation": ["0~20 V"]
+    },
+    "pin_mux.pin_name": {
+      "enabled": true,
+      "source_priority": ["引脚定义/管脚功能表"],
+      "rule": "取复用字符串中的GPIO主名称P端口；电源脚和纯模拟脚当前不展开。",
+      "normalization": ["P数字.数字大写"],
+      "validation": ["匹配P\\d+\\.\\d+"]
+    },
+    "pin_mux.pin_number": {
+      "enabled": true,
+      "source_priority": ["与具体封装对应的引脚序号列"],
+      "rule": "多封装表必须先用型号封装匹配引脚序号列；不能混用两列。",
+      "normalization": ["整数"],
+      "validation": ["1~1000"]
+    },
+    "pin_mux.function_name": {
+      "enabled": true,
+      "source_priority": ["管脚名称中的斜杠复用项"],
+      "rule": "除主GPIO名称外逐项展开；不根据描述文字臆造不存在的功能。",
+      "normalization": ["IIC→I2C", "ADC[0]→ADC0", "TK[0]→TK0", "UART索引统一"],
+      "validation": ["同chip_id+pin_name+function_name唯一"]
+    },
+    "pin_mux.is_supported": {
+      "enabled": true,
+      "source_priority": ["复用项在引脚表中出现"],
+      "rule": "出现即为true；不生成false占位行。",
+      "normalization": ["布尔值"],
+      "validation": ["true"]
+    },
+    "pin_mux.default_function": {
+      "enabled": true,
+      "source_priority": ["默认功能列"],
+      "rule": "默认功能列为空时仅使用通用GPIO默认值并降低置信度。",
+      "normalization": ["压缩多余空格"],
+      "validation": ["文本字段"]
+    },
+    "pin_mux.af_code": {"enabled": false, "reason": "模板整列从未人工填写"},
+    "pin_mux.constraints": {"enabled": false, "reason": "模板整列从未人工填写"},
+    "peripherals.peripheral_type": {
+      "enabled": true,
+      "source_priority": ["型号功能表表头"],
+      "allowed": ["PWM", "ADC", "UART", "I2C", "SPI", "Touch"],
+      "rule": "只生成模板已使用的外设类型。"
+    },
+    "peripherals.instance_count": {
+      "enabled": true,
+      "source_priority": ["型号功能表具体数量", "基本特性明确数量"],
+      "rule": "ADC填写外部输入通道数；PWM填写通道数；UART、I2C、SPI填写接口实例数。表格只有勾选时使用基本特性数量；仍不明确时通信接口按1处理并降低置信度。",
+      "normalization": ["整数"],
+      "validation": ["大于0"]
+    },
+    "peripherals.max_resolution": {
+      "enabled": true,
+      "source_priority": ["外设表头中的位数", "基本特性"],
+      "rule": "仅ADC和PWM填写；其他外设保持空白。",
+      "normalization": ["整数位数"],
+      "validation": ["1~64 bit"]
+    },
+    "peripherals.max_frequency_mhz": {
+      "enabled": true,
+      "source_priority": ["型号功能表明确频率", "外设章节明确最高频率"],
+      "rule": "不能使用CPU频率替代；没有明确外设最高频率时保持空白。",
+      "normalization": ["MHz"],
+      "validation": ["0.01~1000 MHz"]
+    },
+    "peripherals.features": {"enabled": false, "reason": "模板整列从未人工填写"},
+    "electrical.param_name": {
+      "enabled": true,
+      "allowed": ["VDD", "T_operating"],
+      "source_priority": ["极限参数表"],
+      "rule": "直流供电电压映射VDD；工作环境温度/工作温度映射T_operating。"
+    },
+    "electrical.min_value": {
+      "enabled": true,
+      "source_priority": ["极限参数表最小值"],
+      "normalization": ["数值"],
+      "validation": ["与max_value同一表格行"]
+    },
+    "electrical.max_value": {
+      "enabled": true,
+      "source_priority": ["极限参数表最大值"],
+      "normalization": ["数值"],
+      "validation": ["不得小于min_value"]
+    },
+    "electrical.unit": {
+      "enabled": true,
+      "source_priority": ["极限参数表单位"],
+      "normalization": ["V", "°C"],
+      "validation": ["VDD使用V", "T_operating使用°C"]
+    },
+    "electrical.conditions": {"enabled": false, "reason": "模板整列从未人工填写"},
+    "memory.memory_type": {
+      "enabled": true,
+      "allowed": ["Flash", "MTP", "EEPROM", "SRAM_Internal", "SRAM_External"],
+      "source_priority": ["型号功能表", "基本特性", "器件一览表"]
+    },
+    "memory.size_kb": {
+      "enabled": true,
+      "source_priority": ["对应存储器容量列", "基本特性明确容量"],
+      "normalization": ["全部换算为KB"],
+      "validation": ["0.001~1048576 KB"]
+    },
+    "memory.organization": {"enabled": false, "reason": "模板整列从未人工填写"},
+    "memory.features": {"enabled": false, "reason": "模板整列从未人工填写"}
+  },
+  "write_policy": {
+    "A": "表格值与型号同一行/列，自动写入",
+    "B": "明确文字或带通用回退，写入并进入复核",
+    "C": "型号归属、单位或列关系不明确，不写入，只进入待复核",
+    "conflict": "同一复合主键出现不同非空值时不覆盖，记录冲突和双方证据"
+  }
+}

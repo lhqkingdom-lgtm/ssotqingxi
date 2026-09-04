@@ -1,0 +1,41 @@
+{
+  "ca_miai_current_v2": {
+    "input_dir": "tmp/testsets/metadata_v2_3docs",
+    "profile": "config/profiles/ca_miai_v1.json",
+    "baseline": "tests/baselines/ca_miai_current_v2.json",
+    "files": [
+      {
+        "name": "CA32F0156系列数据手册V1.0.0_20230620(1).pdf",
+        "bytes": 1997481,
+        "sha256": "d820f1b61cba539e765c3d21cc9b35ae874dc45c9e599dacde4edd512e5c59af"
+      },
+      {
+        "name": "MiAi-603增强型系列MCU用户手册 REV 1.2.pdf",
+        "bytes": 2324515,
+        "sha256": "7f1990af5716f76b790af16928147f9da96322d5170a05d5f8c9e0ac661336f0"
+      },
+      {
+        "name": "MiAi-6099A1 MCU用户手册_REV1.0.pdf",
+        "bytes": 2631862,
+        "sha256": "8d293785e377e432f9fce13b7b91433e8ee3cd5b0ca1b30aa2223550695ea4c5"
+      }
+    ]
+  },
+  "stm32_v1_sample2": {
+    "input_dir": "tmp/testsets/stm32_v1_sample2",
+    "profile": "config/profiles/stm32_v1.json",
+    "baseline": "tests/baselines/stm32_v1_sample2.json",
+    "files": [
+      {
+        "name": "stm32c031c4.pdf",
+        "bytes": 2527456,
+        "sha256": "896fc5601df00779e650ff8e9d52ac8f800ce14d404d19f976383ae205053f47"
+      },
+      {
+        "name": "stm32f103c8.pdf",
+        "bytes": 1965230,
+        "sha256": "1e54ce18e6c34c5b4a78986f26e245e143748c721009fc9af5953795c30686bc"
+      }
+    ]
+  }
+}

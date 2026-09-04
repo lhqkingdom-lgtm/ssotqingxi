@@ -1,0 +1,52 @@
+{
+  "rule_version": "stm32-0.3.0",
+  "principle": "文件名确定目标基础型号；只从同一数据手册的系列特性矩阵、通用工作条件和目标封装管脚列提取，不把其他系列成员的容量或管脚复制给目标型号。",
+  "output_values": {
+    "memory_type": {
+      "flash": "Flash",
+      "ram": "SRAM_Internal"
+    },
+    "electrical_param": {
+      "voltage": "VDD",
+      "temperature": "T_operating"
+    }
+  },
+  "completeness": {
+    "chips_review_fields": ["flash_kb", "ram_kb", "max_freq_mhz", "package_types", "voltage_min", "voltage_max"]
+  },
+  "header_aliases": {
+    "voltage": ["Operating voltage", "Standard operating voltage"],
+    "package": ["Package", "Packages"],
+    "UART": ["USART", "UART"],
+    "I2C": ["I2C"],
+    "SPI": ["SPI", "SPI [I2S]"],
+    "ADC": ["ADC channels", "12-bit synchronized ADC"]
+  },
+  "document_locators": {
+    "operating_conditions": {
+      "table_any": ["standardoperatingvoltage", "supplyvoltage", "operatingvoltage"],
+      "primary_voltage_symbols": ["VDD"],
+      "temperature_any": ["ambienttemperature"],
+      "temperature_exclude_any": ["suffix"]
+    },
+    "ordering_information": {
+      "page_any": ["orderinginformation"],
+      "flash_label_any": ["flashmemorysize"]
+    }
+  },
+  "field_labels": {
+    "operating_voltage": ["operatingvoltage", "standardoperatingvoltage"],
+    "package": ["package", "packages"],
+    "SPI": ["spi"],
+    "I2C": ["i2c"],
+    "UART": ["usart", "uart"],
+    "ADC": ["adc"],
+    "channel": ["channel", "numberofchannels"]
+  },
+  "unit_conversions": {
+    "voltage_v": {
+      "factors": {"MV": 0.001, "V": 1},
+      "default_unit": "V"
+    }
+  }
+}

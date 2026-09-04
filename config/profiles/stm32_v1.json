@@ -1,0 +1,41 @@
+{
+  "profile_version": 2,
+  "profile_id": "stm32_v1",
+  "config_version": "stm32-2.0.0",
+  "description": "STM32 文字版数据手册，订货码含义只取自原文图例。",
+  "adapter": "family_extractors.stm32",
+  "detection": {
+    "filename_any": ["stm32"],
+    "text_any": ["STM32", "device features and peripheral counts", "Pin name", "General operating conditions"],
+    "exclude_text_all": [["evaluation platform", "schematic diagrams"], ["evaluation board", "schematic diagrams"]],
+    "filename_weight": 10, "text_weight": 2, "minimum_score": 4, "scan_pages": 3
+  },
+  "dictionary": {
+    "base": "../common_field_dictionary.json",
+    "aliases": {"ram_kb": ["ram(kbyte", "ccmram", "ccm(corecoupledmemory)ram", "dtcmram", "itcmram", "axiram"]}
+  },
+  "model": {
+    "pattern": "STM32[A-Z]{1,2}[0-9A-Z]{4,12}", "concatenation_boundary": "(?=STM32)",
+    "skip_suffixes": ["XX"],
+    "exact": [{"prefix": "STM32", "min_suffix_length": 6, "require_alpha": true, "require_digit": true}],
+    "series": [{"kind": "regex", "pattern": "^(STM32[A-Z]{1,2}[0-9]{2,3})", "group": 1}],
+    "filename_rules": [
+      {"pattern": "^(STM32MP\\d{3}[A-Z0-9]{5})", "group": 1},
+      {"pattern": "^(STM32[A-Z]{1,2}\\d{2,3}[A-Z0-9]{2})", "group": 1}
+    ],
+    "aliases_file": "../stm32_aliases.json"
+  },
+  "syntax": {
+    "package_pattern": "(?:LQFP|TSSOP|UFQFPN|VFQFPN|TFBGA|UFBGA|LFBGA|VFBGA|WLCSP|BGA)\\s*\\d+",
+    "pin_pattern": "P[A-Z]\\d{1,2}"
+  },
+  "normalization": {"function_aliases": {"IIC": "I2C", "EVENT-OUT": "EVENTOUT"}},
+  "topologies": {
+    "pipeline": ["ordering_code_legend", "model_column_matrix", "operating_conditions", "pin_definition", "af_matrix"],
+    "presets": {
+      "feature_matrix": "../table_presets/stm32_feature_matrix.json",
+      "operating_conditions": "../table_presets/operating_conditions.json",
+      "pin_relations": "../table_presets/pin_definition_af.json"
+    }
+  }
+}

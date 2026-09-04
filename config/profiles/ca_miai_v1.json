@@ -1,0 +1,44 @@
+{
+  "profile_version": 2,
+  "profile_id": "ca_miai_v1",
+  "config_version": "ca-miai-2.0.0",
+  "description": "CA32/CA51/CA51M/MiAi/MJ 文字版手册。",
+  "adapter": "family_extractors.ca_miai",
+  "detection": {
+    "filename_any": ["CA32", "CA51", "MiAi", "MIAI", "MJ", "SQ-CA"],
+    "text_any": ["基本特性", "芯片型号", "器件型号", "管脚功能", "引脚功能"],
+    "filename_weight": 10, "text_weight": 2, "minimum_score": 4, "scan_pages": 3
+  },
+  "dictionary": {
+    "base": "../common_field_dictionary.json",
+    "aliases": {"flash_kb": ["flashrom容量"], "ram_kb": ["外部sram", "sram容量"]}
+  },
+  "model": {
+    "pattern": "(?:CA(?:32|51)[FM]\\d+[A-Z0-9]*|(?:MiAi|MIAI|MJ)[-‐–—]?\\d+[A-Z0-9]*|SQ[-‐–—]?CA51F\\d+[A-Z0-9]*)",
+    "concatenation_boundary": "(?<=[A-Z0-9])(?=(?:CA32F|CA51F|CA51M|MiAi-|MIAI-|MJ\\d))",
+    "strip_prefixes": ["SQ-"], "skip_suffixes": ["XX"],
+    "exact": [
+      {"prefix": "CA32F", "min_suffix_length": 3, "require_alpha": true, "require_digit": true},
+      {"prefix": "CA51F", "min_suffix_length": 3, "require_alpha": true, "require_digit": true},
+      {"prefix": "CA51M", "min_suffix_length": 3, "require_alpha": true, "require_digit": true},
+      {"prefix": "MIAI-", "min_suffix_length": 5, "require_alpha": true},
+      {"prefix": "MJ", "min_total_length": 7, "require_alpha": true}
+    ],
+    "series": [
+      {"kind": "prefix", "prefix": "CA32F"}, {"kind": "prefix", "prefix": "CA51F"},
+      {"kind": "prefix", "prefix": "CA51M"},
+      {"kind": "code", "prefix": "MiAi-", "code_length": 3, "output_prefix": "MiAi-"},
+      {"kind": "code", "prefix": "MJ", "code_length": 3, "output_prefix": "MJ"}
+    ],
+    "aliases_file": "../chip_aliases.json"
+  },
+  "syntax": {
+    "package_pattern": "(?:LQFP|TSSOP|SSOP|MSOP|SOP|QFN|DFN|DIP|SOT)\\s*\\d+(?:\\([^)]*\\))?",
+    "pin_pattern": "(?:P\\d+\\.\\d+|P[A-Z]\\d{1,2})"
+  },
+  "normalization": {"function_aliases": {"IIC": "I2C", "12C": "I2C"}},
+  "topologies": {
+    "pipeline": ["basic_text", "model_row", "model_transposed", "pin_definition", "electrical_limits"],
+    "presets": {"family_tables": "../table_presets/ca_miai_tables.json"}
+  }
+}

@@ -1,0 +1,5785 @@
+{
+  "rule_version": "stm32-0.2.0",
+  "documents": [
+    {
+      "doc_id": "1e54ce18e6c34c5b",
+      "sha256": "1e54ce18e6c34c5b4a78986f26e245e143748c721009fc9af5953795c30686bc",
+      "version": "0",
+      "source_file": "stm32f103c8.pdf",
+      "duplicate_paths": [
+        "stm32f103c8.pdf"
+      ],
+      "page_count": 114,
+      "basic_page": 10,
+      "model_count": 1,
+      "models": [
+        "STM32F103C8"
+      ],
+      "evidence_count": 8
+    },
+    {
+      "doc_id": "896fc5601df00779",
+      "sha256": "896fc5601df00779e650ff8e9d52ac8f800ce14d404d19f976383ae205053f47",
+      "version": "0",
+      "source_file": "stm32c031c4.pdf",
+      "duplicate_paths": [
+        "stm32c031c4.pdf"
+      ],
+      "page_count": 103,
+      "basic_page": 9,
+      "model_count": 1,
+      "models": [
+        "STM32C031C4"
+      ],
+      "evidence_count": 16
+    }
+  ],
+  "data": {
+    "chips": [
+      {
+        "chip_id": "STM32F103C8",
+        "series": "STM32F103",
+        "core": "ARM",
+        "flash_kb": 64,
+        "ram_kb": 20,
+        "max_freq_mhz": 72,
+        "package_types": [
+          "LQFP48",
+          "UFQFPN48"
+        ],
+        "voltage_min": 2.0,
+        "voltage_max": 3.6,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0010-MODEL-01",
+          "EV-1e54ce18e6c34c5b-0038-ELECTRICAL-01"
+        ],
+        "_confidence": "A",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "series": "STM32C031",
+        "core": "ARM",
+        "flash_kb": 16,
+        "ram_kb": 12,
+        "max_freq_mhz": 48,
+        "package_types": [
+          "LQFP48",
+          "UFQFPN48"
+        ],
+        "voltage_min": 2.0,
+        "voltage_max": 3.6,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0009-MODEL-01",
+          "EV-896fc5601df00779-0010-PACKAGE-01",
+          "EV-896fc5601df00779-0042-ELECTRICAL-01"
+        ],
+        "_confidence": "A",
+        "_source_rank": 0
+      }
+    ],
+    "pin_mux": [
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PC13",
+        "pin_number": 2,
+        "function_name": "TAMPER-RTC",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PC13",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0028-PIN-01"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PC14",
+        "pin_number": 3,
+        "function_name": "OSC32_IN",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PC14",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0028-PIN-01"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PC15",
+        "pin_number": 4,
+        "function_name": "OSC32_OUT",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PC15",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0028-PIN-01"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA0",
+        "pin_number": 10,
+        "function_name": "ADC12_IN0",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA0",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0029-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA0",
+        "pin_number": 10,
+        "function_name": "TIM2_CH1_ETR",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA0",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0029-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA0",
+        "pin_number": 10,
+        "function_name": "USART2_CTS",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA0",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0029-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA0",
+        "pin_number": 10,
+        "function_name": "WKUP",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA0",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0029-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA1",
+        "pin_number": 11,
+        "function_name": "ADC12_IN1",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA1",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0029-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA1",
+        "pin_number": 11,
+        "function_name": "TIM2_CH2",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA1",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0029-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA1",
+        "pin_number": 11,
+        "function_name": "USART2_RTS",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA1",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0029-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA2",
+        "pin_number": 12,
+        "function_name": "ADC12_IN2",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA2",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0029-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA2",
+        "pin_number": 12,
+        "function_name": "TIM2_CH3",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA2",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0029-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA2",
+        "pin_number": 12,
+        "function_name": "USART2_TX",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA2",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0029-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA3",
+        "pin_number": 13,
+        "function_name": "ADC12_IN3",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA3",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0029-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA3",
+        "pin_number": 13,
+        "function_name": "TIM2_CH4",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA3",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0029-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA3",
+        "pin_number": 13,
+        "function_name": "USART2_RX",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA3",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0029-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA4",
+        "pin_number": 14,
+        "function_name": "ADC12_IN4",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA4",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0029-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA4",
+        "pin_number": 14,
+        "function_name": "SPI1_NSS",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA4",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0029-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA4",
+        "pin_number": 14,
+        "function_name": "USART2_CK",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA4",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0029-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA5",
+        "pin_number": 15,
+        "function_name": "ADC12_IN5",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA5",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0029-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA5",
+        "pin_number": 15,
+        "function_name": "SPI1_SCK",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA5",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0029-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA6",
+        "pin_number": 16,
+        "function_name": "ADC12_IN6",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA6",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0029-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA6",
+        "pin_number": 16,
+        "function_name": "SPI1_MISO",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA6",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0029-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA6",
+        "pin_number": 16,
+        "function_name": "TIM1_BKIN",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA6",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0029-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA6",
+        "pin_number": 16,
+        "function_name": "TIM3_CH1",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA6",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0029-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA7",
+        "pin_number": 17,
+        "function_name": "ADC12_IN7",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA7",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0029-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA7",
+        "pin_number": 17,
+        "function_name": "SPI1_MOSI",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA7",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0029-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA7",
+        "pin_number": 17,
+        "function_name": "TIM1_CH1N",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA7",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0029-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA7",
+        "pin_number": 17,
+        "function_name": "TIM3_CH2",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA7",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0029-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PB0",
+        "pin_number": 18,
+        "function_name": "ADC12_IN8",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB0",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0029-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PB0",
+        "pin_number": 18,
+        "function_name": "TIM1_CH2N",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB0",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0029-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PB0",
+        "pin_number": 18,
+        "function_name": "TIM3_CH3",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB0",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0029-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PB1",
+        "pin_number": 19,
+        "function_name": "ADC12_IN9",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB1",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0029-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PB1",
+        "pin_number": 19,
+        "function_name": "TIM1_CH3N",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB1",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0029-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PB1",
+        "pin_number": 19,
+        "function_name": "TIM3_CH4",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB1",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0029-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PB10",
+        "pin_number": 21,
+        "function_name": "I2C2_SCL",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB10",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0030-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PB10",
+        "pin_number": 21,
+        "function_name": "TIM2_CH3",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB10",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0030-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PB10",
+        "pin_number": 21,
+        "function_name": "USART3_TX",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB10",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0030-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PB11",
+        "pin_number": 22,
+        "function_name": "I2C2_SDA",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB11",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0030-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PB11",
+        "pin_number": 22,
+        "function_name": "TIM2_CH4",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB11",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0030-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PB11",
+        "pin_number": 22,
+        "function_name": "USART3_RX",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB11",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0030-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PB12",
+        "pin_number": 25,
+        "function_name": "I2C2_SMBAL",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB12",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0030-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PB12",
+        "pin_number": 25,
+        "function_name": "SPI2_NSS",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB12",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0030-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PB12",
+        "pin_number": 25,
+        "function_name": "TIM1_BKIN",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB12",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0030-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PB12",
+        "pin_number": 25,
+        "function_name": "USART3_CK",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB12",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0030-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PB13",
+        "pin_number": 26,
+        "function_name": "SPI2_SCK",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB13",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0030-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PB13",
+        "pin_number": 26,
+        "function_name": "TIM1_CH1N",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB13",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0030-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PB13",
+        "pin_number": 26,
+        "function_name": "USART3_CTS",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB13",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0030-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PB14",
+        "pin_number": 27,
+        "function_name": "SPI2_MISO",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB14",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0030-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PB14",
+        "pin_number": 27,
+        "function_name": "TIM1_CH2N",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB14",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0030-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PB14",
+        "pin_number": 27,
+        "function_name": "USART3_RTS",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB14",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0030-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PB15",
+        "pin_number": 28,
+        "function_name": "SPI2_MOSI",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB15",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0030-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PB15",
+        "pin_number": 28,
+        "function_name": "TIM1_CH3N",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB15",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0030-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PB2",
+        "pin_number": 20,
+        "function_name": "BOOT1",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB2",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0030-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA10",
+        "pin_number": 31,
+        "function_name": "TIM1_CH3",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA10",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0031-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA10",
+        "pin_number": 31,
+        "function_name": "USART1_RX",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA10",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0031-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA11",
+        "pin_number": 32,
+        "function_name": "CANRX",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA11",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0031-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA11",
+        "pin_number": 32,
+        "function_name": "TIM1_CH4",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA11",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0031-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA11",
+        "pin_number": 32,
+        "function_name": "USART1_CTS",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA11",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0031-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA11",
+        "pin_number": 32,
+        "function_name": "USBDM",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA11",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0031-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA12",
+        "pin_number": 33,
+        "function_name": "CANTX",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA12",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0031-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA12",
+        "pin_number": 33,
+        "function_name": "TIM1_ETR",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA12",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0031-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA12",
+        "pin_number": 33,
+        "function_name": "USART1_RTS",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA12",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0031-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA12",
+        "pin_number": 33,
+        "function_name": "USBDP",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA12",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0031-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA13",
+        "pin_number": 34,
+        "function_name": "JTMS",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA13",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0031-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA13",
+        "pin_number": 34,
+        "function_name": "SWDIO",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA13",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0031-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA8",
+        "pin_number": 29,
+        "function_name": "MCO",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA8",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0031-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA8",
+        "pin_number": 29,
+        "function_name": "TIM1_CH1",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA8",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0031-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA8",
+        "pin_number": 29,
+        "function_name": "USART1_CK",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA8",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0031-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA9",
+        "pin_number": 30,
+        "function_name": "TIM1_CH2",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA9",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0031-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA9",
+        "pin_number": 30,
+        "function_name": "USART1_TX",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA9",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0031-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA14",
+        "pin_number": 37,
+        "function_name": "JTCK",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA14",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0032-PIN-05"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA14",
+        "pin_number": 37,
+        "function_name": "SWCLK",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA14",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0032-PIN-05"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA15",
+        "pin_number": 38,
+        "function_name": "JTDI",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA15",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0032-PIN-05"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA15",
+        "pin_number": 38,
+        "function_name": "SPI1_NSS",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA15",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0032-PIN-05"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PA15",
+        "pin_number": 38,
+        "function_name": "TIM2_CH1_ETR",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA15",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0032-PIN-05"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PB3",
+        "pin_number": 39,
+        "function_name": "JTDO",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB3",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0032-PIN-05"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PB3",
+        "pin_number": 39,
+        "function_name": "SPI1_SCK",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB3",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0032-PIN-05"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PB3",
+        "pin_number": 39,
+        "function_name": "TIM2_CH2",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB3",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0032-PIN-05"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PB3",
+        "pin_number": 39,
+        "function_name": "TRACESWO",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB3",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0032-PIN-05"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PB4",
+        "pin_number": 40,
+        "function_name": "JNTRST",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB4",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0032-PIN-05"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PB4",
+        "pin_number": 40,
+        "function_name": "SPI1_MISO",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB4",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0032-PIN-05"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PB4",
+        "pin_number": 40,
+        "function_name": "TIM3_CH1",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB4",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0032-PIN-05"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PB5",
+        "pin_number": 41,
+        "function_name": "I2C1_SMBAL",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB5",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0032-PIN-05"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PB5",
+        "pin_number": 41,
+        "function_name": "SPI1_MOSI",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB5",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0032-PIN-05"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PB5",
+        "pin_number": 41,
+        "function_name": "TIM3_CH2",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB5",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0032-PIN-05"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PB6",
+        "pin_number": 42,
+        "function_name": "I2C1_SCL",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB6",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0032-PIN-05"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PB6",
+        "pin_number": 42,
+        "function_name": "TIM4_CH1",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB6",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0032-PIN-05"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PB6",
+        "pin_number": 42,
+        "function_name": "USART1_TX",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB6",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0032-PIN-05"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PB7",
+        "pin_number": 43,
+        "function_name": "I2C1_SDA",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB7",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0032-PIN-05"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PB7",
+        "pin_number": 43,
+        "function_name": "TIM4_CH2",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB7",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0032-PIN-05"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PB7",
+        "pin_number": 43,
+        "function_name": "USART1_RX",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB7",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0032-PIN-05"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PB8",
+        "pin_number": 45,
+        "function_name": "CANRX",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB8",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0033-PIN-06"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PB8",
+        "pin_number": 45,
+        "function_name": "I2C1_SCL",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB8",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0033-PIN-06"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PB8",
+        "pin_number": 45,
+        "function_name": "TIM4_CH3",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB8",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0033-PIN-06"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PB9",
+        "pin_number": 46,
+        "function_name": "CANTX",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB9",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0033-PIN-06"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PB9",
+        "pin_number": 46,
+        "function_name": "I2C1_SDA",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB9",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0033-PIN-06"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "pin_name": "PB9",
+        "pin_number": 46,
+        "function_name": "TIM4_CH4",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB9",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0033-PIN-06"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PC14",
+        "pin_number": 2,
+        "function_name": "USART1_TX",
+        "is_supported": true,
+        "af_code": "AF0",
+        "default_function": "PC14",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0031-PIN-01"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PC15",
+        "pin_number": 3,
+        "function_name": "OSC32_EN",
+        "is_supported": true,
+        "af_code": "AF0",
+        "default_function": "PC15",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0031-PIN-01"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PC13",
+        "pin_number": 1,
+        "function_name": "TIM1_ETR",
+        "is_supported": true,
+        "af_code": "AF1",
+        "default_function": "PC13",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0031-PIN-01"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PC14",
+        "pin_number": 2,
+        "function_name": "TIM1_ETR",
+        "is_supported": true,
+        "af_code": "AF1",
+        "default_function": "PC14",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0031-PIN-01"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PC15",
+        "pin_number": 3,
+        "function_name": "OSC_EN",
+        "is_supported": true,
+        "af_code": "AF1",
+        "default_function": "PC15",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0031-PIN-01"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PC14",
+        "pin_number": 2,
+        "function_name": "TIM17_CH1",
+        "is_supported": true,
+        "af_code": "AF10",
+        "default_function": "PC14",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0031-PIN-01"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PC14",
+        "pin_number": 2,
+        "function_name": "TIM3_CH2",
+        "is_supported": true,
+        "af_code": "AF11",
+        "default_function": "PC14",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0031-PIN-01"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PC14",
+        "pin_number": 2,
+        "function_name": "I2C1_SDA",
+        "is_supported": true,
+        "af_code": "AF14",
+        "default_function": "PC14",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0031-PIN-01"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PC14",
+        "pin_number": 2,
+        "function_name": "EVENTOUT",
+        "is_supported": true,
+        "af_code": "AF15",
+        "default_function": "PC14",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0031-PIN-01"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PC13",
+        "pin_number": 1,
+        "function_name": "TIM1_BKIN",
+        "is_supported": true,
+        "af_code": "AF2",
+        "default_function": "PC13",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0031-PIN-01"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PC14",
+        "pin_number": 2,
+        "function_name": "TIM1_BKIN2",
+        "is_supported": true,
+        "af_code": "AF2",
+        "default_function": "PC14",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0031-PIN-01"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PC15",
+        "pin_number": 3,
+        "function_name": "TIM1_ETR",
+        "is_supported": true,
+        "af_code": "AF2",
+        "default_function": "PC15",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0031-PIN-01"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PC15",
+        "pin_number": 3,
+        "function_name": "TIM3_CH3",
+        "is_supported": true,
+        "af_code": "AF3",
+        "default_function": "PC15",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0031-PIN-01"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PC14",
+        "pin_number": 2,
+        "function_name": "IR_OUT",
+        "is_supported": true,
+        "af_code": "AF8",
+        "default_function": "PC14",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0031-PIN-01"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PC14",
+        "pin_number": 2,
+        "function_name": "USART2_RTS_DE_CK",
+        "is_supported": true,
+        "af_code": "AF9",
+        "default_function": "PC14",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0031-PIN-01"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PC13",
+        "pin_number": 1,
+        "function_name": "RTC_OUT1",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PC13",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0031-PIN-01"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PC13",
+        "pin_number": 1,
+        "function_name": "RTC_TS",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PC13",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0031-PIN-01"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PC13",
+        "pin_number": 1,
+        "function_name": "WKUP2",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PC13",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0031-PIN-01"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PC14",
+        "pin_number": 2,
+        "function_name": "OSCX_IN",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PC14",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0031-PIN-01"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PC15",
+        "pin_number": 3,
+        "function_name": "OSCX_OUT",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PC15",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0031-PIN-01"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA1",
+        "pin_number": 12,
+        "function_name": "I2S1_CK",
+        "is_supported": true,
+        "af_code": "AF0",
+        "default_function": "PA1",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA1",
+        "pin_number": 12,
+        "function_name": "SPI1_SCK",
+        "is_supported": true,
+        "af_code": "AF0",
+        "default_function": "PA1",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA2",
+        "pin_number": 13,
+        "function_name": "I2S1_SD",
+        "is_supported": true,
+        "af_code": "AF0",
+        "default_function": "PA2",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA2",
+        "pin_number": 13,
+        "function_name": "SPI1_MOSI",
+        "is_supported": true,
+        "af_code": "AF0",
+        "default_function": "PA2",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA4",
+        "pin_number": 15,
+        "function_name": "I2S1_WS",
+        "is_supported": true,
+        "af_code": "AF0",
+        "default_function": "PA4",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA4",
+        "pin_number": 15,
+        "function_name": "SPI1_NSS",
+        "is_supported": true,
+        "af_code": "AF0",
+        "default_function": "PA4",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA5",
+        "pin_number": 16,
+        "function_name": "I2S1_CK",
+        "is_supported": true,
+        "af_code": "AF0",
+        "default_function": "PA5",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA5",
+        "pin_number": 16,
+        "function_name": "SPI1_SCK",
+        "is_supported": true,
+        "af_code": "AF0",
+        "default_function": "PA5",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA6",
+        "pin_number": 17,
+        "function_name": "I2S1_MCK",
+        "is_supported": true,
+        "af_code": "AF0",
+        "default_function": "PA6",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA6",
+        "pin_number": 17,
+        "function_name": "SPI1_MISO",
+        "is_supported": true,
+        "af_code": "AF0",
+        "default_function": "PA6",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA7",
+        "pin_number": 18,
+        "function_name": "I2S1_SD",
+        "is_supported": true,
+        "af_code": "AF0",
+        "default_function": "PA7",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA7",
+        "pin_number": 18,
+        "function_name": "SPI1_MOSI",
+        "is_supported": true,
+        "af_code": "AF0",
+        "default_function": "PA7",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB0",
+        "pin_number": 19,
+        "function_name": "I2S1_WS",
+        "is_supported": true,
+        "af_code": "AF0",
+        "default_function": "PB0",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB0",
+        "pin_number": 19,
+        "function_name": "SPI1_NSS",
+        "is_supported": true,
+        "af_code": "AF0",
+        "default_function": "PB0",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB1",
+        "pin_number": 20,
+        "function_name": "TIM14_CH1",
+        "is_supported": true,
+        "af_code": "AF0",
+        "default_function": "PB1",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB2",
+        "pin_number": 21,
+        "function_name": "USART1_RX",
+        "is_supported": true,
+        "af_code": "AF0",
+        "default_function": "PB2",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PF1",
+        "pin_number": 9,
+        "function_name": "OSC_EN",
+        "is_supported": true,
+        "af_code": "AF0",
+        "default_function": "PF1",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PF2",
+        "pin_number": 10,
+        "function_name": "MCO",
+        "is_supported": true,
+        "af_code": "AF0",
+        "default_function": "PF2",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA0",
+        "pin_number": 11,
+        "function_name": "USART2_CTS",
+        "is_supported": true,
+        "af_code": "AF1",
+        "default_function": "PA0",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA1",
+        "pin_number": 12,
+        "function_name": "USART2_RTS_DE_CK",
+        "is_supported": true,
+        "af_code": "AF1",
+        "default_function": "PA1",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA2",
+        "pin_number": 13,
+        "function_name": "USART2_TX",
+        "is_supported": true,
+        "af_code": "AF1",
+        "default_function": "PA2",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA3",
+        "pin_number": 14,
+        "function_name": "USART2_RX",
+        "is_supported": true,
+        "af_code": "AF1",
+        "default_function": "PA3",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA4",
+        "pin_number": 15,
+        "function_name": "USART2_TX",
+        "is_supported": true,
+        "af_code": "AF1",
+        "default_function": "PA4",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA5",
+        "pin_number": 16,
+        "function_name": "USART2_RX",
+        "is_supported": true,
+        "af_code": "AF1",
+        "default_function": "PA5",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA6",
+        "pin_number": 17,
+        "function_name": "TIM3_CH1",
+        "is_supported": true,
+        "af_code": "AF1",
+        "default_function": "PA6",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA7",
+        "pin_number": 18,
+        "function_name": "TIM3_CH2",
+        "is_supported": true,
+        "af_code": "AF1",
+        "default_function": "PA7",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB0",
+        "pin_number": 19,
+        "function_name": "TIM3_CH3",
+        "is_supported": true,
+        "af_code": "AF1",
+        "default_function": "PB0",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB1",
+        "pin_number": 20,
+        "function_name": "TIM3_CH4",
+        "is_supported": true,
+        "af_code": "AF1",
+        "default_function": "PB1",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PF2",
+        "pin_number": 10,
+        "function_name": "TIM1_CH4",
+        "is_supported": true,
+        "af_code": "AF1",
+        "default_function": "PF2",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA0",
+        "pin_number": 11,
+        "function_name": "TIM16_CH1",
+        "is_supported": true,
+        "af_code": "AF2",
+        "default_function": "PA0",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA1",
+        "pin_number": 12,
+        "function_name": "TIM17_CH1",
+        "is_supported": true,
+        "af_code": "AF2",
+        "default_function": "PA1",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA2",
+        "pin_number": 13,
+        "function_name": "TIM16_CH1N",
+        "is_supported": true,
+        "af_code": "AF2",
+        "default_function": "PA2",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA3",
+        "pin_number": 14,
+        "function_name": "TIM1_CH1N",
+        "is_supported": true,
+        "af_code": "AF2",
+        "default_function": "PA3",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA4",
+        "pin_number": 15,
+        "function_name": "TIM1_CH2N",
+        "is_supported": true,
+        "af_code": "AF2",
+        "default_function": "PA4",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA5",
+        "pin_number": 16,
+        "function_name": "TIM1_CH3N",
+        "is_supported": true,
+        "af_code": "AF2",
+        "default_function": "PA5",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA6",
+        "pin_number": 17,
+        "function_name": "TIM1_BKIN",
+        "is_supported": true,
+        "af_code": "AF2",
+        "default_function": "PA6",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA7",
+        "pin_number": 18,
+        "function_name": "TIM1_CH1N",
+        "is_supported": true,
+        "af_code": "AF2",
+        "default_function": "PA7",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB0",
+        "pin_number": 19,
+        "function_name": "TIM1_CH2N",
+        "is_supported": true,
+        "af_code": "AF2",
+        "default_function": "PB0",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB1",
+        "pin_number": 20,
+        "function_name": "TIM1_CH3N",
+        "is_supported": true,
+        "af_code": "AF2",
+        "default_function": "PB1",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PF0",
+        "pin_number": 8,
+        "function_name": "TIM14_CH1",
+        "is_supported": true,
+        "af_code": "AF2",
+        "default_function": "PF0",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA2",
+        "pin_number": 13,
+        "function_name": "TIM3_ETR",
+        "is_supported": true,
+        "af_code": "AF3",
+        "default_function": "PA2",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB2",
+        "pin_number": 21,
+        "function_name": "MCO2",
+        "is_supported": true,
+        "af_code": "AF3",
+        "default_function": "PB2",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA0",
+        "pin_number": 11,
+        "function_name": "USART1_TX",
+        "is_supported": true,
+        "af_code": "AF4",
+        "default_function": "PA0",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA1",
+        "pin_number": 12,
+        "function_name": "USART1_RX",
+        "is_supported": true,
+        "af_code": "AF4",
+        "default_function": "PA1",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA4",
+        "pin_number": 15,
+        "function_name": "TIM14_CH1",
+        "is_supported": true,
+        "af_code": "AF4",
+        "default_function": "PA4",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA7",
+        "pin_number": 18,
+        "function_name": "TIM14_CH1",
+        "is_supported": true,
+        "af_code": "AF4",
+        "default_function": "PA7",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA0",
+        "pin_number": 11,
+        "function_name": "TIM1_CH1",
+        "is_supported": true,
+        "af_code": "AF5",
+        "default_function": "PA0",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA1",
+        "pin_number": 12,
+        "function_name": "TIM1_CH2",
+        "is_supported": true,
+        "af_code": "AF5",
+        "default_function": "PA1",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA2",
+        "pin_number": 13,
+        "function_name": "TIM1_CH3",
+        "is_supported": true,
+        "af_code": "AF5",
+        "default_function": "PA2",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA3",
+        "pin_number": 14,
+        "function_name": "TIM1_CH4",
+        "is_supported": true,
+        "af_code": "AF5",
+        "default_function": "PA3",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA4",
+        "pin_number": 15,
+        "function_name": "TIM17_CH1N",
+        "is_supported": true,
+        "af_code": "AF5",
+        "default_function": "PA4",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA5",
+        "pin_number": 16,
+        "function_name": "TIM1_CH1",
+        "is_supported": true,
+        "af_code": "AF5",
+        "default_function": "PA5",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA6",
+        "pin_number": 17,
+        "function_name": "TIM16_CH1",
+        "is_supported": true,
+        "af_code": "AF5",
+        "default_function": "PA6",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA7",
+        "pin_number": 18,
+        "function_name": "TIM17_CH1",
+        "is_supported": true,
+        "af_code": "AF5",
+        "default_function": "PA7",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB1",
+        "pin_number": 20,
+        "function_name": "TIM1_CH2N",
+        "is_supported": true,
+        "af_code": "AF5",
+        "default_function": "PB1",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA1",
+        "pin_number": 12,
+        "function_name": "I2C1_SMBA",
+        "is_supported": true,
+        "af_code": "AF6",
+        "default_function": "PA1",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA1",
+        "pin_number": 12,
+        "function_name": "EVENTOUT",
+        "is_supported": true,
+        "af_code": "AF7",
+        "default_function": "PA1",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA3",
+        "pin_number": 14,
+        "function_name": "EVENTOUT",
+        "is_supported": true,
+        "af_code": "AF7",
+        "default_function": "PA3",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA4",
+        "pin_number": 15,
+        "function_name": "EVENTOUT",
+        "is_supported": true,
+        "af_code": "AF7",
+        "default_function": "PA4",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA5",
+        "pin_number": 16,
+        "function_name": "EVENTOUT",
+        "is_supported": true,
+        "af_code": "AF7",
+        "default_function": "PA5",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB1",
+        "pin_number": 20,
+        "function_name": "EVENTOUT",
+        "is_supported": true,
+        "af_code": "AF7",
+        "default_function": "PB1",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB2",
+        "pin_number": 21,
+        "function_name": "EVENTOUT",
+        "is_supported": true,
+        "af_code": "AF7",
+        "default_function": "PB2",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA0",
+        "pin_number": 11,
+        "function_name": "ADC_IN0",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA0",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA0",
+        "pin_number": 11,
+        "function_name": "WKUP1",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA0",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA1",
+        "pin_number": 12,
+        "function_name": "ADC_IN1",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA1",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA2",
+        "pin_number": 13,
+        "function_name": "ADC_IN2",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA2",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA2",
+        "pin_number": 13,
+        "function_name": "LSCO",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA2",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA2",
+        "pin_number": 13,
+        "function_name": "WKUP4",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA2",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA3",
+        "pin_number": 14,
+        "function_name": "ADC_IN3",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA3",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA4",
+        "pin_number": 15,
+        "function_name": "ADC_IN4",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA4",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA4",
+        "pin_number": 15,
+        "function_name": "RTC_OUT2",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA4",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA5",
+        "pin_number": 16,
+        "function_name": "ADC_IN5",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA5",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA6",
+        "pin_number": 17,
+        "function_name": "ADC_IN6",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA6",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA7",
+        "pin_number": 18,
+        "function_name": "ADC_IN7",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA7",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB0",
+        "pin_number": 19,
+        "function_name": "ADC_IN17",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB0",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB1",
+        "pin_number": 20,
+        "function_name": "ADC_IN18",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB1",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB10",
+        "pin_number": 22,
+        "function_name": "ADC_IN20",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB10",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB2",
+        "pin_number": 21,
+        "function_name": "ADC_IN19",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB2",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PF0",
+        "pin_number": 8,
+        "function_name": "OSC_IN",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PF0",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PF1",
+        "pin_number": 9,
+        "function_name": "OSC_OUT",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PF1",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PF2",
+        "pin_number": 10,
+        "function_name": "NRST",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PF2",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0032-PIN-02"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA11",
+        "pin_number": 33,
+        "function_name": "I2S1_MCK",
+        "is_supported": true,
+        "af_code": "AF0",
+        "default_function": "PA11",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA11",
+        "pin_number": 33,
+        "function_name": "SPI1_MISO",
+        "is_supported": true,
+        "af_code": "AF0",
+        "default_function": "PA11",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA12",
+        "pin_number": 34,
+        "function_name": "I2S1_SD",
+        "is_supported": true,
+        "af_code": "AF0",
+        "default_function": "PA12",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA12",
+        "pin_number": 34,
+        "function_name": "SPI1_MOSI",
+        "is_supported": true,
+        "af_code": "AF0",
+        "default_function": "PA12",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA13",
+        "pin_number": 35,
+        "function_name": "SWDIO",
+        "is_supported": true,
+        "af_code": "AF0",
+        "default_function": "PA13",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA14",
+        "pin_number": 36,
+        "function_name": "SWCLK",
+        "is_supported": true,
+        "af_code": "AF0",
+        "default_function": "PA14",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA15",
+        "pin_number": 37,
+        "function_name": "I2S1_WS",
+        "is_supported": true,
+        "af_code": "AF0",
+        "default_function": "PA15",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA15",
+        "pin_number": 37,
+        "function_name": "SPI1_NSS",
+        "is_supported": true,
+        "af_code": "AF0",
+        "default_function": "PA15",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA8",
+        "pin_number": 28,
+        "function_name": "MCO",
+        "is_supported": true,
+        "af_code": "AF0",
+        "default_function": "PA8",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA9",
+        "pin_number": 29,
+        "function_name": "MCO",
+        "is_supported": true,
+        "af_code": "AF0",
+        "default_function": "PA9",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB3",
+        "pin_number": 42,
+        "function_name": "I2S1_CK",
+        "is_supported": true,
+        "af_code": "AF0",
+        "default_function": "PB3",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB3",
+        "pin_number": 42,
+        "function_name": "SPI1_SCK",
+        "is_supported": true,
+        "af_code": "AF0",
+        "default_function": "PB3",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB4",
+        "pin_number": 43,
+        "function_name": "I2S1_MCK",
+        "is_supported": true,
+        "af_code": "AF0",
+        "default_function": "PB4",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB4",
+        "pin_number": 43,
+        "function_name": "SPI1_MISO",
+        "is_supported": true,
+        "af_code": "AF0",
+        "default_function": "PB4",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PD0",
+        "pin_number": 38,
+        "function_name": "EVENTOUT",
+        "is_supported": true,
+        "af_code": "AF0",
+        "default_function": "PD0",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PD1",
+        "pin_number": 39,
+        "function_name": "EVENTOUT",
+        "is_supported": true,
+        "af_code": "AF0",
+        "default_function": "PD1",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PD3",
+        "pin_number": 41,
+        "function_name": "USART2_CTS",
+        "is_supported": true,
+        "af_code": "AF0",
+        "default_function": "PD3",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA10",
+        "pin_number": 32,
+        "function_name": "USART1_RX",
+        "is_supported": true,
+        "af_code": "AF1",
+        "default_function": "PA10",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA11",
+        "pin_number": 33,
+        "function_name": "USART1_CTS",
+        "is_supported": true,
+        "af_code": "AF1",
+        "default_function": "PA11",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA12",
+        "pin_number": 34,
+        "function_name": "USART1_RTS_DE_CK",
+        "is_supported": true,
+        "af_code": "AF1",
+        "default_function": "PA12",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA13",
+        "pin_number": 35,
+        "function_name": "IR_OUT",
+        "is_supported": true,
+        "af_code": "AF1",
+        "default_function": "PA13",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA14",
+        "pin_number": 36,
+        "function_name": "USART2_TX",
+        "is_supported": true,
+        "af_code": "AF1",
+        "default_function": "PA14",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA15",
+        "pin_number": 37,
+        "function_name": "USART2_RX",
+        "is_supported": true,
+        "af_code": "AF1",
+        "default_function": "PA15",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA8",
+        "pin_number": 28,
+        "function_name": "USART2_TX",
+        "is_supported": true,
+        "af_code": "AF1",
+        "default_function": "PA8",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA9",
+        "pin_number": 29,
+        "function_name": "USART1_TX",
+        "is_supported": true,
+        "af_code": "AF1",
+        "default_function": "PA9",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB12",
+        "pin_number": 24,
+        "function_name": "TIM1_BKIN2",
+        "is_supported": true,
+        "af_code": "AF1",
+        "default_function": "PB12",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB3",
+        "pin_number": 42,
+        "function_name": "TIM1_CH2",
+        "is_supported": true,
+        "af_code": "AF1",
+        "default_function": "PB3",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB4",
+        "pin_number": 43,
+        "function_name": "TIM3_CH1",
+        "is_supported": true,
+        "af_code": "AF1",
+        "default_function": "PB4",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PC6",
+        "pin_number": 30,
+        "function_name": "TIM3_CH1",
+        "is_supported": true,
+        "af_code": "AF1",
+        "default_function": "PC6",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PC7",
+        "pin_number": 31,
+        "function_name": "TIM3_CH2",
+        "is_supported": true,
+        "af_code": "AF1",
+        "default_function": "PC7",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PD2",
+        "pin_number": 40,
+        "function_name": "TIM3_ETR",
+        "is_supported": true,
+        "af_code": "AF1",
+        "default_function": "PD2",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA14",
+        "pin_number": 36,
+        "function_name": "TIM1_CH1",
+        "is_supported": true,
+        "af_code": "AF10",
+        "default_function": "PA14",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA8",
+        "pin_number": 28,
+        "function_name": "TIM1_CH3N",
+        "is_supported": true,
+        "af_code": "AF10",
+        "default_function": "PA8",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA14",
+        "pin_number": 36,
+        "function_name": "MCO2",
+        "is_supported": true,
+        "af_code": "AF11",
+        "default_function": "PA14",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA8",
+        "pin_number": 28,
+        "function_name": "TIM3_CH3",
+        "is_supported": true,
+        "af_code": "AF11",
+        "default_function": "PA8",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA14",
+        "pin_number": 36,
+        "function_name": "USART1_RTS_DE_CK",
+        "is_supported": true,
+        "af_code": "AF12",
+        "default_function": "PA14",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA8",
+        "pin_number": 28,
+        "function_name": "TIM3_CH4",
+        "is_supported": true,
+        "af_code": "AF12",
+        "default_function": "PA8",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA8",
+        "pin_number": 28,
+        "function_name": "TIM14_CH1",
+        "is_supported": true,
+        "af_code": "AF13",
+        "default_function": "PA8",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA8",
+        "pin_number": 28,
+        "function_name": "USART1_RX",
+        "is_supported": true,
+        "af_code": "AF14",
+        "default_function": "PA8",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA8",
+        "pin_number": 28,
+        "function_name": "MCO2",
+        "is_supported": true,
+        "af_code": "AF15",
+        "default_function": "PA8",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA10",
+        "pin_number": 32,
+        "function_name": "TIM1_CH3",
+        "is_supported": true,
+        "af_code": "AF2",
+        "default_function": "PA10",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA11",
+        "pin_number": 33,
+        "function_name": "TIM1_CH4",
+        "is_supported": true,
+        "af_code": "AF2",
+        "default_function": "PA11",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA12",
+        "pin_number": 34,
+        "function_name": "TIM1_ETR",
+        "is_supported": true,
+        "af_code": "AF2",
+        "default_function": "PA12",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA15",
+        "pin_number": 37,
+        "function_name": "TIM1_CH1",
+        "is_supported": true,
+        "af_code": "AF2",
+        "default_function": "PA15",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA8",
+        "pin_number": 28,
+        "function_name": "TIM1_CH1",
+        "is_supported": true,
+        "af_code": "AF2",
+        "default_function": "PA8",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA9",
+        "pin_number": 29,
+        "function_name": "TIM1_CH2",
+        "is_supported": true,
+        "af_code": "AF2",
+        "default_function": "PA9",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB12",
+        "pin_number": 24,
+        "function_name": "TIM1_BKIN",
+        "is_supported": true,
+        "af_code": "AF2",
+        "default_function": "PB12",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB13",
+        "pin_number": 25,
+        "function_name": "TIM1_CH1N",
+        "is_supported": true,
+        "af_code": "AF2",
+        "default_function": "PB13",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB14",
+        "pin_number": 26,
+        "function_name": "TIM1_CH2N",
+        "is_supported": true,
+        "af_code": "AF2",
+        "default_function": "PB14",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB15",
+        "pin_number": 27,
+        "function_name": "TIM1_CH3N",
+        "is_supported": true,
+        "af_code": "AF2",
+        "default_function": "PB15",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PD0",
+        "pin_number": 38,
+        "function_name": "TIM16_CH1",
+        "is_supported": true,
+        "af_code": "AF2",
+        "default_function": "PD0",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PD1",
+        "pin_number": 39,
+        "function_name": "TIM17_CH1",
+        "is_supported": true,
+        "af_code": "AF2",
+        "default_function": "PD1",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PD2",
+        "pin_number": 40,
+        "function_name": "TIM1_CH1N",
+        "is_supported": true,
+        "af_code": "AF2",
+        "default_function": "PD2",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PD3",
+        "pin_number": 41,
+        "function_name": "TIM1_CH2N",
+        "is_supported": true,
+        "af_code": "AF2",
+        "default_function": "PD3",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA10",
+        "pin_number": 32,
+        "function_name": "MCO2",
+        "is_supported": true,
+        "af_code": "AF3",
+        "default_function": "PA10",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA13",
+        "pin_number": 35,
+        "function_name": "TIM3_ETR",
+        "is_supported": true,
+        "af_code": "AF3",
+        "default_function": "PA13",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA15",
+        "pin_number": 37,
+        "function_name": "MCO2",
+        "is_supported": true,
+        "af_code": "AF3",
+        "default_function": "PA15",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA9",
+        "pin_number": 29,
+        "function_name": "TIM3_ETR",
+        "is_supported": true,
+        "af_code": "AF3",
+        "default_function": "PA9",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB3",
+        "pin_number": 42,
+        "function_name": "TIM3_CH2",
+        "is_supported": true,
+        "af_code": "AF3",
+        "default_function": "PB3",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA13",
+        "pin_number": 35,
+        "function_name": "USART2_RX",
+        "is_supported": true,
+        "af_code": "AF4",
+        "default_function": "PA13",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA15",
+        "pin_number": 37,
+        "function_name": "USART1_RTS_DE_CK",
+        "is_supported": true,
+        "af_code": "AF4",
+        "default_function": "PA15",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB3",
+        "pin_number": 42,
+        "function_name": "USART1_RTS_DE_CK",
+        "is_supported": true,
+        "af_code": "AF4",
+        "default_function": "PB3",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB4",
+        "pin_number": 43,
+        "function_name": "USART1_CTS",
+        "is_supported": true,
+        "af_code": "AF4",
+        "default_function": "PB4",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA10",
+        "pin_number": 32,
+        "function_name": "TIM17_BKIN",
+        "is_supported": true,
+        "af_code": "AF5",
+        "default_function": "PA10",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA11",
+        "pin_number": 33,
+        "function_name": "TIM1_BKIN2",
+        "is_supported": true,
+        "af_code": "AF5",
+        "default_function": "PA11",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA12",
+        "pin_number": 34,
+        "function_name": "I2S_CKIN",
+        "is_supported": true,
+        "af_code": "AF5",
+        "default_function": "PA12",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB4",
+        "pin_number": 43,
+        "function_name": "TIM17_BKIN",
+        "is_supported": true,
+        "af_code": "AF5",
+        "default_function": "PB4",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA10",
+        "pin_number": 32,
+        "function_name": "I2C1_SDA",
+        "is_supported": true,
+        "af_code": "AF6",
+        "default_function": "PA10",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA9",
+        "pin_number": 29,
+        "function_name": "I2C1_SCL",
+        "is_supported": true,
+        "af_code": "AF6",
+        "default_function": "PA9",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA10",
+        "pin_number": 32,
+        "function_name": "EVENTOUT",
+        "is_supported": true,
+        "af_code": "AF7",
+        "default_function": "PA10",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA13",
+        "pin_number": 35,
+        "function_name": "EVENTOUT",
+        "is_supported": true,
+        "af_code": "AF7",
+        "default_function": "PA13",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA14",
+        "pin_number": 36,
+        "function_name": "EVENTOUT",
+        "is_supported": true,
+        "af_code": "AF7",
+        "default_function": "PA14",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA15",
+        "pin_number": 37,
+        "function_name": "EVENTOUT",
+        "is_supported": true,
+        "af_code": "AF7",
+        "default_function": "PA15",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA8",
+        "pin_number": 28,
+        "function_name": "EVENTOUT",
+        "is_supported": true,
+        "af_code": "AF7",
+        "default_function": "PA8",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA9",
+        "pin_number": 29,
+        "function_name": "EVENTOUT",
+        "is_supported": true,
+        "af_code": "AF7",
+        "default_function": "PA9",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB12",
+        "pin_number": 24,
+        "function_name": "EVENTOUT",
+        "is_supported": true,
+        "af_code": "AF7",
+        "default_function": "PB12",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB13",
+        "pin_number": 25,
+        "function_name": "EVENTOUT",
+        "is_supported": true,
+        "af_code": "AF7",
+        "default_function": "PB13",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB14",
+        "pin_number": 26,
+        "function_name": "EVENTOUT",
+        "is_supported": true,
+        "af_code": "AF7",
+        "default_function": "PB14",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB15",
+        "pin_number": 27,
+        "function_name": "EVENTOUT",
+        "is_supported": true,
+        "af_code": "AF7",
+        "default_function": "PB15",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB3",
+        "pin_number": 42,
+        "function_name": "EVENTOUT",
+        "is_supported": true,
+        "af_code": "AF7",
+        "default_function": "PB3",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB4",
+        "pin_number": 43,
+        "function_name": "EVENTOUT",
+        "is_supported": true,
+        "af_code": "AF7",
+        "default_function": "PB4",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA14",
+        "pin_number": 36,
+        "function_name": "I2S1_WS",
+        "is_supported": true,
+        "af_code": "AF8",
+        "default_function": "PA14",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA14",
+        "pin_number": 36,
+        "function_name": "SPI1_NSS",
+        "is_supported": true,
+        "af_code": "AF8",
+        "default_function": "PA14",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA8",
+        "pin_number": 28,
+        "function_name": "I2S1_WS",
+        "is_supported": true,
+        "af_code": "AF8",
+        "default_function": "PA8",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA8",
+        "pin_number": 28,
+        "function_name": "SPI1_NSS",
+        "is_supported": true,
+        "af_code": "AF8",
+        "default_function": "PA8",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA14",
+        "pin_number": 36,
+        "function_name": "USART2_RX",
+        "is_supported": true,
+        "af_code": "AF9",
+        "default_function": "PA14",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA8",
+        "pin_number": 28,
+        "function_name": "TIM1_CH2N",
+        "is_supported": true,
+        "af_code": "AF9",
+        "default_function": "PA8",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA11",
+        "pin_number": 33,
+        "function_name": "ADC_IN11",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA11",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA12",
+        "pin_number": 34,
+        "function_name": "ADC_IN12",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA12",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA13",
+        "pin_number": 35,
+        "function_name": "ADC_IN13",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA13",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA14",
+        "pin_number": 36,
+        "function_name": "ADC_IN14",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA14",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA14",
+        "pin_number": 36,
+        "function_name": "BOOT0",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA14",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PA8",
+        "pin_number": 28,
+        "function_name": "ADC_IN8",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PA8",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB11",
+        "pin_number": 23,
+        "function_name": "ADC_IN21",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB11",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB12",
+        "pin_number": 24,
+        "function_name": "ADC_IN22",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB12",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB15",
+        "pin_number": 27,
+        "function_name": "RTC_REFIN",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB15",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0033-PIN-03"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB5",
+        "pin_number": 44,
+        "function_name": "I2S1_SD",
+        "is_supported": true,
+        "af_code": "AF0",
+        "default_function": "PB5",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB5",
+        "pin_number": 44,
+        "function_name": "SPI1_MOSI",
+        "is_supported": true,
+        "af_code": "AF0",
+        "default_function": "PB5",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB6",
+        "pin_number": 45,
+        "function_name": "USART1_TX",
+        "is_supported": true,
+        "af_code": "AF0",
+        "default_function": "PB6",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB7",
+        "pin_number": 46,
+        "function_name": "USART1_RX",
+        "is_supported": true,
+        "af_code": "AF0",
+        "default_function": "PB7",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB9",
+        "pin_number": 48,
+        "function_name": "IR_OUT",
+        "is_supported": true,
+        "af_code": "AF0",
+        "default_function": "PB9",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB5",
+        "pin_number": 44,
+        "function_name": "TIM3_CH2",
+        "is_supported": true,
+        "af_code": "AF1",
+        "default_function": "PB5",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB6",
+        "pin_number": 45,
+        "function_name": "TIM1_CH3",
+        "is_supported": true,
+        "af_code": "AF1",
+        "default_function": "PB6",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB7",
+        "pin_number": 46,
+        "function_name": "TIM1_CH4",
+        "is_supported": true,
+        "af_code": "AF1",
+        "default_function": "PB7",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB8",
+        "pin_number": 47,
+        "function_name": "USART2_CTS",
+        "is_supported": true,
+        "af_code": "AF1",
+        "default_function": "PB8",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB9",
+        "pin_number": 48,
+        "function_name": "USART2_RTS_DE_CK",
+        "is_supported": true,
+        "af_code": "AF1",
+        "default_function": "PB9",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB6",
+        "pin_number": 45,
+        "function_name": "I2S1_CK",
+        "is_supported": true,
+        "af_code": "AF10",
+        "default_function": "PB6",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB6",
+        "pin_number": 45,
+        "function_name": "SPI1_SCK",
+        "is_supported": true,
+        "af_code": "AF10",
+        "default_function": "PB6",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB7",
+        "pin_number": 46,
+        "function_name": "TIM16_CH1",
+        "is_supported": true,
+        "af_code": "AF10",
+        "default_function": "PB7",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB6",
+        "pin_number": 45,
+        "function_name": "TIM1_CH2",
+        "is_supported": true,
+        "af_code": "AF11",
+        "default_function": "PB6",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB7",
+        "pin_number": 46,
+        "function_name": "TIM3_CH1",
+        "is_supported": true,
+        "af_code": "AF11",
+        "default_function": "PB7",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB6",
+        "pin_number": 45,
+        "function_name": "TIM3_CH1",
+        "is_supported": true,
+        "af_code": "AF12",
+        "default_function": "PB6",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB6",
+        "pin_number": 45,
+        "function_name": "TIM3_CH2",
+        "is_supported": true,
+        "af_code": "AF13",
+        "default_function": "PB6",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB6",
+        "pin_number": 45,
+        "function_name": "TIM16_BKIN",
+        "is_supported": true,
+        "af_code": "AF14",
+        "default_function": "PB6",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB7",
+        "pin_number": 46,
+        "function_name": "I2C1_SCL",
+        "is_supported": true,
+        "af_code": "AF14",
+        "default_function": "PB7",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB6",
+        "pin_number": 45,
+        "function_name": "TIM17_BKIN",
+        "is_supported": true,
+        "af_code": "AF15",
+        "default_function": "PB6",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB5",
+        "pin_number": 44,
+        "function_name": "TIM16_BKIN",
+        "is_supported": true,
+        "af_code": "AF2",
+        "default_function": "PB5",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB6",
+        "pin_number": 45,
+        "function_name": "TIM16_CH1N",
+        "is_supported": true,
+        "af_code": "AF2",
+        "default_function": "PB6",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB7",
+        "pin_number": 46,
+        "function_name": "TIM17_CH1N",
+        "is_supported": true,
+        "af_code": "AF2",
+        "default_function": "PB7",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB8",
+        "pin_number": 47,
+        "function_name": "TIM16_CH1",
+        "is_supported": true,
+        "af_code": "AF2",
+        "default_function": "PB8",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB9",
+        "pin_number": 48,
+        "function_name": "TIM17_CH1",
+        "is_supported": true,
+        "af_code": "AF2",
+        "default_function": "PB9",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB5",
+        "pin_number": 44,
+        "function_name": "TIM3_CH3",
+        "is_supported": true,
+        "af_code": "AF3",
+        "default_function": "PB5",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB6",
+        "pin_number": 45,
+        "function_name": "TIM3_CH3",
+        "is_supported": true,
+        "af_code": "AF3",
+        "default_function": "PB6",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB7",
+        "pin_number": 46,
+        "function_name": "TIM3_CH4",
+        "is_supported": true,
+        "af_code": "AF3",
+        "default_function": "PB7",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB8",
+        "pin_number": 47,
+        "function_name": "TIM3_CH1",
+        "is_supported": true,
+        "af_code": "AF3",
+        "default_function": "PB8",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB9",
+        "pin_number": 48,
+        "function_name": "TIM3_CH2",
+        "is_supported": true,
+        "af_code": "AF3",
+        "default_function": "PB9",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB6",
+        "pin_number": 45,
+        "function_name": "USART1_RTS_DE_CK",
+        "is_supported": true,
+        "af_code": "AF4",
+        "default_function": "PB6",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB6",
+        "pin_number": 45,
+        "function_name": "USART1_CTS",
+        "is_supported": true,
+        "af_code": "AF5",
+        "default_function": "PB6",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB5",
+        "pin_number": 44,
+        "function_name": "I2C1_SMBA",
+        "is_supported": true,
+        "af_code": "AF6",
+        "default_function": "PB5",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB6",
+        "pin_number": 45,
+        "function_name": "I2C1_SCL",
+        "is_supported": true,
+        "af_code": "AF6",
+        "default_function": "PB6",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB7",
+        "pin_number": 46,
+        "function_name": "I2C1_SDA",
+        "is_supported": true,
+        "af_code": "AF6",
+        "default_function": "PB7",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB8",
+        "pin_number": 47,
+        "function_name": "I2C1_SCL",
+        "is_supported": true,
+        "af_code": "AF6",
+        "default_function": "PB8",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB9",
+        "pin_number": 48,
+        "function_name": "I2C1_SDA",
+        "is_supported": true,
+        "af_code": "AF6",
+        "default_function": "PB9",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB6",
+        "pin_number": 45,
+        "function_name": "I2C1_SMBA",
+        "is_supported": true,
+        "af_code": "AF7",
+        "default_function": "PB6",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB7",
+        "pin_number": 46,
+        "function_name": "EVENTOUT",
+        "is_supported": true,
+        "af_code": "AF7",
+        "default_function": "PB7",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB8",
+        "pin_number": 47,
+        "function_name": "EVENTOUT",
+        "is_supported": true,
+        "af_code": "AF7",
+        "default_function": "PB8",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB9",
+        "pin_number": 48,
+        "function_name": "EVENTOUT",
+        "is_supported": true,
+        "af_code": "AF7",
+        "default_function": "PB9",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB6",
+        "pin_number": 45,
+        "function_name": "I2S1_SD",
+        "is_supported": true,
+        "af_code": "AF8",
+        "default_function": "PB6",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB6",
+        "pin_number": 45,
+        "function_name": "SPI1_MOSI",
+        "is_supported": true,
+        "af_code": "AF8",
+        "default_function": "PB6",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB6",
+        "pin_number": 45,
+        "function_name": "I2S1_MCK",
+        "is_supported": true,
+        "af_code": "AF9",
+        "default_function": "PB6",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB6",
+        "pin_number": 45,
+        "function_name": "SPI1_MISO",
+        "is_supported": true,
+        "af_code": "AF9",
+        "default_function": "PB6",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB7",
+        "pin_number": 46,
+        "function_name": "USART2_CTS",
+        "is_supported": true,
+        "af_code": "AF9",
+        "default_function": "PB7",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB5",
+        "pin_number": 44,
+        "function_name": "WKUP6",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB5",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "pin_name": "PB6",
+        "pin_number": 45,
+        "function_name": "WKUP3",
+        "is_supported": true,
+        "af_code": null,
+        "default_function": "PB6",
+        "constraints": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0034-PIN-04"
+        ],
+        "_confidence": "B",
+        "_source_rank": 0
+      }
+    ],
+    "peripherals": [
+      {
+        "chip_id": "STM32F103C8",
+        "peripheral_type": "ADC",
+        "instance_count": 2,
+        "max_resolution": 12,
+        "max_frequency_mhz": null,
+        "features": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0010-MODEL-01"
+        ],
+        "_confidence": "A",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "peripheral_type": "I2C",
+        "instance_count": 2,
+        "max_resolution": null,
+        "max_frequency_mhz": null,
+        "features": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0010-MODEL-01"
+        ],
+        "_confidence": "A",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "peripheral_type": "SPI",
+        "instance_count": 2,
+        "max_resolution": null,
+        "max_frequency_mhz": null,
+        "features": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0010-MODEL-01"
+        ],
+        "_confidence": "A",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "peripheral_type": "UART",
+        "instance_count": 3,
+        "max_resolution": null,
+        "max_frequency_mhz": null,
+        "features": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0010-MODEL-01"
+        ],
+        "_confidence": "A",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "peripheral_type": "ADC",
+        "instance_count": 1,
+        "max_resolution": 12,
+        "max_frequency_mhz": null,
+        "features": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0009-MODEL-01"
+        ],
+        "_confidence": "A",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "peripheral_type": "I2C",
+        "instance_count": 1,
+        "max_resolution": null,
+        "max_frequency_mhz": null,
+        "features": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0009-MODEL-01"
+        ],
+        "_confidence": "A",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "peripheral_type": "SPI",
+        "instance_count": 1,
+        "max_resolution": null,
+        "max_frequency_mhz": null,
+        "features": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0009-MODEL-01"
+        ],
+        "_confidence": "A",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "peripheral_type": "UART",
+        "instance_count": 2,
+        "max_resolution": null,
+        "max_frequency_mhz": null,
+        "features": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0009-MODEL-01"
+        ],
+        "_confidence": "A",
+        "_source_rank": 0
+      }
+    ],
+    "electrical": [
+      {
+        "chip_id": "STM32F103C8",
+        "param_name": "VDD_operating",
+        "min_value": 2.0,
+        "max_value": 3.6,
+        "unit": "V",
+        "conditions": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0038-ELECTRICAL-01"
+        ],
+        "_confidence": "A",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "param_name": "VDD_operating",
+        "min_value": 2.0,
+        "max_value": 3.6,
+        "unit": "V",
+        "conditions": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0042-ELECTRICAL-01"
+        ],
+        "_confidence": "A",
+        "_source_rank": 0
+      }
+    ],
+    "memory": [
+      {
+        "chip_id": "STM32F103C8",
+        "memory_type": "Flash",
+        "size_kb": 64,
+        "organization": null,
+        "features": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0010-MODEL-01"
+        ],
+        "_confidence": "A",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32F103C8",
+        "memory_type": "SRAM",
+        "size_kb": 20,
+        "organization": null,
+        "features": null,
+        "_evidence_ids": [
+          "EV-1e54ce18e6c34c5b-0010-MODEL-01"
+        ],
+        "_confidence": "A",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "memory_type": "Flash",
+        "size_kb": 16,
+        "organization": null,
+        "features": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0009-MODEL-01"
+        ],
+        "_confidence": "A",
+        "_source_rank": 0
+      },
+      {
+        "chip_id": "STM32C031C4",
+        "memory_type": "SRAM",
+        "size_kb": 12,
+        "organization": null,
+        "features": null,
+        "_evidence_ids": [
+          "EV-896fc5601df00779-0009-MODEL-01"
+        ],
+        "_confidence": "A",
+        "_source_rank": 0
+      }
+    ]
+  },
+  "conflicts": [],
+  "validation_issues": [],
+  "errors": [],
+  "summary": {
+    "chips": 2,
+    "pin_mux": 343,
+    "peripherals": 8,
+    "electrical": 2,
+    "memory": 4
+  },
+  "evidence": [
+    {
+      "evidence_id": "EV-1e54ce18e6c34c5b-0010-MODEL-01",
+      "doc_id": "1e54ce18e6c34c5b",
+      "source_file": "stm32f103c8.pdf",
+      "page": 10,
+      "bbox": [
+        123.88,
+        131.46,
+        526.34,
+        495.18
+      ],
+      "kind": "model",
+      "confidence": "A",
+      "raw_text": "Description STM32F103x8, STM32F103xB 10/115 DS5319 Rev 20 2.1 Device overview Table 2. STM32F103xx medium-density device features and peripheral counts Peripheral STM32F103Tx STM32F103Cx STM32F103Rx STM32F103Vx Flash - Kbytes 64 128 64 128 64 128 64 128 SRAM - Kbytes 20 20 20 20 Timers General-purpose 33 3 3 Advanced-control 11 1 1 Communication SPI 12 2 2 I2C 12 2 2 USART 23 3 3 USB 11 1 1 CAN 11 1 1 GPIOs 26 37 51 80 12-bit synchronized ADC Number of channels 2 10 channels 2 10 channels 2 16 channels(1) 1. On the TFBGA64 package only 15 channels are avai lable (one analog input pin has been replaced by VREF+). 2 16 channels CPU frequency 72 MHz Operating voltage 2.0 to 3.6 V Operating temperatures Ambient temperatures: -40 to +85 °C / -40 to +105 °C (see Table 9) Junction temperature: -40 to + 125 °C (see Table 9) Packages VFQFPN36 LQFP48, UFQFPN48 LQFP64, TFBGA64 LQFP100, LFBGA100, UFBGA100"
+    },
+    {
+      "evidence_id": "EV-1e54ce18e6c34c5b-0028-PIN-01",
+      "doc_id": "1e54ce18e6c34c5b",
+      "source_file": "stm32f103c8.pdf",
+      "page": 28,
+      "bbox": [
+        67.18,
+        105.42,
+        528.82,
+        663.18
+      ],
+      "kind": "pin",
+      "confidence": "B",
+      "raw_text": "Pinouts and pin description STM32F103x8, STM32F103xB 28/115 DS5319 Rev 20 Table 5. Medium-density STM32F103xx pin definitions Pins Pin name Type(1) I / O Level(2) Main function(3) (after reset) Alternate functions(4) LFBGA100 UFBG100 LQFP48/UFQFPN48 TFBGA64 LQFP64 LQFP100 VFQFPN36 Default Remap A3 B2 - - - 1 - PE2 I/O FT PE2 TRACECK - B3 A1 - - - 2 - PE3 I/O FT PE3 TRACED0 - C3 B1 - - - 3 - PE4 I/O FT PE4 TRACED1 - D3 C2 - - - 4 - PE5 I/O FT PE5 TRACED2 - E3 D2 - - - 5 - PE6 I/O FT PE6 TRACED3 - B2 E2 1 B2 1 6 - V BAT S- V BAT -- A2 C1 2 A2 2 7 - PC13-TAMPER- RTC(5) I/O - PC13 (6) TAMPER-RTC - A1 D1 3 A1 3 8 - PC14-OSC32_IN (5) I/O - PC14 (6) OSC32_IN - B1 E1 4 B1 4 9 - PC15- OSC32_OUT(5) I/O - PC15 (6) OSC32_OUT - C2 F2 - - - 10 - V SS_5 S- V SS_5 -- D2 G2 - - - 11 - V DD_5 S- V DD_5 - C1 F1 5 C1 5 12 2 OSC_IN I - OSC_IN - PD0 (7) D1 G1 6 D1 6 13 3 OSC_OUT O - OSC_OUT PD1 (7) E1 H2 7 E1 7 14 4 NRST I/O - NRST - - F1 H1 - E3 8 15 - PC0 I/O - PC0 ADC12_IN10 - F2 J2 - E2 9 16 - PC1 I/O - PC1 ADC12_IN11 - E2 J3 - F2 10 17 - PC2 I/O - PC2 ADC12_IN12 - F3 K2 - - (8) 11 18 - PC3 I/O - PC3 ADC12_IN13 - G1 J1 8 F1 12 19 5 V SSA S- V SSA -- H1 K1 - - - 20 - V REF- S- V REF- -- J1 L1 - G1 (8"
+    },
+    {
+      "evidence_id": "EV-1e54ce18e6c34c5b-0029-PIN-02",
+      "doc_id": "1e54ce18e6c34c5b",
+      "source_file": "stm32f103c8.pdf",
+      "page": 29,
+      "bbox": [
+        67.18,
+        103.44,
+        528.82,
+        712.98
+      ],
+      "kind": "pin",
+      "confidence": "B",
+      "raw_text": "DS5319 Rev 20 29/115 STM32F103x8, STM32F103xB Pinouts and pin description 104 G2 L2 10 G2 14 23 7 PA0-WKUP I/O - PA0 WKUP/ USART2_CTS(9)/ ADC12_IN0/ TIM2_CH1_ ETR(9) - H2 M2 11 H2 15 24 8 PA1 I/O - PA1 USART2_RTS(9)/ ADC12_IN1/ TIM2_CH2(9) - J2 K3 12 F3 16 25 9 PA2 I/O - PA2 USART2_TX(9)/ ADC12_IN2/ TIM2_CH3(9) - K2 L3 13 G3 17 26 10 PA3 I/O - PA3 USART2_RX(9)/ ADC12_IN3/ TIM2_CH4(9) - E4 E3 - C2 18 27 - V SS_4 S- V SS_4 -- F4 H3 - D2 19 28 - V DD_4 S- V DD_4 -- G3 M3 14 H3 20 29 11 PA4 I/O - PA4 SPI1_NSS(9)/ USART2_CK(9)/ ADC12_IN4 - H3 K4 15 F4 21 30 12 PA5 I/O - PA5 SPI1_SCK(9)/ ADC12_IN5 - J3 L4 16 G4 22 31 13 PA6 I/O - PA6 SPI1_MISO(9)/ ADC12_IN6/ TIM3_CH1(9) TIM1_BKIN K3 M4 17 H4 23 32 14 PA7 I/O - PA7 SPI1_MOSI(9)/ ADC12_IN7/ TIM3_CH2(9) TIM1_CH1N G4 K5 - H5 24 33 PC4 I/O - PC4 ADC12_IN14 - H4 L5 - H6 25 34 PC5 I/O - PC5 ADC12_IN15 - J4 M5 18 F5 26 35 15 PB0 I/O - PB0 ADC12_IN8/ TIM3_CH3(9) TIM1_CH2N K4 M6 19 G5 27 36 16 PB1 I/O - PB1 ADC12_IN9/ TIM3_CH4(9) TIM1_CH3N Table 5. Medium-density STM32F103xx pin definitions (continued) Pins Pin name Type(1) I / O Level(2) Main function(3) (after reset) Alternate functions(4) LFBGA100 UFBG100 LQFP48/UFQFPN48 TFBGA64 LQFP64 LQFP100 "
+    },
+    {
+      "evidence_id": "EV-1e54ce18e6c34c5b-0030-PIN-03",
+      "doc_id": "1e54ce18e6c34c5b",
+      "source_file": "stm32f103c8.pdf",
+      "page": 30,
+      "bbox": [
+        67.18,
+        103.44,
+        528.82,
+        715.38
+      ],
+      "kind": "pin",
+      "confidence": "B",
+      "raw_text": "Pinouts and pin description STM32F103x8, STM32F103xB 30/115 DS5319 Rev 20 G5 L6 20 G6 28 37 17 PB2 I/O FT PB2/BOOT1 - - H5 M7 - - - 38 - PE7 I/O FT PE7 - TIM1_ETR J5 L7 - - - 39 - PE8 I/O FT PE8 - TIM1_CH1N K5 M8 - - - 40 - PE9 I/O FT PE9 - TIM1_CH1 G6 L8 - - - 41 - PE10 I/O FT PE10 - TIM1_CH2N H6 M9 - - - 42 - PE11 I/O FT PE11 - TIM1_CH2 J6 L9 - - - 43 - PE12 I/O FT PE12 - TIM1_CH3N K6 M10 - - - 44 - PE13 I/O FT PE13 - TIM1_CH3 G7 M11 - - - 45 - PE14 I/O FT PE14 - TIM1_CH4 H7 M12 - - - 46 - PE15 I/O FT PE15 - TIM1_BKIN J7 L10 21 G7 29 47 - PB10 I/O FT PB10 I2C2_SCL/ USART3_TX(9) TIM2_CH3 K7 L11 22 H7 30 48 - PB11 I/O FT PB11 I2C2_SDA/ USART3_RX(9) TIM2_CH4 E7 F12 23 D6 31 49 18 V SS_1 S- V SS_1 -- F7 G12 24 E6 32 50 19 V DD_1 S- V DD_1 -- K8 L12 25 H8 33 51 - PB12 I/O FT PB12 SPI2_NSS/ I2C2_SMBAl/ USART3_CK(9)/ TIM1_BKIN(9) - J8 K12 26 G8 34 52 - PB13 I/O FT PB13 SPI2_SCK/ USART3_CTS(9)/ TIM1_CH1N (9) - H8 K11 27 F8 35 53 - PB14 I/O FT PB14 SPI2_MISO/ USART3_RTS(9) TIM1_CH2N (9) - G8 K10 28 F7 36 54 - PB15 I/O FT PB15 SPI2_MOSI/ TIM1_CH3N(9) - K9 K9 - - - 55 - PD8 I/O FT PD8 - USART3_TX J9 K8 - - - 56 - PD9 I/O FT PD9 - USART3_RX Table 5. Medium-density STM32F103xx pin definitions"
+    },
+    {
+      "evidence_id": "EV-1e54ce18e6c34c5b-0031-PIN-04",
+      "doc_id": "1e54ce18e6c34c5b",
+      "source_file": "stm32f103c8.pdf",
+      "page": 31,
+      "bbox": [
+        67.18,
+        103.44,
+        528.82,
+        709.44
+      ],
+      "kind": "pin",
+      "confidence": "B",
+      "raw_text": "DS5319 Rev 20 31/115 STM32F103x8, STM32F103xB Pinouts and pin description 104 H9 J12 - - - 57 - PD10 I/O FT PD10 - USART3_CK G9 J11 - - - 58 - PD11 I/O FT PD11 - USART3_CTS K10 J10 - - - 59 - PD12 I/O FT PD12 - TIM4_CH1 / USART3_RTS J10 H12 - - - 60 - PD13 I/O FT PD13 - TIM4_CH2 H10 H11 - - - 61 - PD14 I/O FT PD14 - TIM4_CH3 G10 H10 - - - 62 - PD15 I/O FT PD15 - TIM4_CH4 F10 E12 - F6 37 63 - PC6 I/O FT PC6 - TIM3_CH1 E10 E11 E7 38 64 - PC7 I/O FT PC7 - TIM3_CH2 F9 E10 E8 39 65 - PC8 I/O FT PC8 - TIM3_CH3 E9 D12 - D8 40 66 - PC9 I/O FT PC9 - TIM3_CH4 D9 D11 29 D7 41 67 20 PA8 I/O FT PA8 USART1_CK/ TIM1_CH1(9)/ MCO - C9 D10 30 C7 42 68 21 PA9 I/O FT PA9 USART1_TX(9)/ TIM1_CH2(9) - D10 C12 31 C6 43 69 22 PA10 I/O FT PA10 USART1_RX(9)/ TIM1_CH3(9) - C10 B12 32 C8 44 70 23 PA11 I/O FT PA11 USART1_CTS/ CANRX(9)/ USBDM/ TIM1_CH4(9) - B10 A12 33 B8 45 71 24 PA12 I/O FT PA12 USART1_RTS/ CANTX(9) /USBDP TIM1_ETR(9) - A10 A11 34 A8 46 72 25 PA13 I/O FT JTMS/SWDIO - PA13 F8 C11 - - - 73 - Not connected - E6 F11 35 D5 47 74 26 V SS_2 S- V SS_2 -- F6 G11 36 E5 48 75 27 V DD_2 S- V DD_2 -- Table 5. Medium-density STM32F103xx pin definitions (continued) Pins Pin name Type(1) I / O Level(2) Main fu"
+    },
+    {
+      "evidence_id": "EV-1e54ce18e6c34c5b-0032-PIN-05",
+      "doc_id": "1e54ce18e6c34c5b",
+      "source_file": "stm32f103c8.pdf",
+      "page": 32,
+      "bbox": [
+        67.18,
+        103.44,
+        528.82,
+        698.46
+      ],
+      "kind": "pin",
+      "confidence": "B",
+      "raw_text": "Pinouts and pin description STM32F103x8, STM32F103xB 32/115 DS5319 Rev 20 A9 A10 37 A7 49 76 28 PA14 I/O FT JTCK/SWCLK - PA14 A8 A9 38 A6 50 77 29 PA15 I/O FT JTDI - TIM2_CH1_ ETR/ PA15 /SPI1_NSS B9 B11 - B7 51 78 PC10 I/O FT PC10 - USART3_TX B8 C10 - B6 52 79 PC11 I/O FT PC11 - USART3_RX C8 B10 - C5 53 80 PC12 I/O FT PC12 - USART3_CK D8 C9 - C1 - 81 2 PD0 I/O FT PD0 - CANRX E8 B9 - D1 - 82 3 PD1 I/O FT PD1 - CANTX B7 C8 B5 54 83 - PD2 I/O FT PD2 TIM3_ETR - C7 B8 - - - 84 - PD3 I/O FT PD3 - USART2_CTS D7 B7 - - - 85 - PD4 I/O FT PD4 - USART2_RTS B6 A6 - - - 86 - PD5 I/O FT PD5 - USART2_TX C6 B6 - - - 87 - PD6 I/O FT PD6 - USART2_RX D6 A5 - - - 88 - PD7 I/O FT PD7 - USART2_CK A7 A8 39 A5 55 89 30 PB3 I/O FT JTDO - TIM2_CH2 / PB3 TRACESWO SPI1_SCK A6 A7 40 A4 56 90 31 PB4 I/O FT JNTRST - TIM3_CH1/ PB4/ SPI1_MISO C5 C5 41 C4 57 91 32 PB5 I/O PB5 I2C1_SMBAl TIM3_CH2 / SPI1_MOSI B5 B5 42 D3 58 92 33 PB6 I/O FT PB6 I2C1_SCL (9)/ TIM4_CH1(9) USART1_TX A5 B4 43 C3 59 93 34 PB7 I/O FT PB7 I2C1_SDA(9)/ TIM4_CH2(9) USART1_RX D5 A4 44 B4 60 94 35 BOOT0 I BOOT0 - - Table 5. Medium-density STM32F103xx pin definitions (continued) Pins Pin name Type(1) I / O Level(2) Main function(3) (after reset)"
+    },
+    {
+      "evidence_id": "EV-1e54ce18e6c34c5b-0033-PIN-06",
+      "doc_id": "1e54ce18e6c34c5b",
+      "source_file": "stm32f103c8.pdf",
+      "page": 33,
+      "bbox": [
+        67.18,
+        103.44,
+        528.82,
+        390.78
+      ],
+      "kind": "pin",
+      "confidence": "B",
+      "raw_text": "DS5319 Rev 20 33/115 STM32F103x8, STM32F103xB Pinouts and pin description 104 B4 A3 45 B3 61 95 - PB8 I/O FT PB8 TIM4_CH3 (9) I2C1_SCL / CANRX A4 B3 46 A3 62 96 - PB9 I/O FT PB9 TIM4_CH4 (9) I2C1_SDA/ CANTX D4 C3 - - - 97 - PE0 I/O FT PE0 TIM4_ETR - C4 A2 - - - 98 - PE1 I/O FT PE1 - - E5 D3 47 D4 63 99 36 V SS_3 S- V SS_3 -- F5 C4 48 E4 64 100 1 V DD_3 S- V DD_3 -- 1. I = input, O = output, S = supply. 2. FT = 5 V tolerant. 3. Function availability depends upon the chosen device. For devices having reduced peripheral counts, it is always the lower number of peripheral that is included. For example, if a device has only one SPI and two USARTs, they are called SPI1 and USART1 and USART2, respectively. Refer to Table 2. 4. If several peripherals share the same I/O pin, to avoid c onflict between these alternate functions only one peripheral should be enabled at a time through the peripheral clock enable bit (in the corresponding RCC peripheral clock enable register). 5. PC13, PC14 and PC15 are supplied through the power switch. Si nce the switch only sinks a limited amount of current (3 mA), the use of GPIOs PC13 to PC15 in output mode is limited: the speed should not exceed 2 MHz wit"
+    },
+    {
+      "evidence_id": "EV-1e54ce18e6c34c5b-0038-ELECTRICAL-01",
+      "doc_id": "1e54ce18e6c34c5b",
+      "source_file": "stm32f103c8.pdf",
+      "page": 38,
+      "bbox": [
+        123.88,
+        159.42,
+        526.94,
+        638.46
+      ],
+      "kind": "electrical",
+      "confidence": "A",
+      "raw_text": "Electrical characteristics STM32F103x8, STM32F103xB 38/115 DS5319 Rev 20 5.3 Operating conditions 5.3.1 General operating conditions Table 9. General operating conditions Symbol Parameter Conditions Min Max Unit fHCLK Internal AHB clock frequency - 0 72 MHzfPCLK1 Internal APB1 clock frequency - 0 36 fPCLK2 Internal APB2 clock frequency - 0 72 VDD Standard operating voltage - 2 3.6 VVDDA (1) 1. When the ADC is used, refer to Table 47. Analog operating voltage (ADC not used) Must be the same potential as VDD (2) 2. It is recommended to power V DD and VDDA from the same source. A maximum difference of 300 mV between VDD and VDDA can be tolerated during power-up and operation. 23 . 6 Analog operating voltage (ADC used) 2.4 3.6 VBAT Backup operating voltage - 1.8 3.6 VIN I/O input voltage Standard IO –0.3 VDD+ 0.3 VFT IO(3) 3. To sustain a voltage higher than V DD + 0.3 V, the internal pull-up/pull-down resistors must be disabled. 2 V < VDD ≤ 3.6 V –0.3 5.5 VDD = 2 V –0.3 5.2 BOOT0 0 5.5 PD Power dissipation at TA = 85 °C for suffix 6 or TA = 105 °C for suffix 7(4) 4. If T A is lower, higher PD values are allowed as long as TJ does not exceed TJmax (see Section 6.10). LFBGA100 - 454 mW "
+    },
+    {
+      "evidence_id": "EV-896fc5601df00779-0009-MODEL-01",
+      "doc_id": "896fc5601df00779",
+      "source_file": "stm32c031c4.pdf",
+      "page": 9,
+      "bbox": [
+        67.18,
+        353.46,
+        528.02,
+        687.0
+      ],
+      "kind": "model",
+      "confidence": "A",
+      "raw_text": "DS13867 Rev 4 9/103 STM32C031x4/x6 Description 27 2 Description The STM32C031x4/x6 mainstream microcontrollers are based on high-performance Arm® Cortex®-M0+ 32-bit RISC core operating at up to 48 MHz frequency. Offering a high level of integration, they are suitable for a wide range of applications in consumer, industrial and appliance domains and ready for the Internet of Things (IoT) solutions. The devices incorporate a memory protection unit (MPU), high-speed embedded memories (12 Kbytes of SRAM and up to 32 Kbytes of flash program memory with read and write protection), DMA, an extensive range of system functions, enhanced I/Os, and peripherals. The devices offer standard communication interfaces (one I2Cs, one SPI / one I2S, and two USARTs), one 12-bit ADC (2.5 MSps) with up to 21 channels, a low-power RTC, an advanced control PWM timer, four general-purpose 16-bit timers, two watchdog timers, and a SysTick timer. The devices operate within ambient temperatures from -40 to 125°C and with supply voltages from 2.0 V to 3.6 V. Optimized dynamic consumption combined with power-saving modes allows the design of low-power applications. The devices are housed in packages with 20 to "
+    },
+    {
+      "evidence_id": "EV-896fc5601df00779-0010-PACKAGE-01",
+      "doc_id": "896fc5601df00779",
+      "source_file": "stm32c031c4.pdf",
+      "page": 10,
+      "bbox": [
+        67.18,
+        103.44,
+        528.02,
+        190.44
+      ],
+      "kind": "package",
+      "confidence": "A",
+      "raw_text": "Description STM32C031x4/x6 10/103 DS13867 Rev 4 Package TSSOP20 UFQFPN28 LQFP32 / UFQFPN32 LQFP48/ UFQFPN48 Bootloader USART1, I2C1 1. The numbers in brackets denote the count of SPI interfaces configurable as I2S interface. 2. Depends on order code. Refer to Section 7: Ordering information for details. Table 2. STM32C031x4/x6 family device features and peripheral counts (continued) Peripheral STM32C031_ _F4 _F6 _G4 _G6 _K4 _K6 _C4 _C6"
+    },
+    {
+      "evidence_id": "EV-896fc5601df00779-0031-PIN-01",
+      "doc_id": "896fc5601df00779",
+      "source_file": "stm32c031c4.pdf",
+      "page": 31,
+      "bbox": [
+        67.18,
+        427.92,
+        528.02,
+        719.28
+      ],
+      "kind": "pin",
+      "confidence": "B",
+      "raw_text": "DS13867 Rev 4 31/103 STM32C031x4/x6 Pinouts, pin desc ription and alternate functions 34 Table 11. Terms and symbols used in the pin assignment table Column Symbol Definition Pin name Terminal name corresponds to its by-default function at reset, unless otherwise specified in parenthesis under the pin name. Pin type S Supply pin I Input only pin I/O Input / output pin I/O structure FT 5 V tolerant I/O RST Reset pin with embedded weak pull-up resistor Options for FT I/Os _f I/O, Fm+ capable _a I/O, with analog switch function Note Upon reset, all I/Os are set as analog inputs, unless otherwise specified. Pin functions Alternate functions Functions selected through GPIOx_AFR registers Additional functions Functions directly selected/enabled through peripheral registers Table 12. Pin assignment and description Pin Pin name (function upon reset) Pin type I/O structure Note Alternate functions Additional functions TSSOP20 UFQFPN28 LQFP32 UFQFPN32 LQFP48 UFQFPN48 - - - - 1 1 PC13 I/O FT - TIM1_ETR, TIM1_BKIN RTC_TS, RTC_OUT1, WKUP2 ----2 2 PC14- OSCX_IN (PC14) I/O FT_f - USART1_TX, TIM1_ETR, TIM1_BKIN2, IR_OUT, USART2_RTS_DE_CK, TIM17_CH1, TIM3_CH2, I2C1_SDA, EVENTOUT OSCX_IN 2122- - PC1"
+    },
+    {
+      "evidence_id": "EV-896fc5601df00779-0032-PIN-02",
+      "doc_id": "896fc5601df00779",
+      "source_file": "stm32c031c4.pdf",
+      "page": 32,
+      "bbox": [
+        67.18,
+        103.44,
+        528.02,
+        708.84
+      ],
+      "kind": "pin",
+      "confidence": "B",
+      "raw_text": "Pinouts, pin description and alternate functions STM32C031x4/x6 32/103 DS13867 Rev 4 ----5 5 V R E F + S - - - - 434466V D D / V D D A S - - - - 545577V S S / VSSA S - - - - ----8 8 PF0-OSC_IN (PF0) I/O FT - TIM14_CH1 OSC_IN ----9 9 PF1- OSC_OUT (PF1) I/O FT - OSC_EN OSC_OUT 6566 1 0 1 0 P F 2 - N R S T I / O R S T , F T (1) MCO, TIM1_CH4 NRST 7677 1 1 1 1 P A 0 I / O F T _ a - USART2_CTS, TIM16_CH1, USART1_TX, TIM1_CH1 ADC_IN0, WKUP1 8788 1 2 1 2 P A 1 I / O F T _ a - SPI1_SCK/I2S1_CK, USART2_RTS_DE_CK, TIM17_CH1, USART1_RX, TIM1_CH2, I2C1_SMBA, EVENTOUT ADC_IN1 9899 1 3 1 3 P A 2 I / O F T _ a - SPI1_MOSI/I2S1_SD, USART2_TX, TIM16_CH1N, TIM3_ETR, TIM1_CH3 ADC_IN2, WKUP4, LSCO 1 091 0 1 0 1 4 1 4 P A 3 I / O F T _ a - USART2_RX, TIM1_CH1N, TIM1_CH4, EVENTOUT ADC_IN3 - - - - 15 15 PA4 I/O FT_a - SPI1_NSS/I2S1_WS, USART2_TX, TIM1_CH2N, TIM14_CH1, TIM17_CH1N, EVENTOUT ADC_IN4, RTC_OUT2 11 10 11 11 - - PA4 I/O FT_a - SPI1_NSS/I2S1_WS, USART2_TX, TIM1_CH2N, TIM14_CH1, TIM17_CH1N, EVENTOUT ADC_IN4, RTC_TS, RTC_OUT1, WKUP2 12 11 12 12 16 16 PA5 I/O FT_a - SPI1_SCK/I2S1_CK, USART2_RX, TIM1_CH3N, TIM1_CH1, EVENTOUT ADC_IN5 13 12 13 13 17 17 PA6 I/O FT_a - SPI1_MISO/I2S1_MCK, TIM3_CH1, TIM1"
+    },
+    {
+      "evidence_id": "EV-896fc5601df00779-0033-PIN-03",
+      "doc_id": "896fc5601df00779",
+      "source_file": "stm32c031c4.pdf",
+      "page": 33,
+      "bbox": [
+        67.18,
+        103.44,
+        528.02,
+        710.82
+      ],
+      "kind": "pin",
+      "confidence": "B",
+      "raw_text": "DS13867 Rev 4 33/103 STM32C031x4/x6 Pinouts, pin desc ription and alternate functions 34 - - - - 23 23 PB11 I/O FT_a - - ADC_IN21 - - - - 24 24 PB12 I/O FT_a - TIM1_BKIN2, TIM1_BKIN, EVENTOUT ADC_IN22 - - - - 25 25 PB13 I/O FT - TIM1_CH1N, EVENTOUT - - - - - 26 26 PB14 I/O FT - TIM1_CH2N, EVENTOUT - - - - - 27 27 PB15 I/O FT - TIM1_CH3N, EVENTOUT RTC_REFIN 15 16 18 18 28 28 PA8 I/O FT_a - MCO, USART2_TX, TIM1_CH1, EVENTOUT, SPI1_NSS/I2S1_WS, TIM1_CH2N, TIM1_CH3N, TIM3_CH3, TIM3_CH4, TIM14_CH1, USART1_RX, MCO2 ADC_IN8 - - 19 19 29 29 PA9 I/O FT_f (2) MCO, USART1_TX, TIM1_CH2, TIM3_ETR, I2C1_SCL, EVENTOUT - - 17 20 20 30 30 PC6 I/O FT - TIM3_CH1 - - - - - 31 31 PC7 I/O FT - TIM3_CH2 - - - 21 21 32 32 PA10 I/O FT_f (2) USART1_RX, TIM1_CH3, MCO2, TIM17_BKIN, I2C1_SDA, EVENTOUT - 16 18 22 22 33 33 PA11 [PA9] I/O FT_a (2) SPI1_MISO/I2S1_MCK, USART1_CTS, TIM1_CH4, TIM1_BKIN2 ADC_IN11 17 19 23 23 34 34 PA12 [PA10] I/O FT_a (2) SPI1_MOSI/I2S1_SD, USART1_RTS_DE_CK, TIM1_ETR, I2S_CKIN ADC_IN12 18 20 24 24 35 35 PA13 I/O FT_a (3) SWDIO, IR_OUT, TIM3_ETR, USART2_RX, EVENTOUT ADC_IN13 19 21 25 25 36 36 PA14- BOOT0 I/O FT_a (3) SWCLK, USART2_TX, EVENTOUT, SPI1_NSS/I2S1_WS, USART2_RX, TIM1_CH1, MC"
+    },
+    {
+      "evidence_id": "EV-896fc5601df00779-0034-PIN-04",
+      "doc_id": "896fc5601df00779",
+      "source_file": "stm32c031c4.pdf",
+      "page": 34,
+      "bbox": [
+        67.18,
+        103.44,
+        528.02,
+        470.82
+      ],
+      "kind": "pin",
+      "confidence": "B",
+      "raw_text": "Pinouts, pin description and alternate functions STM32C031x4/x6 34/103 DS13867 Rev 4 - 2 52 92 94 44 4 P B 5 I / O F T - SPI1_MOSI/I2S1_SD, TIM3_CH2, TIM16_BKIN, TIM3_CH3, I2C1_SMBA WKUP6 20 26 30 30 45 45 PB6 I/O FT_f - USART1_TX, TIM1_CH3, TIM16_CH1N, TIM3_CH3, USART1_RTS_DE_CK, USART1_CTS, I2C1_SCL, I2C1_SMBA, SPI1_MOSI/I2S1_SD, SPI1_MISO/I2S1_MCK, SPI1_SCK/I2S1_CK, TIM1_CH2, TIM3_CH1, TIM3_CH2, TIM16_BKIN, TIM17_BKIN WKUP3 ---- 4 6 4 6 P B 7 I / O F T _ f - USART1_RX, TIM1_CH4, TIM17_CH1N, TIM3_CH4, I2C1_SDA, EVENTOUT, USART2_CTS, TIM16_CH1, TIM3_CH1, I2C1_SCL - 1 27 31 31 - - PB7 I/O FT_f - USART1_RX, TIM1_CH4, TIM17_CH1N, TIM3_CH4, I2C1_SDA, EVENTOUT, USART2_CTS, TIM16_CH1, TIM3_CH1, I2C1_SCL RTC_REFIN - 2 83 23 24 74 7 P B 8 I / O F T _ f - USART2_CTS, TIM16_CH1, TIM3_CH1, I2C1_SCL, EVENTOUT - - - 1 1 48 48 PB9 I/O FT_f - IR_OUT, USART2_RTS_DE_CK, TIM17_CH1, TIM3_CH2, I2C1_SDA, EVENTOUT - 1. RST I/O structure when the PF2-NRST pin is configured as re set (input or input/output mode), FT I/O structure when the PF2-NRST pin is configured as GPIO 2. Pins PA9 and PA10 can be remapped in place of pins PA11 and PA12 (default mapping), using SYSCFG_CFGR1 register. 3. Upon reset, th"
+    },
+    {
+      "evidence_id": "EV-896fc5601df00779-0035-PIN_AF-01",
+      "doc_id": "896fc5601df00779",
+      "source_file": "stm32c031c4.pdf",
+      "page": 35,
+      "bbox": [
+        118.47,
+        80.28,
+        750.09,
+        472.32
+      ],
+      "kind": "pin_af",
+      "confidence": "A",
+      "raw_text": "STM32C031x4/x6 DS13867 Rev 4 35/103 Table 13. Port A alternate function mapping (AF0 to AF7) Port AF0 AF1 AF2 AF3 AF4 AF5 AF6 AF7 PA0 - USART2_CTS TIM16_CH1 - USART1_TX TIM1_CH1 - - PA1 SPI1_SCK/I2S1_ CK USART2_RTS_ DE_CK TIM17_CH1 - USART1_RX TIM1_CH2 I2C1_SMBA EVENTOUT PA2 SPI1_MOSI/I2S1 _SD USART2_TX TIM16_CH1N TIM3_ETR - TIM1_CH3 - - PA3 - USART2_RX TIM1_CH1N - - TIM1_CH4 - EVENTOUT PA4 SPI1_NSS/I2S1_ WS USART2_TX TIM1_CH2N - TIM14_CH1 TIM17_CH1N - EVENTOUT PA5 SPI1_SCK/I2S1_ CK USART2_RX TIM1_CH3N - - TIM1_CH1 - EVENTOUT PA6 SPI1_MISO/I2S1 _MCK TIM3_CH1 TIM1_BKIN - - TIM16_CH1 - - PA7 SPI1_MOSI/I2S1 _SD TIM3_CH2 TIM1_CH1N - TIM14_CH1 TIM17_CH1 - - PA8 MCO USART2_TX TIM1_CH1 - - - - EVENTOUT PA9 MCO USART1_TX TIM1_CH2 TIM3_ETR - - I2C1_SCL EVENTOUT PA10 - USART1_RX TIM1_CH3 MCO2 - TIM17_BKIN I2C1_SDA EVENTOUT PA11 SPI1_MISO/I2S1 _MCK USART1_CTS TIM1_CH4 - - TIM1_BKIN2 - - PA12 SPI1_MOSI/I2S1 _SD USART1_RTS_ DE_CK TIM1_ETR - - I2S_CKIN - - PA13 SWDIO IR_OUT - TIM3_ETR USART2_RX - - EVENTOUT P A 1 4 S W C L K U S A R T 2 _ T X ----- E V E N T O U T PA15 SPI1_NSS/I2S1_ WS USART2_RX TIM1_CH1 MCO2 USART1_RTS_ DE_CK - - EVENTOUT"
+    },
+    {
+      "evidence_id": "EV-896fc5601df00779-0036-PIN_AF-02",
+      "doc_id": "896fc5601df00779",
+      "source_file": "stm32c031c4.pdf",
+      "page": 36,
+      "bbox": [
+        118.47,
+        80.28,
+        750.09,
+        157.26
+      ],
+      "kind": "pin_af",
+      "confidence": "A",
+      "raw_text": "STM32C031x4/x6 36/103 DS13867 Rev 4 Table 14. Port A alternate function mapping (AF8 to AF15) Port AF8 AF9 AF10 AF11 AF12 AF13 AF14 AF15 PA8 SPI1_NSS/I2S1_ WS TIM1_CH2N TIM1_CH3N TIM3_CH3 TIM3_CH4 TIM14_CH1 USART1_RX MCO2 PA14 SPI1_NSS/I2S1_ WS USART2_RX TIM1_CH1 MCO2 USART1_RTS_ DE_CK --- Table 15. Port B alternate function mapping (AF0 to AF7) Port AF0 AF1 AF2 AF3 AF4 AF5 AF6 AF7 PB0 SPI1_NSS/I2S1_ WS T I M 3 _ C H 3 T I M 1 _ C H 2 N ----- PB1 TIM14_CH1 TIM3_CH4 TIM1_CH3N - - TIM1_CH2N - EVENTOUT PB2 USART1_RX - - MCO2 - - - EVENTOUT PB3 SPI1_SCK/I2S1_ CK TIM1_CH2 - TIM3_CH2 USART1_RTS_ DE_CK - - EVENTOUT PB4 SPI1_MISO/I2S1 _MCK TIM3_CH1 - - USART1_CTS TIM17_BKIN - EVENTOUT PB5 SPI1_MOSI/I2S1 _SD TIM3_CH2 TIM16_BKIN TIM3_CH3 - - I2C1_SMBA - PB6 USART1_TX TIM1_CH3 TIM16_CH1N TIM3_CH3 USART1_RTS_ DE_CK USART1_CTS I2C1_SCL I2C1_SMBA PB7 USART1_RX TIM1_CH4 TIM17_CH1N TIM3_CH4 - - I2C1_SDA EVENTOUT PB8 - USART2_CTS TIM16_CH1 TI M3_CH1 - - I2C1_SCL EVENTOUT PB9 IR_OUT USART2_RTS_ DE_CK TIM17_CH1 TIM3_CH2 - - I2C1_SDA EVENTOUT P B 1 0 -------- P B 1 1 -------- PB12 - TIM1_BKIN2 TIM1_BKIN - - - - EVENTOUT PB13 - - TIM1_CH1N - - - - EVENTOUT"
+    },
+    {
+      "evidence_id": "EV-896fc5601df00779-0036-PIN_AF-03",
+      "doc_id": "896fc5601df00779",
+      "source_file": "stm32c031c4.pdf",
+      "page": 36,
+      "bbox": [
+        118.47,
+        190.26,
+        750.09,
+        526.02
+      ],
+      "kind": "pin_af",
+      "confidence": "A",
+      "raw_text": "STM32C031x4/x6 36/103 DS13867 Rev 4 Table 14. Port A alternate function mapping (AF8 to AF15) Port AF8 AF9 AF10 AF11 AF12 AF13 AF14 AF15 PA8 SPI1_NSS/I2S1_ WS TIM1_CH2N TIM1_CH3N TIM3_CH3 TIM3_CH4 TIM14_CH1 USART1_RX MCO2 PA14 SPI1_NSS/I2S1_ WS USART2_RX TIM1_CH1 MCO2 USART1_RTS_ DE_CK --- Table 15. Port B alternate function mapping (AF0 to AF7) Port AF0 AF1 AF2 AF3 AF4 AF5 AF6 AF7 PB0 SPI1_NSS/I2S1_ WS T I M 3 _ C H 3 T I M 1 _ C H 2 N ----- PB1 TIM14_CH1 TIM3_CH4 TIM1_CH3N - - TIM1_CH2N - EVENTOUT PB2 USART1_RX - - MCO2 - - - EVENTOUT PB3 SPI1_SCK/I2S1_ CK TIM1_CH2 - TIM3_CH2 USART1_RTS_ DE_CK - - EVENTOUT PB4 SPI1_MISO/I2S1 _MCK TIM3_CH1 - - USART1_CTS TIM17_BKIN - EVENTOUT PB5 SPI1_MOSI/I2S1 _SD TIM3_CH2 TIM16_BKIN TIM3_CH3 - - I2C1_SMBA - PB6 USART1_TX TIM1_CH3 TIM16_CH1N TIM3_CH3 USART1_RTS_ DE_CK USART1_CTS I2C1_SCL I2C1_SMBA PB7 USART1_RX TIM1_CH4 TIM17_CH1N TIM3_CH4 - - I2C1_SDA EVENTOUT PB8 - USART2_CTS TIM16_CH1 TI M3_CH1 - - I2C1_SCL EVENTOUT PB9 IR_OUT USART2_RTS_ DE_CK TIM17_CH1 TIM3_CH2 - - I2C1_SDA EVENTOUT P B 1 0 -------- P B 1 1 -------- PB12 - TIM1_BKIN2 TIM1_BKIN - - - - EVENTOUT PB13 - - TIM1_CH1N - - - - EVENTOUT"
+    },
+    {
+      "evidence_id": "EV-896fc5601df00779-0037-PIN_AF-04",
+      "doc_id": "896fc5601df00779",
+      "source_file": "stm32c031c4.pdf",
+      "page": 37,
+      "bbox": [
+        118.49,
+        78.3,
+        750.07,
+        137.58
+      ],
+      "kind": "pin_af",
+      "confidence": "A",
+      "raw_text": "STM32C031x4/x6 DS13867 Rev 4 37/103 PB14 - - TIM1_CH2N - - - - EVENTOUT PB15 - - TIM1_CH3N - - - - EVENTOUT Table 15. Port B alternate function mapping (AF0 to AF7) (continued) Port AF0 AF1 AF2 AF3 AF4 AF5 AF6 AF7 Table 16. Port B alternate function mapping (AF8 to AF15) Port AF8 AF9 AF10 AF11 AF12 AF13 AF14 AF15 PB6 SPI1_MOSI/I2S1 _SD SPI1_MISO/I2S1 _MCK SPI1_SCK/I2S1_ CK TIM1_CH2 TIM3_CH1 TIM3_CH2 TIM16_BKIN TIM17_BKIN PB7 - USART2_CTS TIM16_CH1 TIM3_CH1 - - I2C1_SCL - Table 17. Port C alternate function mapping (AF0 to AF7) Port AF0 AF1 AF2 AF3 AF4 AF5 AF6 AF7 PC6 - TIM3_CH1 - - - - - - PC7 - TIM3_CH2 - - - - - - PC13 - TIM1_ETR TIM1_BKIN - - - - - PC14 USART1_TX TIM1_ ETR TIM1_BKIN2 - - - - - PC15 OSC32_EN OSC_EN TIM1_ETR TIM3_CH3 - - - - Table 18. Port C alternate function mapping (AF8 to AF15) Port AF8 AF9 AF10 AF11 AF12 AF13 AF14 AF15 PC14 IR_OUT USART2_RTS_ DE_CK TIM17_CH1 TIM3_CH2 - - I2C1_SDA EVENTOUT"
+    },
+    {
+      "evidence_id": "EV-896fc5601df00779-0037-PIN_AF-05",
+      "doc_id": "896fc5601df00779",
+      "source_file": "stm32c031c4.pdf",
+      "page": 37,
+      "bbox": [
+        118.49,
+        170.58,
+        750.07,
+        236.58
+      ],
+      "kind": "pin_af",
+      "confidence": "A",
+      "raw_text": "STM32C031x4/x6 DS13867 Rev 4 37/103 PB14 - - TIM1_CH2N - - - - EVENTOUT PB15 - - TIM1_CH3N - - - - EVENTOUT Table 15. Port B alternate function mapping (AF0 to AF7) (continued) Port AF0 AF1 AF2 AF3 AF4 AF5 AF6 AF7 Table 16. Port B alternate function mapping (AF8 to AF15) Port AF8 AF9 AF10 AF11 AF12 AF13 AF14 AF15 PB6 SPI1_MOSI/I2S1 _SD SPI1_MISO/I2S1 _MCK SPI1_SCK/I2S1_ CK TIM1_CH2 TIM3_CH1 TIM3_CH2 TIM16_BKIN TIM17_BKIN PB7 - USART2_CTS TIM16_CH1 TIM3_CH1 - - I2C1_SCL - Table 17. Port C alternate function mapping (AF0 to AF7) Port AF0 AF1 AF2 AF3 AF4 AF5 AF6 AF7 PC6 - TIM3_CH1 - - - - - - PC7 - TIM3_CH2 - - - - - - PC13 - TIM1_ETR TIM1_BKIN - - - - - PC14 USART1_TX TIM1_ ETR TIM1_BKIN2 - - - - - PC15 OSC32_EN OSC_EN TIM1_ETR TIM3_CH3 - - - - Table 18. Port C alternate function mapping (AF8 to AF15) Port AF8 AF9 AF10 AF11 AF12 AF13 AF14 AF15 PC14 IR_OUT USART2_RTS_ DE_CK TIM17_CH1 TIM3_CH2 - - I2C1_SDA EVENTOUT"
+    },
+    {
+      "evidence_id": "EV-896fc5601df00779-0037-PIN_AF-06",
+      "doc_id": "896fc5601df00779",
+      "source_file": "stm32c031c4.pdf",
+      "page": 37,
+      "bbox": [
+        118.49,
+        269.58,
+        750.07,
+        382.02
+      ],
+      "kind": "pin_af",
+      "confidence": "A",
+      "raw_text": "STM32C031x4/x6 DS13867 Rev 4 37/103 PB14 - - TIM1_CH2N - - - - EVENTOUT PB15 - - TIM1_CH3N - - - - EVENTOUT Table 15. Port B alternate function mapping (AF0 to AF7) (continued) Port AF0 AF1 AF2 AF3 AF4 AF5 AF6 AF7 Table 16. Port B alternate function mapping (AF8 to AF15) Port AF8 AF9 AF10 AF11 AF12 AF13 AF14 AF15 PB6 SPI1_MOSI/I2S1 _SD SPI1_MISO/I2S1 _MCK SPI1_SCK/I2S1_ CK TIM1_CH2 TIM3_CH1 TIM3_CH2 TIM16_BKIN TIM17_BKIN PB7 - USART2_CTS TIM16_CH1 TIM3_CH1 - - I2C1_SCL - Table 17. Port C alternate function mapping (AF0 to AF7) Port AF0 AF1 AF2 AF3 AF4 AF5 AF6 AF7 PC6 - TIM3_CH1 - - - - - - PC7 - TIM3_CH2 - - - - - - PC13 - TIM1_ETR TIM1_BKIN - - - - - PC14 USART1_TX TIM1_ ETR TIM1_BKIN2 - - - - - PC15 OSC32_EN OSC_EN TIM1_ETR TIM3_CH3 - - - - Table 18. Port C alternate function mapping (AF8 to AF15) Port AF8 AF9 AF10 AF11 AF12 AF13 AF14 AF15 PC14 IR_OUT USART2_RTS_ DE_CK TIM17_CH1 TIM3_CH2 - - I2C1_SDA EVENTOUT"
+    },
+    {
+      "evidence_id": "EV-896fc5601df00779-0037-PIN_AF-07",
+      "doc_id": "896fc5601df00779",
+      "source_file": "stm32c031c4.pdf",
+      "page": 37,
+      "bbox": [
+        118.49,
+        415.02,
+        750.07,
+        464.04
+      ],
+      "kind": "pin_af",
+      "confidence": "A",
+      "raw_text": "STM32C031x4/x6 DS13867 Rev 4 37/103 PB14 - - TIM1_CH2N - - - - EVENTOUT PB15 - - TIM1_CH3N - - - - EVENTOUT Table 15. Port B alternate function mapping (AF0 to AF7) (continued) Port AF0 AF1 AF2 AF3 AF4 AF5 AF6 AF7 Table 16. Port B alternate function mapping (AF8 to AF15) Port AF8 AF9 AF10 AF11 AF12 AF13 AF14 AF15 PB6 SPI1_MOSI/I2S1 _SD SPI1_MISO/I2S1 _MCK SPI1_SCK/I2S1_ CK TIM1_CH2 TIM3_CH1 TIM3_CH2 TIM16_BKIN TIM17_BKIN PB7 - USART2_CTS TIM16_CH1 TIM3_CH1 - - I2C1_SCL - Table 17. Port C alternate function mapping (AF0 to AF7) Port AF0 AF1 AF2 AF3 AF4 AF5 AF6 AF7 PC6 - TIM3_CH1 - - - - - - PC7 - TIM3_CH2 - - - - - - PC13 - TIM1_ETR TIM1_BKIN - - - - - PC14 USART1_TX TIM1_ ETR TIM1_BKIN2 - - - - - PC15 OSC32_EN OSC_EN TIM1_ETR TIM3_CH3 - - - - Table 18. Port C alternate function mapping (AF8 to AF15) Port AF8 AF9 AF10 AF11 AF12 AF13 AF14 AF15 PC14 IR_OUT USART2_RTS_ DE_CK TIM17_CH1 TIM3_CH2 - - I2C1_SDA EVENTOUT"
+    },
+    {
+      "evidence_id": "EV-896fc5601df00779-0038-PIN_AF-08",
+      "doc_id": "896fc5601df00779",
+      "source_file": "stm32c031c4.pdf",
+      "page": 38,
+      "bbox": [
+        118.47,
+        80.28,
+        750.09,
+        169.26
+      ],
+      "kind": "pin_af",
+      "confidence": "A",
+      "raw_text": "STM32C031x4/x6 38/103 DS13867 Rev 4 Table 19. Port D alternate function mapping Port AF0 AF1 AF2 AF3 AF4 AF5 AF6 AF7 PD0 EVENTOUT - TIM16_CH1 - - - - - PD1 EVENTOUT - TIM17_CH1 - - - - - PD2 - TIM3_ETR TIM1_CH1N - - - - - PD3 USART2_CTS - TIM1_CH2N - - - - - Table 20. Port F alternate function mapping Port AF0 AF1 AF2 AF3 AF4 AF5 AF6 AF7 PF0 - - TIM14_CH1 - - - - - P F 1 O S C _ E N ------- PF2 MCO TIM1_CH4 - - - - - - P F 3 --------"
+    },
+    {
+      "evidence_id": "EV-896fc5601df00779-0038-PIN_AF-09",
+      "doc_id": "896fc5601df00779",
+      "source_file": "stm32c031c4.pdf",
+      "page": 38,
+      "bbox": [
+        118.47,
+        202.26,
+        750.09,
+        291.3
+      ],
+      "kind": "pin_af",
+      "confidence": "A",
+      "raw_text": "STM32C031x4/x6 38/103 DS13867 Rev 4 Table 19. Port D alternate function mapping Port AF0 AF1 AF2 AF3 AF4 AF5 AF6 AF7 PD0 EVENTOUT - TIM16_CH1 - - - - - PD1 EVENTOUT - TIM17_CH1 - - - - - PD2 - TIM3_ETR TIM1_CH1N - - - - - PD3 USART2_CTS - TIM1_CH2N - - - - - Table 20. Port F alternate function mapping Port AF0 AF1 AF2 AF3 AF4 AF5 AF6 AF7 PF0 - - TIM14_CH1 - - - - - P F 1 O S C _ E N ------- PF2 MCO TIM1_CH4 - - - - - - P F 3 --------"
+    },
+    {
+      "evidence_id": "EV-896fc5601df00779-0042-ELECTRICAL-01",
+      "doc_id": "896fc5601df00779",
+      "source_file": "stm32c031c4.pdf",
+      "page": 42,
+      "bbox": [
+        67.18,
+        159.42,
+        528.02,
+        333.48
+      ],
+      "kind": "electrical",
+      "confidence": "A",
+      "raw_text": "Electrical characteristics STM32C031x4/x6 42/103 DS13867 Rev 4 5.3 Operating conditions 5.3.1 General operating conditions 5.3.2 Operating conditions at power-up / power-down The parameters given in Table 25 are derived from tests performed under the ambient temperature condition summarized in Table 24. 5.3.3 Embedded reset and power control block characteristics The parameters given in Table 26 are derived from tests performed under the ambient temperature conditions summarized in Table 24. Table 24. General operating conditions Symbol Parameter Conditions Min Max Unit VDD Standard operating voltage - 2.0 (1) 3.6 V VIN I/O input voltage - -0.3 Min (VDD + 3.6, 5.5) (2) V fPCLK APB clock frequency - - 48 MHz TA Ambient temperature(3) Suffix 6(4) -40 85 °CSuffix 7(4) -40 105 Suffix 3(4) -40 125 TJ Junction temperature Suffix 6(4) -40 105 °CSuffix 7(4) -40 125 Suffix 3(4) -40 130 1. When RESET is released func tionality is guaranteed down to VPDR min. 2. For operation with voltage higher than VDD +0.3 V, the internal pull-up and pull-down resistors must be disabled. 3. The T A(max) applies to PD(max). At PD < PD(max) the ambient temperature is allowed to go higher than TA(max) provide"
+    }
+  ]
+}

@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MCU 芯片审核</title>
+  <link rel="stylesheet" href="styles.css?v=review-server-state-2">
+</head>
+<body>
+  <header class="topbar">
+    <a class="batch-home" href="/">批次列表</a>
+    <div class="brand">
+      <strong>MCU 芯片审核</strong>
+      <span id="runSummary">正在读取数据…</span>
+      <span id="saveStatus" class="save-status" aria-live="polite">正在读取审核状态…</span>
+    </div>
+    <div class="top-actions">
+      <label class="search-wrap">
+        <span>搜索型号</span>
+        <input id="chipSearch" type="search" placeholder="例如 STM32H743VI" autocomplete="off">
+      </label>
+      <label class="filter-wrap">
+        <span>审核状态</span>
+        <select id="chipStatusFilter" aria-label="芯片审核状态筛选">
+          <option value="all">全部</option>
+          <option value="unreviewed">未审核</option>
+          <option value="issue">有问题</option>
+          <option value="pending_export">已审核·待导出</option>
+          <option value="exported">已导出</option>
+        </select>
+      </label>
+      <div class="export-wrap">
+        <label class="filter-wrap"><span>导出范围</span><select id="exportScope" aria-label="审核数据导出范围">
+          <option value="pending_export">本次待导出</option>
+          <option value="all_reviewed">全部已审核</option>
+          <option value="current">当前芯片</option>
+        </select></label>
+        <button id="exportReview" type="button">导出审核Excel</button>
+        <span id="exportMessage" aria-live="polite"></span>
+      </div>
+    </div>
+  </header>
+
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="side-heading">
+        <span>芯片</span>
+        <span id="visibleCount">0</span>
+        <button id="toggleSidebar" class="sidebar-toggle" type="button" aria-label="收起芯片列表" title="收起芯片列表">‹</button>
+      </div>
+      <div id="chipList" class="chip-list" aria-label="芯片列表"></div>
+    </aside>
+
+    <main class="workspace">
+      <section id="chipHeader" class="chip-header"></section>
+      <nav id="sheetTabs" class="sheet-tabs" aria-label="业务表"></nav>
+      <div class="review-split">
+        <section class="table-panel">
+          <div class="table-toolbar">
+            <strong id="sheetTitle"></strong>
+            <span id="sheetHint"></span>
+            <span id="tableEditMessage" class="table-edit-message" aria-live="polite"></span>
+            <div class="data-tools">
+              <button id="toggleDataMode" type="button">管理数据</button>
+              <button id="addRecord" type="button" hidden>新增记录</button>
+              <button id="editSelectedRecord" type="button" hidden>编辑选中行</button>
+              <button id="deleteSelectedRecord" type="button" class="delete-record" hidden>删除选中行</button>
+              <button id="resetSheetChanges" type="button" class="secondary" hidden>撤销本表修改</button>
+            </div>
+          </div>
+          <div id="tableViewport" class="table-viewport"></div>
+          <div id="pagination" class="pagination"></div>
+        </section>
+        <aside class="evidence-panel">
+          <div class="evidence-toolbar">
+            <strong>PDF 原始证据</strong>
+            <span id="currentPackage" class="package-badge" hidden></span>
+            <div class="evidence-zoom-controls" aria-label="证据图片缩放">
+              <button id="evidenceZoomOut" type="button" title="缩小证据图">−</button>
+              <button id="evidenceZoomFit" type="button" title="完整显示证据宽度">适宽</button>
+              <button id="evidenceZoomActual" type="button" title="按证据图片原始像素显示">原图</button>
+              <button id="evidenceZoomIn" type="button" title="放大证据图">＋</button>
+              <output id="evidenceZoomLabel">65%</output>
+            </div>
+            <span id="evidenceMeta">点击左侧记录查看</span>
+          </div>
+          <div id="evidenceTabs" class="evidence-tabs"></div>
+          <div id="evidenceViewport" class="evidence-viewport">
+            <div class="evidence-empty">请选择一条数据</div>
+          </div>
+        </aside>
+      </div>
+    </main>
+  </div>
+
+  <div id="fatalError" class="fatal-error" hidden></div>
+  <div id="evidenceModal" class="evidence-modal" hidden>
+    <button id="closeEvidenceModal" type="button" aria-label="关闭证据大图">关闭</button>
+    <img id="evidenceModalImage" alt="PDF 证据大图">
+  </div>
+  <div id="recordEditor" class="record-editor" hidden>
+    <section class="record-editor-card" role="dialog" aria-modal="true" aria-labelledby="recordEditorTitle">
+      <h2 id="recordEditorTitle">编辑记录</h2>
+      <div id="recordEditorFields" class="record-editor-fields"></div>
+      <div id="recordEditorError" class="record-editor-error" aria-live="polite"></div>
+      <footer>
+        <button id="cancelRecordEditor" type="button">取消</button>
+        <button id="saveRecordEditor" type="button" class="primary">保存修改</button>
+      </footer>
+    </section>
+  </div>
+  <script src="review_state.js?v=review-state-4" defer></script>
+  <script src="app.js?v=review-server-state-2" defer></script>
+</body>
+</html>
