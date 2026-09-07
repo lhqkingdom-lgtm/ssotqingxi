@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import importlib
 import gc
 import json
 from dataclasses import dataclass
@@ -12,6 +11,14 @@ from typing import Any
 from core.collector import Collector
 from core.documents import choose_pdfs, extract_page_texts
 from core.evidence import Evidence
+from core.engine_runtime import (
+    ExtractionRun,
+    compare_runs,
+    declarative_module,
+    isolated_run,
+    load_extractor,
+    resolve_engine_mode,
+)
 from core.metadata import attach_ingestion_metadata
 from core.profile import DocumentProfile, load_profile
 from core.runtime_metrics import format_memory, release_process_working_set
@@ -26,22 +33,45 @@ class FamilyRuntime:
     rules: dict[str, Any]
     aliases: dict[str, str]
     extractor: Any
+    declarative_extractor: Any | None
+    engine_mode: str
     rules_path: Path
 
 
-def load_family(profile_path: Path, aliases_override: Path | None = None) -> FamilyRuntime:
+def load_family(
+    profile_path: Path,
+    aliases_override: Path | None = None,
+    engine_mode: str | None = None,
+) -> FamilyRuntime:
     profile = load_profile(profile_path)
     aliases_path = aliases_override.resolve() if aliases_override else profile.aliases_file
     rules = {"rule_version": profile.config_version}
     alias_payload = json.loads(aliases_path.read_text(encoding="utf-8")) if aliases_path.exists() else {"aliases": {}}
     aliases = {compact(key): compact(value) for key, value in alias_payload.get("aliases", {}).items()}
-    module_name = profile.adapter
-    module = importlib.import_module(str(module_name))
-    if hasattr(module, "configure"):
-        module.configure(profile)
-    if not hasattr(module, "process_document"):
-        raise ValueError(f"extractor module {module_name} does not expose process_document")
-    return FamilyRuntime(profile, rules, aliases, module, profile.path)
+    mode = resolve_engine_mode(engine_mode, profile)
+    legacy = load_extractor(profile.adapter, profile)
+    declarative = (
+        load_extractor(declarative_module(profile), profile)
+        if mode in {"shadow", "declarative"}
+        else None
+    )
+    selected = declarative if mode == "declarative" else legacy
+    return FamilyRuntime(profile, rules, aliases, selected, declarative, mode, profile.path)
+
+
+def collector_delta(collector: Collector, checkpoint: dict[str, Any]) -> dict[str, list[dict[str, Any]]]:
+    """Capture rows inserted or changed by one document transaction."""
+    result: dict[str, list[dict[str, Any]]] = {}
+    for sheet, rows in collector.data.items():
+        changed = list(rows[checkpoint["data_lengths"][sheet] :])
+        for changed_sheet, key in checkpoint["before"]:
+            if changed_sheet != sheet or (changed_sheet, key) in checkpoint["inserted"]:
+                continue
+            current = collector.index[sheet].get(key)
+            if current is not None and current not in changed:
+                changed.append(current)
+        result[sheet] = changed
+    return result
 
 
 def profiles_from_registry(registry_path: Path) -> list[Path]:
@@ -93,6 +123,7 @@ def run_extraction(
     ingested_at: str | None = None,
     limit: int = 0,
     aliases_override: Path | None = None,
+    engine_mode: str | None = None,
 ) -> dict[str, Any]:
     if not profile_paths:
         raise ValueError("at least one document-family profile is required")
@@ -100,7 +131,7 @@ def run_extraction(
         raise ValueError("aliases override is only valid with one explicit profile")
     output_dir.mkdir(parents=True, exist_ok=True)
     schema = json.loads(schema_path.read_text(encoding="utf-8"))
-    families = [load_family(path, aliases_override) for path in profile_paths]
+    families = [load_family(path, aliases_override, engine_mode) for path in profile_paths]
     docs = choose_pdfs(input_dir)
     if limit:
         docs = docs[:limit]
@@ -109,6 +140,7 @@ def run_extraction(
     evidences: list[Evidence] = []
     errors = []
     review_queue: list[dict[str, Any]] = []
+    shadow_differences: list[dict[str, Any]] = []
     print(f"[inventory] unique_pdfs={len(docs)} input={input_dir}", flush=True)
     for index, doc in enumerate(docs, start=1):
         document_started = perf_counter()
@@ -140,6 +172,26 @@ def run_extraction(
 
             doc["table_progress"] = table_progress
             record, doc_evidence = family.extractor.process_document(doc, collector, family.aliases, family.profile)
+            if getattr(family, "engine_mode", "legacy") == "shadow":
+                declarative_run = isolated_run(
+                    family.declarative_extractor,
+                    doc,
+                    family.aliases,
+                    family.profile,
+                    schema,
+                )
+                legacy_run = ExtractionRun(
+                    record=record,
+                    evidences=doc_evidence,
+                    data=collector_delta(collector, checkpoint),
+                    conflicts=collector.conflicts[checkpoint["conflicts_length"] :],
+                )
+                for difference in compare_runs(legacy_run, declarative_run, schema):
+                    shadow_differences.append({
+                        "doc_id": doc["doc_id"],
+                        "profile_id": family.profile.profile_id,
+                        **difference,
+                    })
             if int(record.get("model_count") or 0) < 1 or not record.get("models"):
                 raise ValueError("document extraction produced zero concrete chip models")
             document_conflicts = collector.conflicts[checkpoint["conflicts_length"]:]
@@ -239,6 +291,11 @@ def run_extraction(
         "review_queue_count": len(review_queue),
         "summary": {sheet: len(rows) for sheet, rows in collector.data.items()},
     }
+    effective_modes = {getattr(family, "engine_mode", "legacy") for family in families}
+    if engine_mode is not None or effective_modes != {"legacy"}:
+        payload["engine_mode"] = engine_mode or next(iter(effective_modes))
+    if "shadow" in effective_modes:
+        payload["shadow_differences"] = shadow_differences
     with (output_dir / "extracted.json").open("w", encoding="utf-8") as stream:
         json.dump(payload, stream, ensure_ascii=False, indent=2)
     with (output_dir / "evidence.jsonl").open("w", encoding="utf-8") as stream:
@@ -247,5 +304,8 @@ def run_extraction(
     with (output_dir / "review_queue.jsonl").open("w", encoding="utf-8") as stream:
         for item in review_queue:
             stream.write(json.dumps(item, ensure_ascii=False) + "\n")
+    if "shadow" in effective_modes:
+        with (output_dir / "shadow_differences.json").open("w", encoding="utf-8") as stream:
+            json.dump(shadow_differences, stream, ensure_ascii=False, indent=2)
     print(json.dumps({"summary": payload["summary"], "documents": len(documents), "conflicts": len(collector.conflicts), "issues": len(issues), "errors": len(errors)}, ensure_ascii=False))
     return payload

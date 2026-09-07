@@ -21,6 +21,7 @@ def main() -> None:
     parser.add_argument("--ingested-by", default=getpass.getuser())
     parser.add_argument("--ingested-at", default=None)
     parser.add_argument("--limit", type=int, default=0)
+    parser.add_argument("--engine", choices=("legacy", "shadow", "declarative"), default=None)
     parser.add_argument(
         "--allow-partial",
         action="store_true",
@@ -37,8 +38,11 @@ def main() -> None:
         ingested_at=args.ingested_at,
         limit=args.limit,
         aliases_override=args.aliases,
+        engine_mode=args.engine,
     )
-    if not args.allow_partial and (payload["errors"] or payload["validation_issues"]):
+    if not args.allow_partial and (
+        payload["errors"] or payload["validation_issues"] or payload.get("shadow_differences")
+    ):
         raise SystemExit(2)
 
 

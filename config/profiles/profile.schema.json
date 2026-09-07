@@ -9,6 +9,14 @@
     "config_version": {"type": "string", "minLength": 1},
     "description": {"type": "string"},
     "adapter": {"type": "string", "pattern": "^family_extractors\\.[a-z0-9_]+$"},
+    "execution": {
+      "type": "object",
+      "properties": {
+        "default": {"enum": ["legacy", "shadow", "declarative"]},
+        "declarative_adapter": {"const": "family_extractors.declarative"}
+      },
+      "additionalProperties": false
+    },
     "detection": {
       "type": "object",
       "required": ["filename_any", "text_any", "minimum_score", "scan_pages"],

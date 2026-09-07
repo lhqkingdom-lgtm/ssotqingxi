@@ -12,7 +12,7 @@ import pdfplumber
 from core.collector import Collector
 from core.documents import extract_page_texts
 from core.evidence import Evidence
-from core.field_dictionary import load_field_dictionary, match_common_field
+from core.field_dictionary import load_field_dictionary, match_common_field, peripheral_count_field
 from core.ir import DocumentIR
 from core.profile import DocumentProfile, load_profile
 from core.table_ir_builder import build_document_ir
@@ -326,11 +326,9 @@ def parse_basic_defaults(text: str) -> dict[str, Any]:
         for pattern in patterns:
             match = re.search(pattern, normalized, re.I)
             if match:
-                defaults["peripherals"][ptype] = (
-                    {"channel_count": int(match.group(1))}
-                    if ptype == "ADC"
-                    else {"count": int(match.group(1))}
-                )
+                count_semantic = peripheral_count_field(FIELD_DICTIONARY, ptype)
+                output_field = "channel_count" if count_semantic in {"channel_count", "mixed"} else "count"
+                defaults["peripherals"][ptype] = {output_field: int(match.group(1))}
                 if ptype == "ADC" and match.lastindex and match.lastindex >= 2:
                     defaults["peripherals"][ptype]["resolution"] = int(match.group(2))
                 break
@@ -1067,8 +1065,14 @@ def process_document(
                             for value in values
                             if (count := peripheral_value(value, None)) is not None
                         ]
-                        count = scalar_or_none(sum(parsed_counts)) if parsed_counts else peripheral_value("", fallback)
-                        channel_count = (fallback or {}).get("channel_count")
+                        count_semantic = peripheral_count_field(FIELD_DICTIONARY, ptype)
+                        parsed_value = scalar_or_none(sum(parsed_counts)) if parsed_counts else None
+                        if count_semantic == "channel_count":
+                            count = (fallback or {}).get("count")
+                            channel_count = parsed_value if parsed_value is not None else (fallback or {}).get("channel_count")
+                        else:
+                            count = parsed_value if parsed_value is not None else peripheral_value("", fallback)
+                            channel_count = (fallback or {}).get("channel_count")
                     if count is None and channel_count is None:
                         continue
                     resolution = None

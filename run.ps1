@@ -18,6 +18,9 @@ param(
 
     [string]$IngestedBy = $env:USERNAME,
 
+    [ValidateSet('legacy', 'shadow', 'declarative')]
+    [string]$Engine,
+
     [switch]$SkipReview,
 
     [switch]$Strict
@@ -107,6 +110,9 @@ $extractArgs = @(
 )
 if (-not $Strict) {
     $extractArgs += '--allow-partial'
+}
+if ($Engine) {
+    $extractArgs += @('--engine', $Engine)
 }
 if ($resolvedProfiles.Count) {
     foreach ($profilePath in $resolvedProfiles) {

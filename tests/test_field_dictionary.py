@@ -10,7 +10,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from core.field_dictionary import load_field_dictionary, load_table_recipe, match_common_field
+from core.field_dictionary import load_field_dictionary, load_table_recipe, match_common_field, peripheral_count_field
 from core.units import convert_number
 
 
@@ -55,6 +55,21 @@ class CommonFieldDictionaryTests(unittest.TestCase):
         self.assertEqual(convert_number("2 MB", memory), 2048)
         self.assertEqual(convert_number("48000 kHz", frequency), 48)
         self.assertIsNone(convert_number("48", frequency))
+
+    def test_peripheral_count_semantics_are_dictionary_driven(self) -> None:
+        dictionary = load_field_dictionary(DICTIONARY)
+        self.assertEqual(peripheral_count_field(dictionary, "UART"), "instance_count")
+        self.assertEqual(peripheral_count_field(dictionary, "Touch"), "channel_count")
+        self.assertEqual(peripheral_count_field(dictionary, "PWM"), "channel_count")
+
+    def test_unknown_peripheral_count_semantic_is_rejected(self) -> None:
+        payload = json.loads(DICTIONARY.read_text(encoding="utf-8"))
+        payload["fields"]["peripheral_touch"]["count_field"] = "answer_count"
+        with tempfile.TemporaryDirectory() as temp_dir:
+            path = Path(temp_dir) / "dictionary.json"
+            path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "invalid peripheral count_field"):
+                load_field_dictionary(path)
 
 
 if __name__ == "__main__":

@@ -13,7 +13,7 @@ from core.text import compact
 REQUIRED_KEYS = {"profile_version", "profile_id", "config_version", "adapter", "detection", "dictionary", "model", "syntax", "topologies"}
 REQUIRED_MODEL_KEYS = {"pattern", "concatenation_boundary", "exact", "series", "aliases_file"}
 REQUIRED_SYNTAX_KEYS = {"package_pattern", "pin_pattern"}
-ALLOWED_TOP_LEVEL_KEYS = REQUIRED_KEYS | {"description", "normalization"}
+ALLOWED_TOP_LEVEL_KEYS = REQUIRED_KEYS | {"description", "normalization", "execution"}
 FORBIDDEN_PROFILE_KEYS = {
     "rules_file",
     "field_dictionary_file",
@@ -173,6 +173,16 @@ def load_profile(path: Path) -> DocumentProfile:
     forbidden = _forbidden_profile_paths(payload)
     if forbidden:
         raise ValueError(f"profile contains implementation details: {forbidden}")
+    execution = payload.get("execution", {})
+    if not isinstance(execution, dict):
+        raise ValueError("profile execution must be an object")
+    unknown_execution = set(execution) - {"default", "declarative_adapter"}
+    if unknown_execution:
+        raise ValueError(f"profile execution has unknown keys: {sorted(unknown_execution)}")
+    if execution.get("default", "legacy") not in {"legacy", "shadow", "declarative"}:
+        raise ValueError("profile execution.default must be legacy, shadow or declarative")
+    if "declarative_adapter" in execution and execution["declarative_adapter"] != "family_extractors.declarative":
+        raise ValueError("profile declarative_adapter must use the shared family_extractors.declarative module")
     if not isinstance(payload["model"], dict):
         raise ValueError("profile model must be an object")
     missing_model = REQUIRED_MODEL_KEYS - set(payload["model"])

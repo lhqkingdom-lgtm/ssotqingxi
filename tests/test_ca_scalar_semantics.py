@@ -122,6 +122,14 @@ class CaScalarSemanticsTests(unittest.TestCase):
             ["CAN", "UART"],
         )
 
+    def test_touch_quantity_is_a_channel_count_not_an_instance_count(self) -> None:
+        values = parse_basic_defaults("最大支持 24 通道触摸")
+        self.assertEqual(values["peripherals"]["Touch"], {"channel_count": 24})
+
+    def test_controller_quantity_remains_an_instance_count(self) -> None:
+        values = parse_basic_defaults("支持 2 个 UART")
+        self.assertEqual(values["peripherals"]["UART"], {"count": 2})
+
 
 if __name__ == "__main__":
     unittest.main()

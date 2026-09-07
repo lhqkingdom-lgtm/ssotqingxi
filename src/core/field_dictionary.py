@@ -10,6 +10,7 @@ from core.text import compact
 
 REQUIRED_FIELDS = {"flash_kb", "ram_kb", "max_freq_mhz"}
 REQUIRED_UNITS = {"memory_kb", "frequency_mhz"}
+COUNT_FIELDS = {"instance_count", "channel_count", "mixed"}
 
 
 def load_field_dictionary(
@@ -28,12 +29,31 @@ def load_field_dictionary(
             f"common field dictionary incomplete: fields={sorted(missing_fields)} units={sorted(missing_units)}"
         )
     result = copy.deepcopy(payload)
+    for field_name, definition in result["fields"].items():
+        if not field_name.startswith("peripheral_"):
+            continue
+        count_field = definition.get("count_field", "instance_count")
+        if count_field not in COUNT_FIELDS:
+            raise ValueError(f"invalid peripheral count_field for {field_name}: {count_field}")
     for field_name, aliases in (family_aliases or {}).items():
         if field_name not in result["fields"]:
             raise ValueError(f"family alias targets unknown common field: {field_name}")
         existing = result["fields"][field_name].setdefault("aliases", [])
         existing.extend(alias for alias in aliases if alias not in existing)
     return result
+
+
+def peripheral_count_field(dictionary: dict[str, Any], peripheral_type: str) -> str:
+    """Return whether an unqualified peripheral number counts units or channels."""
+    matches = [
+        definition.get("count_field", "instance_count")
+        for name, definition in dictionary.get("fields", {}).items()
+        if name.startswith("peripheral_")
+        and definition.get("canonical") == peripheral_type
+    ]
+    if len(matches) != 1:
+        raise ValueError(f"peripheral {peripheral_type!r} must have one dictionary count semantic")
+    return str(matches[0])
 
 
 def match_common_field(label: str, dictionary: dict[str, Any]) -> str | None:

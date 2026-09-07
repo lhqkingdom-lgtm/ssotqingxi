@@ -1,0 +1,38 @@
+{
+  "review_id": "r1-peripheral-count-dimensions",
+  "status": "confirmed",
+  "root_cause_layer": "field_semantics",
+  "invariant": "Controller quantities belong to instance_count; input/output/key/PWM channel quantities belong to channel_count.",
+  "source_checks": [
+    {
+      "document": "CA32F0156系列数据手册V1.0.0_20230620(1).pdf",
+      "page": 6,
+      "table": "1.1 器件一览表",
+      "observed_headers": ["12bit ADC Number of channels", "Touch Channels"],
+      "confirmed_models": ["CA32F0156L1", "CA32F0156L2", "CA32F0156N6"]
+    },
+    {
+      "document": "MiAi-603增强型系列MCU用户手册 REV 1.2.pdf",
+      "page": 9,
+      "table": "3-1 MJ603 系列具体型号功能特点",
+      "observed_headers": ["16 bit PWM 通道数量", "12 bit ADC 通道数量", "按键数量"],
+      "confirmed_models": 11
+    },
+    {
+      "document": "MiAi-6099A1 MCU用户手册_REV1.0.pdf",
+      "page": 10,
+      "table": "3-1 MiAi-609 系列具体型号功能特点",
+      "observed_headers": ["16 bit PWM 通道数量", "电容式触摸按键通道数量", "12 位 ADC 通道数量"],
+      "confirmed_models": ["MiAi-6099A1", "MiAi-6099A2", "MiAi-6099A3", "MiAi-6099A4", "MiAi-6099A5", "MiAi-6099A6"]
+    }
+  ],
+  "negative_checks": [
+    "UART/I2C/SPI quantities remain instance_count",
+    "ADC keeps independent instance and channel parsers",
+    "No model identifier, filename branch, page locator or expected numeric value was added to runtime code"
+  ],
+  "changed_records": {
+    "peripheral_rows": 37,
+    "change": "Move existing PWM and Touch counts from instance_count to channel_count; numeric values and evidence stay unchanged"
+  }
+}

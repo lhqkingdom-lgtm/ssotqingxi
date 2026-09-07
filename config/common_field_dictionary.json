@@ -46,33 +46,39 @@
     "peripheral_uart": {
       "aliases": ["uart数量", "uart", "usart", "lpuart"],
       "canonical": "UART",
+      "count_field": "instance_count",
       "unit": null
     },
     "peripheral_i2c": {
       "aliases": ["i2c数量", "i2c通道数量", "i2c", "i²c", "iic"],
       "canonical": "I2C",
+      "count_field": "instance_count",
       "unit": null
     },
     "peripheral_spi": {
       "aliases": ["spi数量", "spi[i2s]", "spi"],
       "exclude_aliases": ["qspi", "quadspi", "quad-spi", "octospi", "octo-spi"],
       "canonical": "SPI",
+      "count_field": "instance_count",
       "unit": null
     },
     "peripheral_pwm": {
       "aliases": ["pwm通道数量", "16bitpwm通道数量", "pwm"],
       "canonical": "PWM",
+      "count_field": "channel_count",
       "unit": null
     },
     "peripheral_adc": {
       "aliases": ["adc通道数量", "12bitadc通道数量", "12位adc", "adcchannels", "adc"],
       "exclude_aliases": ["vref", "reference"],
       "canonical": "ADC",
+      "count_field": "mixed",
       "unit": null
     },
     "peripheral_touch": {
       "aliases": ["触摸按键数量", "触摸按键数", "电容式触摸按键", "touchkey", "touchchannels", "touch"],
       "canonical": "Touch",
+      "count_field": "channel_count",
       "unit": null
     }
   },
