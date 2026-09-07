@@ -33,6 +33,11 @@ def fragment(page: int, title: str, rows: list[list[str]]) -> TableFragment:
     )
 
 
+def unnumbered_fragment(page: int, title: str, rows: list[list[str]]) -> TableFragment:
+    value = fragment(page, title, rows)
+    return TableFragment(**{**value.__dict__, "table_number": None, "continued": False})
+
+
 class TableEngineTests(unittest.TestCase):
     def test_table_identity_tolerates_pdf_letter_spacing(self) -> None:
         number, base, continued = table_identity("T able 2. Device features (continued)")
@@ -53,6 +58,33 @@ class TableEngineTests(unittest.TestCase):
         )
         self.assertEqual(len(groups), 1)
         self.assertEqual(groups[0].pages, [15, 16])
+
+    def test_repeated_entity_headers_recover_captionless_matrix_continuation(self) -> None:
+        groups = group_continued_tables(
+            [
+                fragment(
+                    4,
+                    "Table 1. Device features",
+                    [["Peripheral", "ZX10A1", "ZX10B2", "ZX10C3"], ["Flash", "32", "64", "128"]],
+                ),
+                unnumbered_fragment(
+                    5,
+                    "Description",
+                    [["Peripheral", "ZX10A1", "ZX10B2", "ZX10C3"], ["CPU frequency", "56", "", ""]],
+                ),
+            ]
+        )
+        self.assertEqual(len(groups), 1)
+        self.assertEqual(groups[0].pages, [4, 5])
+
+    def test_generic_headers_do_not_merge_unrelated_next_page_tables(self) -> None:
+        groups = group_continued_tables(
+            [
+                fragment(20, "Table 2. ADC characteristics", [["Symbol", "Parameter", "Min", "Typ", "Max", "Unit"]]),
+                unnumbered_fragment(21, "Electrical characteristics", [["Symbol", "Parameter", "Min", "Typ", "Max", "Unit"]]),
+            ]
+        )
+        self.assertEqual(len(groups), 2)
 
     def test_repeated_table_numbers_receive_document_unique_keys(self) -> None:
         groups = group_continued_tables(

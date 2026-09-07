@@ -2,13 +2,16 @@ from __future__ import annotations
 
 import sys
 import unittest
+import re
 from pathlib import Path
+from types import SimpleNamespace
 
 SRC = Path(__file__).resolve().parents[1] / "src"
 sys.path.insert(0, str(SRC))
 
 from core.profile import load_profile
-from family_extractors.stm32 import configure, configured_output_value, header_matches, infer_pin_header_depth, is_primary_voltage_row, missing_review_fields, model_codes, ordering_flash_value, package_column, parse_packages, split_functions, target_model
+from family_extractors.stm32 import configure, configured_output_value, header_matches, infer_pin_header_depth, is_primary_voltage_row, missing_review_fields, model_codes, ordering_flash_value, package_column, parse_packages, preferred_model_voltage, split_functions, target_model
+from topologies.pin_definition import extract_pin_definitions
 
 
 PROFILE_PATH = Path(__file__).resolve().parents[1] / "config" / "profiles" / "stm32_v1.json"
@@ -35,6 +38,8 @@ class Stm32ProfileTests(unittest.TestCase):
         self.assertEqual(model_codes("STM32C031C4"), ("C", "4"))
         self.assertEqual(model_codes("STM32F103C8"), ("C", "8"))
         self.assertEqual(model_codes("STM32WB55CC"), ("C", "C"))
+        self.assertEqual(model_codes("STM32G0B1KB"), ("K", "B"))
+        self.assertEqual(model_codes("STM32L4R5ZI"), ("Z", "I"))
 
     def test_generic_mpu_family_name_is_not_misread_as_ordering_codes(self) -> None:
         with self.assertRaisesRegex(ValueError, "unsupported STM32 model code"):
@@ -51,6 +56,21 @@ class Stm32ProfileTests(unittest.TestCase):
         self.assertTrue(is_primary_voltage_row(["VDD", "Standard operating voltage"], locator))
         self.assertFalse(is_primary_voltage_row(["VDD12", "Standard operating voltage"], locator))
         self.assertFalse(is_primary_voltage_row(["VDDUSB", "Standard operating voltage"], locator))
+
+    def test_model_specific_voltage_precedes_document_wide_operating_range(self) -> None:
+        self.assertEqual(
+            preferred_model_voltage(
+                {"voltage_min": 1.71, "voltage_max": 3.6},
+                {"voltage_min": 1.62, "voltage_max": 3.6},
+            ),
+            (1.71, 3.6),
+        )
+
+    def test_document_wide_voltage_is_used_only_as_fallback(self) -> None:
+        self.assertEqual(
+            preferred_model_voltage({}, {"voltage_min": 1.62, "voltage_max": 3.6}),
+            (1.62, 3.6),
+        )
 
     def test_output_vocabulary_matches_template(self) -> None:
         self.assertEqual(configured_output_value("memory_type", "ram", "SRAM"), "SRAM_Internal")
@@ -89,6 +109,19 @@ class Stm32ProfileTests(unittest.TestCase):
 
     def test_package_column_does_not_use_broad_fuzzy_matching(self) -> None:
         self.assertIsNone(package_column(["LPFQ100"], package_types=["LQFP100"]))
+
+    def test_bga_header_can_use_generic_kind_with_exact_ball_count(self) -> None:
+        self.assertEqual(
+            package_column(
+                ["UBGA132_SMPS", "BGA132", "UFBGA169"],
+                package_types=["UFBGA132"],
+                qualifier_preferences=["unqualified", "smps"],
+            ),
+            1,
+        )
+
+    def test_bga_header_does_not_cross_ball_counts(self) -> None:
+        self.assertIsNone(package_column(["BGA144"], package_types=["UFBGA132"]))
 
     def test_pin_header_depth_is_inferred_from_roles_and_package_column(self) -> None:
         rows = [
@@ -133,6 +166,16 @@ class Stm32ProfileTests(unittest.TestCase):
             1,
         )
 
+    def test_short_variant_qualifier_is_tokenized_not_matched_inside_package_name(self) -> None:
+        self.assertEqual(
+            package_column(
+                ["LQFP64 - GP", "LQFP64 - N", "UFBGA64 - N"],
+                package_types=["LQFP64"],
+                qualifier_preferences=["unqualified", "gp", "smps", "n"],
+            ),
+            0,
+        )
+
     def test_ambiguous_package_columns_have_no_first_column_fallback(self) -> None:
         self.assertIsNone(
             package_column(
@@ -141,6 +184,56 @@ class Stm32ProfileTests(unittest.TestCase):
                 qualifier_preferences=["unqualified", "smps"],
             )
         )
+
+    def test_full_header_path_binds_repeated_package_to_target_product_group(self) -> None:
+        rows = [
+            ["Pin number", "", "", "", "Pin name", "Alternate functions"],
+            ["STM32L4R5xxx", "", "STM32L4R9xxx", "", "", ""],
+            ["LQFP100", "", "LQFP100", "", "", ""],
+            ["10", "", "90", "", "PA0", "TIM2_CH1"],
+        ]
+
+        class FakeTable:
+            bbox = (0, 0, 100, 100)
+            table_id = "pin-table"
+
+            def extract(self):
+                return rows
+
+            def column_header_paths(self, depth):
+                paths = {
+                    0: ("Pin number", "STM32L4R5xxx", "LQFP100"),
+                    2: ("Pin number", "STM32L4R9xxx", "LQFP100"),
+                    4: ("Pin name",),
+                    5: ("Alternate functions",),
+                }
+                return {column: path[:depth] for column, path in paths.items()}
+
+            def cell_id(self, row, column):
+                return f"cell-{row}-{column}"
+
+        recipe = {
+            "required_header_terms": ["alternatefunctions"],
+            "required_header_groups": [["pin", "name"]],
+            "pin_name_aliases": ["pinname"],
+            "pin_name_alias_groups": [["pin", "name"]],
+            "pin_name_exclude": ["pinnumber"],
+            "pin_name_preference": "rightmost",
+            "function_aliases": ["alternatefunctions"],
+            "default_function_aliases": ["mainfunction"],
+            "column_qualifier_preferences": ["unqualified", "smps"],
+        }
+        pdf = SimpleNamespace(pages=[SimpleNamespace(find_tables=lambda: [FakeTable()])])
+        extracted = extract_pin_definitions(
+            pdf,
+            model="STM32L4R5VI",
+            pin_pattern=re.compile(r"P[A-Z]\d+"),
+            normalize_function=lambda value: value,
+            series_identity="STM32L4R5",
+            recipe=recipe,
+            package_types=["LQFP100"],
+        )
+        self.assertEqual(extracted[0]["rows"][0].pin_number, 10)
 
     def test_rotated_pin_name_header_can_match_term_conjunction(self) -> None:
         self.assertTrue(header_matches("retfa...pin(functionreset)nameafter", ["pinname"], [["pin", "name"]]))

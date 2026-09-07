@@ -5,6 +5,7 @@ from collections.abc import Iterable
 from typing import Any
 
 from core.text import clean, compact
+from core.qualifiers import preferred_qualifier_indices
 from topologies.matrix_observer import table_grids, text_direction_variants
 
 
@@ -43,6 +44,7 @@ def find_package_values(
     package_label_terms: Iterable[str],
     pin_header_terms: Iterable[str],
     preferred_package_kinds: Iterable[str] = (),
+    qualifier_preferences: Iterable[str] = (),
     candidate_table_ids: Iterable[str] = (),
 ) -> tuple[list[str], int | None, tuple[float, ...] | None]:
     expected_counts = tuple(int(item) for item in pin_counts)
@@ -80,13 +82,19 @@ def find_package_values(
             ).lower()
             if not any(term in header_text for term in normalized_pin_headers):
                 continue
-            matches = []
+            qualified_matches: list[tuple[str, str]] = []
             for cell in (cell for row in rows[:2] for cell in row):
                 for variant in text_direction_variants(clean(cell)):
                     for package in parse_package_names(variant, package_pattern):
                         count_match = re.search(r"(\d+)$", package)
-                        if count_match and int(count_match.group(1)) in expected_counts and package not in matches:
-                            matches.append(package)
+                        if count_match and int(count_match.group(1)) in expected_counts:
+                            item = (package, clean(cell))
+                            if item not in qualified_matches:
+                                qualified_matches.append(item)
+            selected = preferred_qualifier_indices(
+                [header for _, header in qualified_matches], qualifier_preferences
+            )
+            matches = list(dict.fromkeys(qualified_matches[index][0] for index in selected))
             if matches:
                 bbox = table.bboxes[fragment - 1] if fragment - 1 < len(table.bboxes) else (0, 0, 0, 0)
                 return _canonical_order(matches, preferred_package_kinds), page, bbox

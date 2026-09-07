@@ -1,0 +1,14 @@
+{
+  "files": [
+    {"name":"infineon_xmc5200.pdf","vendor":"Infineon","family":"XMC","layout":"infineon-spec-id","source_url":"https://www.infineon.com/assets/row/public/documents/30/49/infineon-xmc5200-datasheet-datasheet-en.pdf"},
+    {"name":"infineon_xmc7200.pdf","vendor":"Infineon","family":"XMC","layout":"infineon-spec-id","source_url":"https://www.infineon.com/assets/row/public/documents/30/49/infineon-xmc7200-datasheet-datasheet-en.pdf"},
+    {"name":"microchip_samd21.pdf","vendor":"Microchip","family":"SAM","layout":"microchip-chaptered-matrix","source_url":"https://ww1.microchip.com/downloads/aemDocuments/documents/MCU32/ProductDocuments/DataSheets/SAM-D21-DA1-Family-Data-Sheet-DS40001882.pdf"},
+    {"name":"microchip_samd5xe5x.pdf","vendor":"Microchip","family":"SAM","layout":"microchip-chaptered-matrix","source_url":"https://ww1.microchip.com/downloads/aemDocuments/documents/MCU32/ProductDocuments/DataSheets/SAM-D5x-E5x-Family-Data-Sheet-DS60001507.pdf"},
+    {"name":"st_stm8l101g3.pdf","vendor":"STMicroelectronics","family":"STM8L","layout":"stm8-low-power","source_url":"https://www.st.com/resource/en/datasheet/stm8l101g3.pdf"},
+    {"name":"st_stm8l152r8.pdf","vendor":"STMicroelectronics","family":"STM8L","layout":"stm8-low-power","source_url":"https://www.st.com/resource/en/datasheet/stm8l152r8.pdf"},
+    {"name":"st_stm8s003f3.pdf","vendor":"STMicroelectronics","family":"STM8S","layout":"stm8-mainstream","source_url":"https://www.st.com/resource/en/datasheet/stm8s003f3.pdf"},
+    {"name":"st_stm8s105c4.pdf","vendor":"STMicroelectronics","family":"STM8S","layout":"stm8-mainstream","source_url":"https://www.st.com/resource/en/datasheet/stm8s105c4.pdf"},
+    {"name":"ti_mspm0g150x.pdf","vendor":"Texas Instruments","family":"MSPM0","layout":"ti-device-comparison","source_url":"https://www.ti.com/lit/gpn/MSPM0G1507"},
+    {"name":"ti_mspm0l111x.pdf","vendor":"Texas Instruments","family":"MSPM0","layout":"ti-device-comparison","source_url":"https://www.ti.com/lit/gpn/MSPM0L1116"}
+  ]
+}

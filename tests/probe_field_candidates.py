@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import argparse
-import json
 import sys
 from pathlib import Path
 
@@ -11,9 +10,14 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from core.documents import extract_page_texts
 from core.candidate_executor import reduce_candidates, validate_hard_rules
+from core.field_dictionary import load_table_recipe
 from core.field_rules import observations_to_candidates
+from core.profile import load_profile
 from core.table_ir_builder import build_document_ir
+from core.table_index import build_table_index
 from family_rules.stm32_matrix import select_observations
+from family_extractors.stm32 import feature_candidate_tables, source_ordering_config
+import json
 
 
 def main() -> None:
@@ -21,14 +25,15 @@ def main() -> None:
     parser.add_argument("--pdf", required=True, type=Path)
     parser.add_argument("--model", required=True)
     args = parser.parse_args()
-    profile = json.loads((ROOT / "config" / "profiles" / "stm32_v1.json").read_text(encoding="utf-8"))
-    recipe_path = (ROOT / "config" / "profiles" / profile["table_presets"]["feature_matrix"]).resolve()
-    recipe = json.loads(recipe_path.read_text(encoding="utf-8"))
+    profile = load_profile(ROOT / "config" / "profiles" / "stm32_v1.json")
+    recipe = load_table_recipe(profile.topology_preset("feature_matrix"), profile.field_aliases)
     texts = extract_page_texts(args.pdf)
-    document = build_document_ir(args.pdf, texts, page_limit=int(profile["stm32"]["feature_page_limit"]))
-    table, observations = select_observations(list(document.tables), args.model.upper(), recipe, profile["stm32"])
+    document = build_document_ir(args.pdf, texts)
+    table_index = build_table_index(document)
+    ordering = source_ordering_config(profile, texts)
+    table, observations = select_observations(feature_candidate_tables(document, table_index), args.model.upper(), recipe, ordering)
     candidates = observations_to_candidates(observations, recipe, entity_type="chip")
-    reduced, aggregates = reduce_candidates(candidates, recipe, package_pattern=profile["patterns"]["package"])
+    reduced, aggregates = reduce_candidates(candidates, recipe, package_pattern=profile.package_re.pattern)
     issues = validate_hard_rules(candidates, aggregates, recipe)
     report = {
         "file": args.pdf.name,

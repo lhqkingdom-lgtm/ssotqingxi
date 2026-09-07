@@ -6,6 +6,7 @@ from typing import Any
 
 from core.header_paths import disambiguate_semantic_column, first_complete_header_prefix, select_column_by_header_path
 from core.pin_ir import PinDefinitionIR
+from core.qualifiers import preferred_qualifier_indices
 from core.text import clean, compact
 from core.validation import valid_pin_designator
 from topologies.matrix_observer import text_direction_variants
@@ -46,12 +47,43 @@ def _contains_package_header(value: str, expected_package: str) -> bool:
     normalized = compact(value).upper()
     if expected_package in normalized:
         return True
+    # Datasheet pin tables sometimes shorten a concrete ball-grid package
+    # (for example UFBGA132) to BGA132, while other columns retain vendor
+    # qualifiers.  Bind by the BGA class and exact ball count, then let the
+    # existing qualifier policy distinguish unqualified/SMPS variants.  Do
+    # not apply this relaxation to leaded packages, whose prefixes are not
+    # interchangeable.
+    expected_bga = re.fullmatch(r"[A-Z]*BGA(\d+)", expected_package)
+    if expected_bga and re.search(rf"(?:^|_)[A-Z]*BGA{re.escape(expected_bga.group(1))}(?:_|$)", normalized):
+        return True
     width = len(expected_package)
     return any(
         _equal_with_one_adjacent_transposition(normalized[index : index + width], expected_package)
         or _equal_with_one_character_move(normalized[index : index + width], expected_package)
         for index in range(max(0, len(normalized) - width + 1))
     )
+
+
+def _package_header_columns(
+    headers: list[Any],
+    pin_counts: tuple[int, ...],
+    expected_packages: list[str],
+) -> list[int]:
+    matches: list[int] = []
+    package_kinds = ("LQFP", "UFQFPN", "TSSOP", "VFQFPN", "BGA", "WLCSP")
+    for index, cell in enumerate(headers):
+        for value in text_direction_variants(clean(cell)):
+            if (
+                any(_contains_package_header(value, package) for package in expected_packages)
+                or (
+                    not expected_packages
+                    and any(str(item) in value for item in pin_counts)
+                    and any(package in value for package in package_kinds)
+                )
+            ):
+                matches.append(index)
+                break
+    return list(dict.fromkeys(matches))
 
 
 def package_column(
@@ -67,36 +99,18 @@ def package_column(
     )
     expected_packages = list(dict.fromkeys(compact(item).upper() for item in package_types if compact(item)))
     for expected_package in expected_packages:
-        matches = []
-        for index, cell in enumerate(headers):
-            for value in text_direction_variants(clean(cell)):
-                if _contains_package_header(value, expected_package):
-                    matches.append(index)
-                    break
-        matches = list(dict.fromkeys(matches))
+        matches = _package_header_columns(headers, pin_counts, [expected_package])
         if len(matches) > 1:
             preferences = [compact(item).lower() for item in qualifier_preferences if compact(item)]
-            qualifiers = [item for item in preferences if item != "unqualified"]
-            for preference in preferences:
-                preferred = []
-                for index in matches:
-                    header = compact(" ".join(text_direction_variants(clean(headers[index])))).lower()
-                    if preference == "unqualified" and not any(term in header for term in qualifiers):
-                        preferred.append(index)
-                    elif preference != "unqualified" and preference in header:
-                        preferred.append(index)
-                if len(preferred) == 1:
-                    return preferred[0]
-            return None
+            selected_indices = preferred_qualifier_indices(
+                [clean(headers[index]) for index in matches],
+                preferences,
+            )
+            matches = [matches[index] for index in selected_indices]
+            return matches[0] if len(matches) == 1 else None
         if matches:
             return matches[0]
-    pin_count_matches = []
-    package_kinds = ("LQFP", "UFQFPN", "TSSOP", "VFQFPN", "BGA", "WLCSP")
-    for index, cell in enumerate(headers):
-        for value in text_direction_variants(clean(cell)):
-            if any(str(item) in value for item in pin_counts) and any(package in value for package in package_kinds):
-                pin_count_matches.append(index)
-                break
+    pin_count_matches = _package_header_columns(headers, pin_counts, [])
     return pin_count_matches[0] if len(set(pin_count_matches)) == 1 else None
 
 
@@ -153,8 +167,21 @@ def infer_pin_header_depth(
             return False
         if not all(all(term in header_text for term in group) for group in normalized_groups):
             return False
+        pin_counts = (
+            tuple(int(item) for item in pin_count)
+            if isinstance(pin_count, (list, tuple, set))
+            else (() if pin_count is None else (int(pin_count),))
+        )
+        # Header completeness needs proof that a package column exists, not a
+        # premature unique choice.  Repeated package names can be disambiguated
+        # only after the full merged header path (including model family) is
+        # available.
         return any(
-            package_column(row, pin_count, [target] if target else [], qualifier_preferences) is not None
+            _package_header_columns(
+                list(row),
+                pin_counts,
+                [compact(target).upper()] if target else [],
+            )
             for target in package_targets
             for row in prefix
         )
@@ -169,6 +196,15 @@ def _header_matches(value: str, terms: Iterable[str], groups: Iterable[Iterable[
 
 def first_pin_data_row(rows: list[list[Any]], identity_header_aliases: Iterable[str]) -> int | None:
     """Find data start from a semantic identity header and a numeric lead column."""
+    def plausible_identity(value: Any) -> bool:
+        token = compact(value).upper()
+        if not token or re.fullmatch(r"[-–—]+|\d+|\([A-Z0-9]+\)", token):
+            return False
+        # Pin identities are normally alphanumeric labels (VDD, NRST, PA0,
+        # P0.5).  Requiring a real label prevents vertical package-header
+        # fragments such as ``8`` and ``(A)`` from ending the header early.
+        return bool(re.search(r"[A-Z]{2,}|P\d", token))
+
     aliases = tuple(compact(item).upper() for item in identity_header_aliases if compact(item))
     for header_row, row in enumerate(rows):
         for declared_col, cell in enumerate(row):
@@ -183,7 +219,7 @@ def first_pin_data_row(rows: list[list[Any]], identity_header_aliases: Iterable[
             for row_index in range(header_row + 1, len(rows)):
                 current = rows[row_index]
                 has_identity = any(
-                    column < len(current) and compact(current[column])
+                    column < len(current) and plausible_identity(current[column])
                     for column in candidate_cols
                 )
                 has_number = any(
@@ -294,16 +330,16 @@ def extract_pin_definitions(
             for target_package in package_targets:
                 search_packages = [target_package] if target_package else []
                 for header_index, package_headers in enumerate(header_rows):
-                    candidate = package_column(package_headers, pin_count, search_packages, preferences)
-                    if candidate is None:
-                        continue
                     selected = select_column_by_header_path(
                         table.column_header_paths(header_index + 1),
                         leaf_terms=tuple(search_packages),
                         identity_terms=(series_identity,),
                         qualifier_preferences=tuple(preferences),
                     )
-                    selection = (header_index, candidate if selected is None else selected, target_package)
+                    candidate = package_column(package_headers, pin_count, search_packages, preferences)
+                    if candidate is None and selected is None:
+                        continue
+                    selection = (header_index, selected if selected is not None else candidate, target_package)
                     if selection not in selections:
                         selections.append(selection)
                     break

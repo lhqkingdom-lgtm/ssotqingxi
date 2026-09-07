@@ -3,6 +3,7 @@
 !/output/.gitkeep
 /logs/
 /tmp/
+/quality_corpus/
 
 # Local dependency links and caches
 /node_modules/
@@ -21,4 +22,3 @@ Thumbs.db
 
 # Generated inspection sidecars
 *.inspect.ndjson
-

@@ -235,6 +235,65 @@ class ModelMatrixTests(unittest.TestCase):
         )
         self.assertEqual(select_model_column(rows, "STM32MP257CA", RECIPE, ORDERING), 1)
 
+    def test_interleaved_family_stem_uses_final_package_and_density_codes(self) -> None:
+        rows = rectangular_rows(
+            [
+                ["Peripheral", "", "STM32L4R5xx", ""],
+                ["Memory", "Flash memory in Kbytes", "1024", "2048"],
+                ["", "SRAM in Kbytes", "640", "640"],
+            ]
+        )
+        ordering = {"flash_code_kb": {"G": 1024, "I": 2048}}
+        self.assertEqual(select_model_column(rows, "STM32L4R5ZI", RECIPE, ordering), 3)
+
+    def test_short_matrix_headers_inherit_family_prefix_from_seed(self) -> None:
+        rows = rectangular_rows(
+            [
+                ["Peripheral", "", "R5VI\nR5VG", "R7VI", "R5ZI\nR5ZG"],
+                ["Memory", "Flash memory", "1 Mbyte for xxxG devices\n2 Mbyte for xxxI devices", "", ""],
+                ["", "Max. CPU frequency", "120 MHz", "", ""],
+            ]
+        )
+        self.assertEqual(select_model_column(rows, "STM32L4R5ZI", RECIPE, ORDERING), 4)
+        self.assertEqual(
+            discover_model_variants(rows, "STM32L4R5ZI", RECIPE, ORDERING),
+            ["STM32L4R5VI", "STM32L4R5VG", "STM32L4R7VI", "STM32L4R5ZI", "STM32L4R5ZG"],
+        )
+
+    def test_wrapped_caption_can_fall_back_to_structural_entity_column(self) -> None:
+        matrix = TableGroup(
+            "table-2",
+            (
+                TableFragment(
+                    page=15,
+                    bbox=(0.0, 0.0, 500.0, 700.0),
+                    rows=rectangular_rows([
+                        ["Peripheral", "", "R5VI\nR5VG", "R5ZI\nR5ZG"],
+                        ["Memory", "Flash memory", "1 Mbyte", "2 Mbyte"],
+                        ["", "SRAM", "640 Kbyte", "640 Kbyte"],
+                    ]),
+                    page_text="Table 2. family features and peripheral counts",
+                    title="Table 2. STM32L4R5xx, STM32L4R7xx and STM32L4R9xx",
+                    table_number="2",
+                    continued=False,
+                    rotation=0,
+                ),
+            ),
+        )
+        mapped = map_model_matrix(matrix, "STM32L4R5ZI", RECIPE, ORDERING)
+        self.assertEqual({item.key for item in mapped}, {"field:flash_kb", "field:ram_kb"})
+
+    def test_suffix_only_matrix_supports_interleaved_family_stem(self) -> None:
+        rows = rectangular_rows(
+            [
+                ["Peripheral", "", "STM32G0B1_ _KB _KC _KE _RB _RC _RE", "", "", "", "", ""],
+                ["Flash memory in Kbytes", "", "128", "256", "512", "128", "256", "512"],
+                ["SRAM in Kbytes", "", "144", "144", "144", "144", "144", "144"],
+            ]
+        )
+        ordering = {"flash_code_kb": {"B": 128, "C": 256, "E": 512}}
+        self.assertEqual(select_model_column(rows, "STM32G0B1RE", RECIPE, ordering), 7)
+
     def test_continued_pages_share_target_column_and_map_fields(self) -> None:
         matrix = group(
             (15, [["Peripherals", "STM32F405RG", "STM32F405ZG"], ["Flash memory (Kbyte)", "1024", "1024"], ["SRAM (Kbyte)", "192", "192"]]),
@@ -300,7 +359,7 @@ class ModelMatrixTests(unittest.TestCase):
         )
         mapped = map_model_matrix(matrix, "STM32U585AI", RECIPE, ORDERING)
         reduced = reduce_values(mapped, RECIPE, package_pattern=r"LQFP\s*\d+")
-        self.assertEqual(reduced["peripherals"]["ADC"], {"count": 24, "resolution": 14})
+        self.assertEqual(reduced["peripherals"]["ADC"], {"count": 1, "channel_count": 24, "resolution": 14})
 
 
 if __name__ == "__main__":

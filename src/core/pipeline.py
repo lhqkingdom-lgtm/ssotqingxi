@@ -15,6 +15,7 @@ from core.evidence import Evidence
 from core.metadata import attach_ingestion_metadata
 from core.profile import DocumentProfile, load_profile
 from core.runtime_metrics import format_memory, release_process_working_set
+from core.semantic_validation import validate_data_semantics
 from core.text import compact
 from core.validation import validate
 
@@ -141,6 +142,24 @@ def run_extraction(
             record, doc_evidence = family.extractor.process_document(doc, collector, family.aliases, family.profile)
             if int(record.get("model_count") or 0) < 1 or not record.get("models"):
                 raise ValueError("document extraction produced zero concrete chip models")
+            document_conflicts = collector.conflicts[checkpoint["conflicts_length"]:]
+            unresolved_conflicts = [
+                conflict
+                for conflict in document_conflicts
+                if conflict.get("resolution") == "ambiguous_same_revision"
+            ]
+            if unresolved_conflicts:
+                record["status"] = "partial"
+                record.setdefault("sections", {})["conflicts"] = "partial"
+                record.setdefault("review_items", []).append({
+                    "section": "conflicts",
+                    "status": "partial",
+                    "source_file": str(doc["path"]),
+                    "pages": None,
+                    "error_type": "UnresolvedConflict",
+                    "reason": f"{len(unresolved_conflicts)} same-revision conflicts require review; candidates were retained",
+                    "conflict_count": len(unresolved_conflicts),
+                })
             if len(families) > 1:
                 record["family_id"] = family.profile.profile_id
             documents.append(record)
@@ -195,11 +214,17 @@ def run_extraction(
             release_process_working_set()
             print(format_memory("after_document_release"), flush=True)
     for sheet, rows in collector.data.items():
-        collector.data[sheet] = [row for row in rows if not row.get("_ambiguous")]
-        collector.data[sheet].sort(key=lambda row: tuple(str(row.get(key) or "") for key in ("chip_id", "pin_number", "pin_name", "function_name", "peripheral_type", "param_name", "memory_type")))
+        rows.sort(key=lambda row: tuple(str(row.get(key) or "") for key in ("chip_id", "pin_number", "pin_name", "function_name", "peripheral_type", "param_name", "memory_type")))
     timestamp = ingested_at or datetime.now().astimezone().isoformat(timespec="seconds")
     attach_ingestion_metadata(collector.data, evidences, ingested_by, timestamp)
     issues = validate(collector.data, schema)
+    issues.extend(validate_data_semantics(collector.data))
+    issues.extend({
+        "level": "error",
+        "sheet": conflict.get("sheet"),
+        "key": list(conflict.get("key", ())),
+        "message": "unresolved same-revision conflict; review retained candidates before publishing",
+    } for conflict in collector.conflicts if conflict.get("resolution") == "ambiguous_same_revision")
     rule_versions = {family.profile.profile_id: family.rules.get("rule_version") for family in families}
     rules_files = {family.profile.profile_id: str(family.rules_path.resolve()) for family in families}
     payload = {

@@ -1,0 +1,280 @@
+{
+  "version": 1,
+  "sets": {
+    "blind_b_round1": {
+      "input_dir": "quality_corpus\\blind_b_round1",
+      "files": [
+        {
+          "name": "stm32f030c6.pdf",
+          "bytes": 2004523,
+          "sha256": "f8039b4a4746829275f62d9d4955a29753a668ae3664ef34a18f14360c199d41",
+          "vendor": "STMicroelectronics",
+          "family": "STM32F",
+          "layout": "legacy-mainstream",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32f030c6.pdf"
+        },
+        {
+          "name": "stm32f051c8.pdf",
+          "bytes": 2040880,
+          "sha256": "80848a22804e56d895b2b971b4b28386bd7cc1612d9d3bc3e7268942512b9daa",
+          "vendor": "STMicroelectronics",
+          "family": "STM32F",
+          "layout": "legacy-mainstream",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32f051c8.pdf"
+        },
+        {
+          "name": "stm32f072rb.pdf",
+          "bytes": 2158858,
+          "sha256": "b01391f094699aeb6a4d952b587c06d13a81a0d300161342efa0534f6695ef08",
+          "vendor": "STMicroelectronics",
+          "family": "STM32F",
+          "layout": "legacy-mainstream",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32f072rb.pdf"
+        },
+        {
+          "name": "stm32f091rc.pdf",
+          "bytes": 1958324,
+          "sha256": "f96a82f50344c61915fac03b3e274fe6aafec40ad98d3c0bc7ec07007497f0e0",
+          "vendor": "STMicroelectronics",
+          "family": "STM32F",
+          "layout": "legacy-mainstream",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32f091rc.pdf"
+        },
+        {
+          "name": "stm32f100rb.pdf",
+          "bytes": 1828268,
+          "sha256": "360e3be010cabad4ad70d33107c689ab5c47c53e5a83adb0ea55954f9e180998",
+          "vendor": "STMicroelectronics",
+          "family": "STM32F",
+          "layout": "legacy-mainstream",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32f100rb.pdf"
+        },
+        {
+          "name": "stm32f303re.pdf",
+          "bytes": 2390805,
+          "sha256": "5009ea08fac5eb658a49a2a777342f76ddcb94a3277eef398f944872f647062c",
+          "vendor": "STMicroelectronics",
+          "family": "STM32F",
+          "layout": "classic-performance",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32f303re.pdf"
+        },
+        {
+          "name": "stm32f334k8.pdf",
+          "bytes": 2662988,
+          "sha256": "4727fd8b6c87c9e0780998ac347f98900e6f1573e534780b405584b38acafbf9",
+          "vendor": "STMicroelectronics",
+          "family": "STM32F",
+          "layout": "classic-performance",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32f334k8.pdf"
+        },
+        {
+          "name": "stm32f446re.pdf",
+          "bytes": 2895510,
+          "sha256": "5cea36b6dc2b623dbe7710b7b75bcb628043aa3bca0f981b7d493c46cc4e6327",
+          "vendor": "STMicroelectronics",
+          "family": "STM32F",
+          "layout": "classic-performance",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32f446re.pdf"
+        },
+        {
+          "name": "stm32f746zg.pdf",
+          "bytes": 3235677,
+          "sha256": "23a9ec5dfd13ea2ec9d776f75a03e32d25a7bf49ef2d5438a36157e6d97c23fa",
+          "vendor": "STMicroelectronics",
+          "family": "STM32F",
+          "layout": "high-performance",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32f746zg.pdf"
+        },
+        {
+          "name": "stm32f767zi.pdf",
+          "bytes": 3549741,
+          "sha256": "c8996762772dd1b02dd3cc40aa17d9e5962134d0354f59fcf8fe0d14090918e1",
+          "vendor": "STMicroelectronics",
+          "family": "STM32F",
+          "layout": "high-performance",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32f767zi.pdf"
+        },
+        {
+          "name": "stm32g030c8.pdf",
+          "bytes": 2056282,
+          "sha256": "b86b1fa79171e8ed521745305bff03d43d75f07729c077e0c4e7badc896711d3",
+          "vendor": "STMicroelectronics",
+          "family": "STM32G",
+          "layout": "modern-mainstream",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32g030c8.pdf"
+        },
+        {
+          "name": "stm32g031k8.pdf",
+          "bytes": 2882659,
+          "sha256": "0e25cbbf2cd173845545b61b91a9a7011724b4e5bd7b00498176129d48684e99",
+          "vendor": "STMicroelectronics",
+          "family": "STM32G",
+          "layout": "modern-mainstream",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32g031k8.pdf"
+        },
+        {
+          "name": "stm32g071rb.pdf",
+          "bytes": 3287914,
+          "sha256": "a83ee1377da65257fe5e7d09a2da8027ecff1bce0594a2176b18cddca47fa7cc",
+          "vendor": "STMicroelectronics",
+          "family": "STM32G",
+          "layout": "modern-mainstream",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32g071rb.pdf"
+        },
+        {
+          "name": "stm32g081rb.pdf",
+          "bytes": 3294227,
+          "sha256": "59c2e10d98f48fc87d4a2ee242aa7b3bd645d805b77a0594752e4a3b74ac9e52",
+          "vendor": "STMicroelectronics",
+          "family": "STM32G",
+          "layout": "modern-mainstream",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32g081rb.pdf"
+        },
+        {
+          "name": "stm32g0b1re.pdf",
+          "bytes": 3971768,
+          "sha256": "8433e47bc5da5cac459a1d3d5a6add183655061f5655d3c653248de65ca535c9",
+          "vendor": "STMicroelectronics",
+          "family": "STM32G",
+          "layout": "modern-mainstream",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32g0b1re.pdf"
+        },
+        {
+          "name": "stm32g431rb.pdf",
+          "bytes": 2654849,
+          "sha256": "c2e903e3de4b05c0b5d77e5bfda037ce65e8652c41f7a4fe092f6893c870f6e9",
+          "vendor": "STMicroelectronics",
+          "family": "STM32G",
+          "layout": "modern-performance",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32g431rb.pdf"
+        },
+        {
+          "name": "stm32g491re.pdf",
+          "bytes": 2674221,
+          "sha256": "978130a7363b37d3149770dc21631ef1f17e2208b2153d67377e7ef35f669056",
+          "vendor": "STMicroelectronics",
+          "family": "STM32G",
+          "layout": "modern-performance",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32g491re.pdf"
+        },
+        {
+          "name": "stm32h723zg.pdf",
+          "bytes": 3195081,
+          "sha256": "0a5bec4bfab75d44768e917943db1ffc8ebf7f291b6cdd2a17b8d1642e210492",
+          "vendor": "STMicroelectronics",
+          "family": "STM32H",
+          "layout": "high-performance",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32h723zg.pdf"
+        },
+        {
+          "name": "stm32h735zg.pdf",
+          "bytes": 3736397,
+          "sha256": "48fc619b23cdb3e0e5b8b7fa33f3fe3410ec9c78f5127d0cc37ac36d45dfaf67",
+          "vendor": "STMicroelectronics",
+          "family": "STM32H",
+          "layout": "high-performance",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32h735zg.pdf"
+        },
+        {
+          "name": "stm32h753zi.pdf",
+          "bytes": 7020854,
+          "sha256": "607b9eadaef1c54f93e02d7cea58c862a1552bda47c848d96f2de5c0ee84c032",
+          "vendor": "STMicroelectronics",
+          "family": "STM32H",
+          "layout": "high-performance",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32h753zi.pdf"
+        },
+        {
+          "name": "stm32l010k8.pdf",
+          "bytes": 1944911,
+          "sha256": "c8fa40a8a26f1b2570a35716e4a591801d36ff1d9f077224a809daadacfa9378",
+          "vendor": "STMicroelectronics",
+          "family": "STM32L",
+          "layout": "legacy-low-power",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32l010k8.pdf"
+        },
+        {
+          "name": "stm32l031k6.pdf",
+          "bytes": 1829263,
+          "sha256": "9726c48418e03f62aa3f094138a49d51338fc32fce2c4daa31a031d322853b60",
+          "vendor": "STMicroelectronics",
+          "family": "STM32L",
+          "layout": "legacy-low-power",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32l031k6.pdf"
+        },
+        {
+          "name": "stm32l052c8.pdf",
+          "bytes": 3034823,
+          "sha256": "ccec04f26ebfb0365e89210e8175a12d993110b8d58ce1cbf88be2db113cffe8",
+          "vendor": "STMicroelectronics",
+          "family": "STM32L",
+          "layout": "legacy-low-power",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32l052c8.pdf"
+        },
+        {
+          "name": "stm32l073rz.pdf",
+          "bytes": 2328618,
+          "sha256": "2453eed55752e9c793fde78a005c559473dba25551bbcdc5944cd1d7c15f7164",
+          "vendor": "STMicroelectronics",
+          "family": "STM32L",
+          "layout": "legacy-low-power",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32l073rz.pdf"
+        },
+        {
+          "name": "stm32l151c8.pdf",
+          "bytes": 2130759,
+          "sha256": "5223296de36fe9040a2dc4c18c5a5f7126cd727d0246a6ed0e44a06f0cfd2380",
+          "vendor": "STMicroelectronics",
+          "family": "STM32L",
+          "layout": "legacy-low-power",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32l151c8.pdf"
+        },
+        {
+          "name": "stm32l4r5zi.pdf",
+          "bytes": 6128584,
+          "sha256": "049cc34598b1e11aa8183333f6f759cc66d0e8322fedb7135912557768b4c21e",
+          "vendor": "STMicroelectronics",
+          "family": "STM32L",
+          "layout": "modern-low-power",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32l4r5zi.pdf"
+        },
+        {
+          "name": "stm32u031c6.pdf",
+          "bytes": 9241448,
+          "sha256": "bc1d0cecfff8f1521c481334116e43353a67e55225c5eb5df1d24bc20d00c410",
+          "vendor": "STMicroelectronics",
+          "family": "STM32U/WB",
+          "layout": "ultra-low-power",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32u031c6.pdf"
+        },
+        {
+          "name": "stm32u083rc.pdf",
+          "bytes": 10357169,
+          "sha256": "de2a1571cb4429bf1d148649b24b43658313e57aadf2bc9a23db070771259212",
+          "vendor": "STMicroelectronics",
+          "family": "STM32U/WB",
+          "layout": "ultra-low-power",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32u083rc.pdf"
+        },
+        {
+          "name": "stm32u575zi.pdf",
+          "bytes": 4789425,
+          "sha256": "f3de0b5e62ad45ed46bdaf8dbebec358edae1fd3305c558c5835589085454345",
+          "vendor": "STMicroelectronics",
+          "family": "STM32U/WB",
+          "layout": "ultra-low-power",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32u575zi.pdf"
+        },
+        {
+          "name": "stm32wb15cc.pdf",
+          "bytes": 2150588,
+          "sha256": "9002c68de9dd479738aa84a4c3e9fe26794e22ca17e116a14256033125a052d3",
+          "vendor": "STMicroelectronics",
+          "family": "STM32U/WB",
+          "layout": "wireless",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32wb15cc.pdf"
+        }
+      ]
+    }
+  }
+}

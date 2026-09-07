@@ -26,7 +26,7 @@ from core.table_engine import (
 from core.text import clean, compact, parse_number, parse_range, scalar_or_none
 from core.units import convert_number
 from topologies.matrix_observer import table_grids
-from topologies.operating_conditions import is_absolute_maximum_context
+from topologies.operating_conditions import is_absolute_maximum_context, parse_compound_operating_conditions
 from topologies.pin_definition import first_pin_data_row, headers_spanning_value_columns
 
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -112,11 +112,25 @@ def associate_pin_number_headers(
     variant_for_col = {column: header_meta.get(column, ([], ""))[1] for column in number_cols}
 
     # A physical pin-number cell can span several narrower package header
-    # cells (for example SOP28 and SSOP28 share one pin-number column). Text
-    # flattening cannot represent that relation, so prefer table geometry.
+    # cells (for example SOP28 and SSOP28 share one pin-number column).  Use
+    # geometry to supplement the reconstructed multi-row header.  Individual
+    # vertical header cells may contain only fragments such as ``SOP2`` or
+    # ``SOP1``; those fragments must not replace a complete ``SOP28`` or
+    # ``SOP16`` recovered by joining the header rows.
     for column, packages in (spanned_packages or {}).items():
         if column in packages_for_col and packages:
-            packages_for_col[column] = list(dict.fromkeys(packages))
+            merged = list(packages_for_col[column])
+            for package in packages:
+                if any(existing != package and existing.startswith(package) for existing in merged):
+                    continue
+                merged = [
+                    existing
+                    for existing in merged
+                    if not (existing != package and package.startswith(existing))
+                ]
+                if package not in merged:
+                    merged.append(package)
+            packages_for_col[column] = merged
 
     unmapped_numbers = [column for column in number_cols if not packages_for_col[column]]
     package_header_cols = [
@@ -130,6 +144,68 @@ def associate_pin_number_headers(
             variant_for_col[number_column] = header_meta[header_column][1]
 
     return packages_for_col, variant_for_col
+
+
+def inherit_pin_column_metadata(
+    packages_for_col: dict[int, list[str]],
+    variant_for_col: dict[int, str],
+    column_positions: dict[int, float],
+    active_columns: dict[float, tuple[list[str], str]],
+    *,
+    position_tolerance: float = 0.035,
+) -> tuple[dict[int, list[str]], dict[int, str]]:
+    """Fill continuation metadata by normalized horizontal column position.
+
+    PDF grid recovery may include empty placeholder columns on the header page
+    and compress them away on continuation pages.  Neither the dense array
+    position nor the raw grid index is therefore a stable identity.  Cell
+    geometry remains stable, so match only a nearby normalized x position.
+    """
+    resolved_packages = {column: list(packages) for column, packages in packages_for_col.items()}
+    resolved_variants = dict(variant_for_col)
+    for column in packages_for_col:
+        if resolved_packages[column] and resolved_variants.get(column):
+            continue
+        position = column_positions.get(column)
+        if position is None or not active_columns:
+            continue
+        nearest_position = min(active_columns, key=lambda active: abs(active - position))
+        if abs(nearest_position - position) > position_tolerance:
+            continue
+        active_packages, active_variant = active_columns[nearest_position]
+        if not resolved_packages[column]:
+            resolved_packages[column] = list(active_packages)
+        if not resolved_variants.get(column):
+            resolved_variants[column] = active_variant
+    return resolved_packages, resolved_variants
+
+
+def pin_number_column_positions(
+    raw_rows: list[list[Any]],
+    cell_bboxes: dict[tuple[int, int], tuple[float, float, float, float] | None],
+    keep_cols: list[int],
+    header_end: int,
+    number_cols: list[int],
+    table_bbox: Iterable[float],
+) -> dict[int, float]:
+    """Return normalized x centers for populated physical pin-number columns."""
+    x0, _, x1, _ = (float(value) for value in table_bbox)
+    width = x1 - x0
+    if width <= 0:
+        return {}
+    positions: dict[int, float] = {}
+    for column in number_cols:
+        raw_col = keep_cols[column]
+        for row_index in range(header_end, len(raw_rows)):
+            if raw_col >= len(raw_rows[row_index]):
+                continue
+            if not re.fullmatch(r"\d+", compact(raw_rows[row_index][raw_col])):
+                continue
+            bbox = cell_bboxes.get((row_index, raw_col))
+            if bbox is not None:
+                positions[column] = ((float(bbox[0]) + float(bbox[2])) / 2.0 - x0) / width
+                break
+    return positions
 
 
 def resolve_pin_data_column(rows: list[list[str]], header_end: int, declared_col: int | None) -> int | None:
@@ -195,7 +271,7 @@ def parse_basic_defaults(text: str) -> dict[str, Any]:
             defaults["core"] = "ARM"
 
     frequency_patterns = [
-        r"CPU\s*(?:频率|主频)[^\d]{0,20}(?:最高|最大)?[^\d]{0,10}(\d+(?:\.\d+)?)\s*(MHz|kHz|Hz)",
+        r"CPU\s*(?:工作)?\s*(?:频率|主频)[^\d]{0,20}(?:最高|最大)?[^\d]{0,10}(\d+(?:\.\d+)?)\s*(MHz|kHz|Hz)",
         r"最高(?:工作|运行)?频率[^\d]{0,10}(\d+(?:\.\d+)?)\s*(MHz|kHz|Hz)",
         r"最高(?:工作|运行)?主频[^\d]{0,10}(\d+(?:\.\d+)?)\s*(MHz|kHz|Hz)",
         r"CPU\s*频率[^@\n]{0,40}@\s*(\d+(?:\.\d+)?)\s*(MHz|kHz|Hz)",
@@ -250,7 +326,11 @@ def parse_basic_defaults(text: str) -> dict[str, Any]:
         for pattern in patterns:
             match = re.search(pattern, normalized, re.I)
             if match:
-                defaults["peripherals"][ptype] = {"count": int(match.group(1))}
+                defaults["peripherals"][ptype] = (
+                    {"channel_count": int(match.group(1))}
+                    if ptype == "ADC"
+                    else {"count": int(match.group(1))}
+                )
                 if ptype == "ADC" and match.lastindex and match.lastindex >= 2:
                     defaults["peripherals"][ptype]["resolution"] = int(match.group(2))
                 break
@@ -261,6 +341,33 @@ def parse_basic_defaults(text: str) -> dict[str, Any]:
     if adc_res:
         defaults["peripherals"].setdefault("ADC", {})["resolution"] = int(adc_res.group(1))
     return defaults
+
+
+def max_cpu_frequency_by_page(texts: list[str]) -> tuple[int | float, int] | None:
+    """Find the highest explicitly CPU/system-clock-labelled frequency.
+
+    Oscillator-only frequencies are deliberately excluded: an oscillator rate
+    is not automatically the maximum supported CPU clock.  Returning the page
+    with the value lets the caller retain field-specific provenance.
+    """
+    patterns = (
+        (3, r"CPU\s*工作\s*(?:频率|主频)[^\d]{0,30}(\d+(?:\.\d+)?)\s*(MHz|kHz|Hz)"),
+        (3, r"(?:CPU|系统)\s*(?:最高|最大)?\s*(?:工作|运行)?\s*(?:频率|主频)[^\d]{0,20}(\d+(?:\.\d+)?)\s*(MHz|kHz|Hz)"),
+        (2, r"(?:支持|可达|高达)\s*(?:的)?\s*(?:系统|CPU)?\s*(?:时钟|频率|主频)[^\d]{0,20}(\d+(?:\.\d+)?)\s*(MHz|kHz|Hz)"),
+        (1, r"CPU\s*(?:时钟|频率|主频)[^\d\n。]{0,20}(?:为|是|:|：)?\s*(\d+(?:\.\d+)?)\s*(MHz|kHz|Hz)"),
+    )
+    candidates: list[tuple[int, float, int]] = []
+    for page_index, text in enumerate(texts):
+        normalized = clean(text).replace("‐", "-").replace("–", "-").replace("—", "-")
+        for score, pattern in patterns:
+            for match in re.finditer(pattern, normalized, re.I):
+                value = parse_frequency_mhz(f"{match.group(1)}{match.group(2)}")
+                if value is not None:
+                    candidates.append((score, float(value), page_index))
+    if not candidates:
+        return None
+    _, value, page_index = max(candidates, key=lambda item: (item[0], item[1]))
+    return scalar_or_none(value), page_index
 
 
 def peripheral_defaults_by_page(
@@ -305,31 +412,86 @@ def logical_transposed_model_rows(rows: list[list[str]]) -> dict[str, Any] | Non
     )
 
 
-def semantic_columns(headers: dict[int, str]) -> dict[str, int]:
-    mappings: dict[str, int] = {}
+def semantic_columns(
+    headers: dict[int, str],
+    field_dictionary: dict[str, Any] | None = None,
+) -> dict[str, int | list[int]]:
+    field_dictionary = field_dictionary or FIELD_DICTIONARY
+    mappings: dict[str, int | list[int]] = {}
+
+    def add(role: str, column: int) -> None:
+        existing = mappings.get(role)
+        if existing is None:
+            mappings[role] = column
+        elif isinstance(existing, list):
+            if column not in existing:
+                existing.append(column)
+        elif existing != column:
+            mappings[role] = [existing, column]
     roles = {
         "chip_id": "chip_id",
         "flash_kb": "flash",
-        "ram_kb": "external_ram",
+        "ram_kb": "ram_total",
         "max_freq_mhz": "max_freq_mhz",
         "mtp_kb": "mtp",
         "eeprom_kb": "eeprom",
         "operating_voltage": "voltage",
+        "operating_conditions": "operating_conditions",
         "package_types": "package",
-        "peripheral_uart": "UART",
-        "peripheral_i2c": "I2C",
-        "peripheral_spi": "SPI",
-        "peripheral_pwm": "PWM",
-        "peripheral_adc": "ADC",
-        "peripheral_touch": "Touch",
     }
 
     for column, header in headers.items():
-        common_field = match_common_field(header, FIELD_DICTIONARY)
+        common_field = match_common_field(header, field_dictionary)
+        if common_field == "ram_kb":
+            normalized_header = compact(header).casefold()
+            if "外部" in normalized_header or "external" in normalized_header or "xram" in normalized_header:
+                mappings.setdefault("external_ram", column)
+            elif "内部" in normalized_header or "internal" in normalized_header or "iram" in normalized_header:
+                mappings.setdefault("internal_ram", column)
+            else:
+                mappings.setdefault("ram_total", column)
+            continue
+        definition = field_dictionary.get("fields", {}).get(common_field or "", {})
+        if (common_field or "").startswith("peripheral_") and definition.get("canonical"):
+            add(f"peripheral:{definition['canonical']}", column)
+            continue
         role = roles.get(common_field or "")
         if role:
             mappings.setdefault(role, column)
     return mappings
+
+
+def semantic_column_indices(columns: dict[str, int | list[int]], role: str) -> list[int]:
+    value = columns.get(role)
+    if value is None:
+        return []
+    return list(value) if isinstance(value, list) else [value]
+
+
+def discovered_peripheral_types(
+    columns: dict[str, int],
+    defaults: dict[str, Any],
+) -> list[str]:
+    """Return configured table peripherals plus text-derived fallbacks."""
+    table_types = {
+        role.partition(":")[2]
+        for role in columns
+        if role.startswith("peripheral:") and role.partition(":")[2]
+    }
+    fallback_types = set(defaults.get("peripherals", {}))
+    return sorted(table_types | fallback_types)
+
+
+def resolve_ram_total_kb(
+    table_total_kb: int | float | None,
+    internal_kb: int | float | None,
+    external_kb: int | float | None,
+) -> int | float | None:
+    """Resolve total RAM without relabelling a total as a component."""
+    if table_total_kb is not None:
+        return scalar_or_none(table_total_kb)
+    components = [value for value in (internal_kb, external_kb) if value is not None]
+    return scalar_or_none(sum(components)) if components else None
 
 
 def extract_models_from_pdf(pdf: pdfplumber.PDF, texts: list[str]) -> list[dict[str, Any]]:
@@ -383,7 +545,7 @@ def extract_models_from_ir(
     for table in document.tables:
         if table.table_id not in candidate_ids:
             continue
-        for fragment, page, rows, _ in table_grids(table):
+        for fragment, page, rows, _ in table_grids(table, inherit_merged_values=True):
             table_text = " ".join(cell for row in rows for cell in row)
             ntext = compact(table_text).upper()
             if not model_tokens(table_text, exact_only=True):
@@ -430,6 +592,33 @@ def peripheral_value(value: str, fallback: dict[str, Any] | None) -> int | None:
     return None
 
 
+def adc_instance_value(value: str, header: str) -> int | None:
+    text = compact(value).upper()
+    explicit = re.search(r"(\d+)\s*[X×]\s*\d+\s*(?:BIT|位)", text, re.I)
+    if explicit:
+        return int(explicit.group(1))
+    # In CA/MiAi feature matrices a lone number under a resolution-labelled
+    # ADC column is a channel count.  Only an explicit multiplier establishes
+    # how many converter instances exist.
+    return None
+
+
+def adc_channel_value(value: str, header: str) -> int | None:
+    text = compact(value).upper()
+    labelled = [int(item) for item in re.findall(r"(\d+)\s*(?:CHANNELS?|通道)", text, re.I)]
+    if labelled:
+        return labelled[-1]
+    normalized_header = compact(header).upper()
+    if (
+        "CHANNEL" in normalized_header
+        or "通道" in normalized_header
+        or ("ADC" in normalized_header and ("BIT" in normalized_header or "位" in normalized_header))
+    ):
+        number = parse_number(text)
+        return int(number) if number is not None else None
+    return None
+
+
 def table_value(record: dict[str, Any], column: int | None) -> str:
     if column is None:
         return ""
@@ -470,8 +659,7 @@ def extract_pin_tables(
         if package:
             by_package[package].append(model["chip_id"])
     extracted = []
-    active_packages: list[list[str]] = []
-    active_variants: list[str] = []
+    active_columns: dict[float, tuple[list[str], str]] = {}
     locator = TABLE_RECIPE["topologies"]["pin_definition"]
     required_any = [compact(item).casefold() for item in locator.get("required_any", [])]
     minimum_gpio_tokens = int(locator.get("minimum_pin_tokens", 3))
@@ -531,20 +719,30 @@ def extract_pin_tables(
             packages_for_col, variant_for_col = associate_pin_number_headers(
                 header_by_col, number_cols, pin_name_col, spanned_packages
             )
-            visible_packages = [packages_for_col[column] for column in number_cols]
-            visible_variants = [variant_for_col[column] for column in number_cols]
-            if any(visible_packages):
-                active_packages = visible_packages
-            elif active_packages:
-                for position, column in enumerate(number_cols):
-                    if position < len(active_packages):
-                        packages_for_col[column] = active_packages[position]
-            if any(visible_variants):
-                active_variants = visible_variants
-            elif active_variants:
-                for position, column in enumerate(number_cols):
-                    if position < len(active_variants):
-                        variant_for_col[column] = active_variants[position]
+            column_positions = pin_number_column_positions(
+                table,
+                table_obj.cell_bboxes(),
+                keep_cols,
+                header_end,
+                number_cols,
+                table_obj.bbox,
+            )
+            has_visible_column_metadata = any(packages_for_col.values()) or any(variant_for_col.values())
+            if has_visible_column_metadata:
+                active_columns.clear()
+            packages_for_col, variant_for_col = inherit_pin_column_metadata(
+                packages_for_col,
+                variant_for_col,
+                column_positions,
+                active_columns,
+            )
+            for column in number_cols:
+                position = column_positions.get(column)
+                if position is not None and (packages_for_col.get(column) or variant_for_col.get(column)):
+                    active_columns[position] = (
+                        list(packages_for_col.get(column, [])),
+                        variant_for_col.get(column, ""),
+                    )
 
             # When one package has multiple explicitly labelled pinout variants,
             # pair the sorted model variants with the sorted table variants. This
@@ -695,6 +893,25 @@ def process_document(
                 evidences.append(source_evidence)
                 page_evidence_ids[source_index] = source_evidence.evidence_id
             peripheral_basic_evidence[peripheral_type] = page_evidence_ids[source_index]
+    document_frequency = max_cpu_frequency_by_page(texts)
+    frequency_evidence_id: str | None = None
+    if document_frequency is not None:
+        frequency_value, frequency_page_index = document_frequency
+        defaults["max_freq_mhz"] = frequency_value
+        if frequency_page_index == basic_index and basic_evidence_id:
+            frequency_evidence_id = basic_evidence_id
+        else:
+            frequency_evidence = make_evidence(
+                doc,
+                frequency_page_index + 1,
+                [0, 0, 595, 842],
+                "frequency",
+                "A",
+                texts[frequency_page_index],
+                1,
+            )
+            evidences.append(frequency_evidence)
+            frequency_evidence_id = frequency_evidence.evidence_id
     document_ir = build_document_ir(path, texts, progress=doc.get("table_progress"))
     table_index = build_table_index(document_ir)
     doc["_table_index"] = table_index
@@ -721,10 +938,24 @@ def process_document(
                 model_id = aliases.get(ids[0], ids[0])
                 package_text = table_value(record, columns.get("package"))
                 package = PACKAGE_RE.search(package_text)
+                compound_conditions = parse_compound_operating_conditions(
+                    table_value(record, columns.get("operating_conditions"))
+                ) if "operating_conditions" in columns else {}
                 voltage = parse_range(table_value(record, columns.get("voltage")))
+                if voltage is None and "voltage_min" in compound_conditions:
+                    voltage = (compound_conditions["voltage_min"], compound_conditions["voltage_max"])
                 flash_kb = table_size_kb(table, record, columns.get("flash")) if "flash" in columns else None
                 mtp_kb = table_size_kb(table, record, columns.get("mtp")) if "mtp" in columns else None
-                ram_kb = table_size_kb(table, record, columns.get("external_ram")) if "external_ram" in columns else defaults.get("sram_external_kb")
+                table_ram_total_kb = table_size_kb(table, record, columns.get("ram_total")) if "ram_total" in columns else None
+                table_ram_internal_kb = table_size_kb(table, record, columns.get("internal_ram")) if "internal_ram" in columns else None
+                table_ram_external_kb = table_size_kb(table, record, columns.get("external_ram")) if "external_ram" in columns else None
+                ram_internal_kb = table_ram_internal_kb if table_ram_internal_kb is not None else defaults.get("sram_internal_kb")
+                ram_external_kb = table_ram_external_kb if table_ram_external_kb is not None else defaults.get("sram_external_kb")
+                ram_kb = resolve_ram_total_kb(
+                    table_ram_total_kb,
+                    ram_internal_kb,
+                    ram_external_kb,
+                )
                 table_frequency = table_frequency_mhz(table, record, columns.get("max_freq_mhz")) if "max_freq_mhz" in columns else None
                 model_row = {
                     "chip_id": model_id,
@@ -740,12 +971,14 @@ def process_document(
                     "_voltage_evidence_id": ev.evidence_id if voltage else basic_evidence_id or ev.evidence_id,
                     "_mtp_kb": mtp_kb,
                     "_eeprom_kb": table_size_kb(table, record, columns.get("eeprom")) if "eeprom" in columns else defaults.get("eeprom_kb"),
+                    "_temperature_min": compound_conditions.get("temperature_min"),
+                    "_temperature_max": compound_conditions.get("temperature_max"),
                 }
                 models.append(model_row)
                 table_fields = {"chip_id", "series"}
                 if flash_kb is not None:
                     table_fields.add("flash_kb")
-                if "external_ram" in columns and ram_kb is not None:
+                if any(value is not None for value in (table_ram_total_kb, table_ram_internal_kb, table_ram_external_kb)):
                     table_fields.add("ram_kb")
                 if package:
                     table_fields.add("package_types")
@@ -762,8 +995,8 @@ def process_document(
                 )
                 uses_basic_defaults = any((
                     defaults.get("core") is not None,
-                    "external_ram" not in columns and defaults.get("sram_external_kb") is not None,
-                    table_frequency is None and defaults.get("max_freq_mhz") is not None,
+                    all(value is None for value in (table_ram_total_kb, table_ram_internal_kb, table_ram_external_kb)) and ram_kb is not None,
+                    table_frequency is None and defaults.get("max_freq_mhz") is not None and frequency_evidence_id is None,
                     voltage is None and defaults.get("voltage_min") is not None,
                     voltage is None and defaults.get("voltage_max") is not None,
                 ))
@@ -771,9 +1004,9 @@ def process_document(
                     basic_fields = set()
                     if defaults.get("core") is not None:
                         basic_fields.add("core")
-                    if "external_ram" not in columns and defaults.get("sram_external_kb") is not None:
+                    if all(value is None for value in (table_ram_total_kb, table_ram_internal_kb, table_ram_external_kb)) and ram_kb is not None:
                         basic_fields.add("ram_kb")
-                    if table_frequency is None and defaults.get("max_freq_mhz") is not None:
+                    if table_frequency is None and defaults.get("max_freq_mhz") is not None and frequency_evidence_id is None:
                         basic_fields.add("max_freq_mhz")
                     if voltage is None and defaults.get("voltage_min") is not None:
                         basic_fields.update(("voltage_min", "voltage_max"))
@@ -784,44 +1017,82 @@ def process_document(
                         "B",
                         {field: basic_evidence_id for field in basic_fields},
                     )
+                if table_frequency is None and frequency_evidence_id is not None:
+                    collector.add(
+                        "chips",
+                        model_row,
+                        frequency_evidence_id,
+                        "A",
+                        {"max_freq_mhz": frequency_evidence_id},
+                    )
 
                 if flash_kb is not None:
                     collector.add("memory", {"chip_id": model_id, "memory_type": "Flash", "size_kb": scalar_or_none(flash_kb), "organization": None, "features": None}, ev.evidence_id, "A")
                 if mtp_kb is not None:
                     collector.add("memory", {"chip_id": model_id, "memory_type": "MTP", "size_kb": scalar_or_none(mtp_kb), "organization": None, "features": None}, ev.evidence_id, "A")
-                if ram_kb is not None:
-                    ram_evidence_id = ev.evidence_id if "external_ram" in columns else basic_evidence_id or ev.evidence_id
-                    collector.add("memory", {"chip_id": model_id, "memory_type": "SRAM_External", "size_kb": scalar_or_none(ram_kb), "organization": None, "features": None}, ram_evidence_id, "A" if "external_ram" in columns else "B")
-                if defaults.get("sram_internal_kb") is not None:
-                    collector.add("memory", {"chip_id": model_id, "memory_type": "SRAM_Internal", "size_kb": scalar_or_none(defaults["sram_internal_kb"]), "organization": None, "features": None}, basic_evidence_id or ev.evidence_id, "B")
+                if table_ram_total_kb is not None:
+                    collector.add("memory", {"chip_id": model_id, "memory_type": "SRAM_Total", "size_kb": scalar_or_none(table_ram_total_kb), "organization": None, "features": None}, ev.evidence_id, "A")
+                if ram_external_kb is not None:
+                    external_evidence_id = ev.evidence_id if table_ram_external_kb is not None else basic_evidence_id or ev.evidence_id
+                    collector.add("memory", {"chip_id": model_id, "memory_type": "SRAM_External", "size_kb": scalar_or_none(ram_external_kb), "organization": None, "features": None}, external_evidence_id, "A" if table_ram_external_kb is not None else "B")
+                if ram_internal_kb is not None:
+                    internal_evidence_id = ev.evidence_id if table_ram_internal_kb is not None else basic_evidence_id or ev.evidence_id
+                    collector.add("memory", {"chip_id": model_id, "memory_type": "SRAM_Internal", "size_kb": scalar_or_none(ram_internal_kb), "organization": None, "features": None}, internal_evidence_id, "A" if table_ram_internal_kb is not None else "B")
                 eeprom_kb = model_row["_eeprom_kb"]
                 if eeprom_kb is not None:
                     collector.add("memory", {"chip_id": model_id, "memory_type": "EEPROM", "size_kb": scalar_or_none(eeprom_kb), "organization": None, "features": None}, ev.evidence_id, "A")
 
-                for ptype in ("PWM", "ADC", "UART", "I2C", "SPI", "Touch"):
-                    value = table_value(record, columns.get(ptype)) if ptype in columns else ""
+                for ptype in discovered_peripheral_types(columns, defaults):
+                    column_role = f"peripheral:{ptype}"
+                    peripheral_columns = semantic_column_indices(columns, column_role)
+                    values = [table_value(record, column) for column in peripheral_columns]
                     fallback = defaults.get("peripherals", {}).get(ptype)
-                    count = peripheral_value(value, fallback)
-                    if count is None:
+                    headers = [table["headers"].get(column, "") for column in peripheral_columns]
+                    if ptype == "ADC":
+                        parsed_counts = [
+                            count
+                            for value, header in zip(values, headers)
+                            if (count := adc_instance_value(value, header)) is not None
+                        ]
+                        parsed_channels = [
+                            count
+                            for value, header in zip(values, headers)
+                            if (count := adc_channel_value(value, header)) is not None
+                        ]
+                        count = scalar_or_none(sum(parsed_counts)) if parsed_counts else (fallback or {}).get("count")
+                        channel_count = max(parsed_channels) if parsed_channels else (fallback or {}).get("channel_count")
+                    else:
+                        parsed_counts = [
+                            count
+                            for value in values
+                            if (count := peripheral_value(value, None)) is not None
+                        ]
+                        count = scalar_or_none(sum(parsed_counts)) if parsed_counts else peripheral_value("", fallback)
+                        channel_count = (fallback or {}).get("channel_count")
+                    if count is None and channel_count is None:
                         continue
                     resolution = None
-                    header = table["headers"].get(columns.get(ptype, -1), "")
-                    resolution_match = re.search(r"(\d+)(?:BIT|位)", header, re.I)
-                    if resolution_match:
-                        resolution = int(resolution_match.group(1))
+                    resolution_values = [
+                        int(match.group(1))
+                        for column in peripheral_columns
+                        if (match := re.search(r"(\d+)(?:BIT|位)", table["headers"].get(column, ""), re.I))
+                    ]
+                    if resolution_values:
+                        resolution = max(resolution_values)
                     elif fallback:
                         resolution = fallback.get("resolution")
                     peripheral_row = {
                         "chip_id": model_id,
                         "peripheral_type": ptype,
                         "instance_count": count,
+                        "channel_count": channel_count,
                         "max_resolution": resolution,
                         "max_frequency_mhz": None,
                         "features": None,
                     }
                     collector.add("peripherals", peripheral_row, ev.evidence_id, "A")
                     fallback_evidence_id = peripheral_basic_evidence.get(ptype, basic_evidence_id)
-                    if fallback_evidence_id and fallback and (not value or resolution_match is None):
+                    if fallback_evidence_id and fallback and (not parsed_counts or not resolution_values):
                         collector.add("peripherals", peripheral_row, fallback_evidence_id, "B")
 
         if not models:
@@ -834,7 +1105,11 @@ def process_document(
                     "series": series_for_model(model_id),
                     "core": defaults.get("core"),
                     "flash_kb": None,
-                    "ram_kb": scalar_or_none(defaults.get("sram_external_kb")),
+                    "ram_kb": resolve_ram_total_kb(
+                        None,
+                        defaults.get("sram_internal_kb"),
+                        defaults.get("sram_external_kb"),
+                    ),
                     "max_freq_mhz": defaults.get("max_freq_mhz"),
                     "package_types": [],
                     "voltage_min": defaults.get("voltage_min"),
@@ -846,26 +1121,41 @@ def process_document(
 
         ir_table_view = IRDocumentTableView(document_ir)
         models_with_voltage: set[str] = set()
+        models_with_temperature: set[str] = set()
         for model in models:
-            if model.get("voltage_min") is None or model.get("voltage_max") is None:
-                continue
-            voltage_evidence_id = model.get("_voltage_evidence_id") or model["_evidence_id"]
-            collector.add(
-                "electrical",
-                {
-                    "chip_id": model["chip_id"],
-                    "param_name": "VDD",
-                    "min_value": model["voltage_min"],
-                    "max_value": model["voltage_max"],
-                    "unit": "V",
-                    "conditions": None,
-                },
-                voltage_evidence_id,
-                "A" if voltage_evidence_id == model["_evidence_id"] else "B",
-            )
-            models_with_voltage.add(model["chip_id"])
+            if model.get("voltage_min") is not None and model.get("voltage_max") is not None:
+                voltage_evidence_id = model.get("_voltage_evidence_id") or model["_evidence_id"]
+                collector.add(
+                    "electrical",
+                    {
+                        "chip_id": model["chip_id"],
+                        "param_name": "VDD",
+                        "min_value": model["voltage_min"],
+                        "max_value": model["voltage_max"],
+                        "unit": "V",
+                        "conditions": None,
+                    },
+                    voltage_evidence_id,
+                    "A" if voltage_evidence_id == model["_evidence_id"] else "B",
+                )
+                models_with_voltage.add(model["chip_id"])
+            if model.get("_temperature_min") is not None and model.get("_temperature_max") is not None:
+                collector.add(
+                    "electrical",
+                    {
+                        "chip_id": model["chip_id"],
+                        "param_name": "T_operating",
+                        "min_value": model["_temperature_min"],
+                        "max_value": model["_temperature_max"],
+                        "unit": "°C",
+                        "conditions": None,
+                    },
+                    model["_evidence_id"],
+                    "A",
+                )
+                models_with_temperature.add(model["chip_id"])
 
-        temperature_added = False
+        temperature_added = len(models_with_temperature) == len(models)
         for electrical_index, text in enumerate(texts):
             ntext = clean(text)
             supply = re.search(r"直流供电电压\s+(-?\d+(?:\.\d+)?)\s+(-?\d+(?:\.\d+)?)\s*V", ntext, re.I)
@@ -884,10 +1174,11 @@ def process_document(
                     if model["chip_id"] not in models_with_voltage:
                         collector.add("electrical", {"chip_id": model["chip_id"], "param_name": "VDD", "min_value": float(supply.group(1)), "max_value": float(supply.group(2)), "unit": "V", "conditions": None}, ev.evidence_id, "A")
                         models_with_voltage.add(model["chip_id"])
-                if temperature and not temperature_added:
+                if temperature and model["chip_id"] not in models_with_temperature:
                     collector.add("electrical", {"chip_id": model["chip_id"], "param_name": "T_operating", "min_value": float(temperature.group(1)), "max_value": float(temperature.group(2)), "unit": "°C", "conditions": None}, ev.evidence_id, "A")
+                    models_with_temperature.add(model["chip_id"])
             temperature_added = temperature_added or bool(temperature)
-            if len(models_with_voltage) == len(models) and temperature_added:
+            if len(models_with_voltage) == len(models) and len(models_with_temperature) == len(models):
                 break
 
         for pin_index, pin_table in enumerate(

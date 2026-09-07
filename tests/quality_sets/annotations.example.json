@@ -1,0 +1,25 @@
+{
+  "configuration_audit": {
+    "core_business_changes": 0,
+    "filename_model_whitelists": 0
+  },
+  "documents": [
+    {
+      "name": "official-datasheet.pdf",
+      "extraction_success": true,
+      "models": [{"id": "MODEL-1", "found": true}],
+      "records": [{"id": "MODEL-1|memory|flash", "found": true}],
+      "fields": [
+        {
+          "id": "MODEL-1|memory|flash|size_kb",
+          "risk": "normal",
+          "expected": 128,
+          "actual": 128,
+          "attribution_correct": true,
+          "evidence_checked": true,
+          "evidence_correct": true
+        }
+      ]
+    }
+  ]
+}

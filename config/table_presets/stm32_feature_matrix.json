@@ -14,6 +14,7 @@
     "required_all": [],
     "required_any": ["sram", "ram", "memorydensity"]
   },
+  "title_optional_when_entity_column_matches": true,
   "continuation": {
     "enabled": true,
     "match_table_number": true,
@@ -53,6 +54,6 @@
     "SPI": {"rows": ["spi", "spi[i2s]"], "exclude_rows": ["qspi", "quadspi", "quad-spi", "octospi", "octo-spi"], "value_parser": "first_integer", "reducer": "max"},
     "I2C": {"rows": ["i2c"], "value_parser": "first_integer", "reducer": "max"},
     "UART": {"rows": ["usart", "uart", "lpuart"], "value_parser": "sum_components", "reducer": "sum"},
-    "ADC": {"rows": ["adc"], "exclude_rows": ["vref", "reference"], "match_scope": "path", "value_parser": "adc_channel_count", "reducer": "max", "resolution_from_label": true}
+    "ADC": {"rows": ["adc"], "exclude_rows": ["vref", "reference"], "match_scope": "path", "value_parser": "adc_instance_count", "reducer": "max", "channel_value_parser": "adc_channel_count", "channel_reducer": "max", "resolution_from_label": true}
   }
 }

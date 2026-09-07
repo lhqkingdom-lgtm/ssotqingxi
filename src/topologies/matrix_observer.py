@@ -68,10 +68,29 @@ def first_entity_column(rows: list[list[str]], header_predicate: HeaderPredicate
         for column, header in headers.items()
         if any(header_predicate(item) for item in text_direction_variants(header))
     ]
-    return min(candidates, default=1)
+    if candidates:
+        return min(candidates)
+    # A wrapped table caption may carry the full family name while physical
+    # columns contain only compact suffixes.  Detect the beginning of such a
+    # header run structurally: short code-like cells contain both letters and
+    # digits and no prose punctuation.  This determines the label/value
+    # boundary without knowing a vendor or model name.
+    compact_codes = [
+        column
+        for column, header in headers.items()
+        if 2 <= len(header) <= 24
+        and any(char.isalpha() for char in header)
+        and any(char.isdigit() for char in header)
+        and re.fullmatch(r"[A-Z0-9_ /-]+", header)
+    ]
+    return min(compact_codes, default=1)
 
 
-def table_grids(table: TableIR) -> list[tuple[int, int, list[list[str]], dict[tuple[int, int], CellIR]]]:
+def table_grids(
+    table: TableIR,
+    *,
+    inherit_merged_values: bool = False,
+) -> list[tuple[int, int, list[list[str]], dict[tuple[int, int], CellIR]]]:
     result = []
     for fragment in sorted({cell.fragment for cell in table.cells}):
         fragment_cells = [cell for cell in table.cells if cell.fragment == fragment]
@@ -79,8 +98,14 @@ def table_grids(table: TableIR) -> list[tuple[int, int, list[list[str]], dict[tu
         width = max(cell.column for cell in fragment_cells) + 1
         rows = [["" for _ in range(width)] for _ in range(height)]
         cells = {(cell.row, cell.column): cell for cell in fragment_cells}
+        by_id = {cell.cell_id: cell for cell in fragment_cells}
         for cell in fragment_cells:
-            rows[cell.row][cell.column] = cell.raw_text
+            source = (
+                by_id.get(cell.inherited_from, cell)
+                if inherit_merged_values and cell.inherited_from
+                else cell
+            )
+            rows[cell.row][cell.column] = source.raw_text
         result.append((fragment, fragment_cells[0].page, rows, cells))
     return result
 
@@ -190,7 +215,15 @@ def select_matrix(
     candidates = []
     for table in tables:
         if not table_matches(table, locator):
-            continue
+            # PDF caption extraction can stop at a wrapped first line before
+            # the semantic title suffix.  A recipe may allow a structural
+            # fallback, but the table must still satisfy its content locator
+            # and the target entity column selector below.
+            if not matrix_config.get("title_optional_when_entity_column_matches"):
+                continue
+            content_locator = {**locator, "title_any": []}
+            if not table_matches(table, content_locator):
+                continue
         observations = observe_matrix(table, target_entity, matrix_config, column_selector, header_predicate)
         if not observations:
             continue

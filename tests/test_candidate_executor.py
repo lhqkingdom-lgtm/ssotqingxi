@@ -76,6 +76,16 @@ class CandidateExecutorTests(unittest.TestCase):
         issues = validate_hard_rules([first, second], [], RULES)
         self.assertIn("contradictory_same_key", {item.rule_id for item in issues})
 
+    def test_non_numeric_descendant_is_not_a_capacity_conflict(self) -> None:
+        capacity = candidate("fields", "flash_kb", "1024 / 512", "c1", "Flash memory (Kbytes)")
+        fmc_flag = candidate("fields", "flash_kb", "yes", "c2", "FMC / NOR flash memory")
+        _, aggregates = reduce_candidates([capacity, fmc_flag], RULES, package_pattern=PACKAGE_PATTERN)
+        flash = next(item for item in aggregates if item.field_name == "flash_kb")
+        self.assertEqual(flash.value, 1024)
+        self.assertEqual(flash.candidate_ids, (capacity.candidate_id,))
+        issues = validate_hard_rules([capacity, fmc_flag], aggregates, RULES)
+        self.assertNotIn("contradictory_same_key", {item.rule_id for item in issues})
+
 
 if __name__ == "__main__":
     unittest.main()

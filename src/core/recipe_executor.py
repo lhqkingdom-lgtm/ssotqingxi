@@ -11,6 +11,19 @@ from core.units import convert_number, convert_scalar, convert_values
 
 
 def memory_kb(cell: MappedCell, unit_config: dict[str, Any]) -> int | float | None:
+    conditioned = []
+    for match in re.finditer(
+        r"(\d+(?:\.\d+)?)\s*(KBYTES?|KBYTE|KB|MBYTES?|MBYTE|MB)\s+(?:FOR\s+)?(?:X{2,}|_+)([A-Z0-9])\b",
+        str(cell.value or ""),
+        re.I,
+    ):
+        value = convert_number(f"{match.group(1)}{match.group(2)}", unit_config)
+        if value is not None:
+            conditioned.append((match.group(3).upper(), value))
+    if conditioned and cell.entity_key:
+        target_code = compact(cell.entity_key).upper()[-1:]
+        selected = [value for code, value in conditioned if code == target_code]
+        return scalar_or_none(max(selected)) if selected else None
     values = convert_values(cell.value, unit_config, cell.label)
     if not values:
         return None
@@ -99,17 +112,30 @@ def peripheral_count(cell: MappedCell, parser: str) -> int | None:
         return sum(components) if components else None
     if parser == "adc_instance_count":
         label = compact(cell.label).lower()
+        leaf_label = compact(cell.row_label).lower()
         if not cell.row_label:
             return None
         if re.match(r"^\s*\d+\s*channels?\b", cell.value, re.I):
-            return 1
-        channel_summary = "numberofchannels" in label or "nbrofchannels" in label
+            return None
+        channel_summary = "numberofchannels" in leaf_label or "nbrofchannels" in leaf_label
         if channel_summary and re.match(r"^\s*(?:yes|available|supported)\b", cell.value, re.I):
             return 1
-        if channel_summary and not re.search(r"\d+[- ]?bit", cell.label, re.I):
+        if channel_summary:
+            # A collapsed two-row cell such as "3 / 16" carries the ADC
+            # instance count followed by the channel count.  A package-
+            # qualified list such as "20 in LQFP48, 21 in ..." does not.
+            package_qualified = bool(
+                re.search(r"\d+\s+in\s+[A-Za-z][A-Za-z0-9/-]*\d+\b", cell.value, re.I)
+            )
+            return (
+                values[0]
+                if len(values) == 2 and re.search(r"adcs?", leaf_label) and not package_qualified
+                else None
+            )
+        if re.search(r"\bchannels?\b", str(cell.value), re.I):
+            return values[0] if len(values) >= 2 else None
+        if "channel" in leaf_label or "channels" in label:
             return None
-        if "adcchannels" in label and "numberofchannels" not in label and not re.search(r"adcs\b", cell.label, re.I):
-            return 1
         return values[0]
     if parser == "adc_channel_count":
         label = compact(cell.label).lower()
@@ -117,15 +143,22 @@ def peripheral_count(cell: MappedCell, parser: str) -> int | None:
         has_channel_label = "channel" in label or "numberofchannels" in label or "nbrofchannels" in label
         has_channel_value = bool(re.search(r"\bchannels?\b", value_text, re.I))
         if not has_channel_label and not has_channel_value:
-            # A plain "ADC"/"ADCs" row describes converter instances.  The
-            # SSOT template uses instance_count for ADC input-channel count,
-            # so that row is not a value source for this field.
+            # A plain "ADC"/"ADCs" row describes converter instances, not
+            # input channels, so it is not a value source for this field.
             return None
         # Device tables commonly write external + internal channels (for
         # example "19 + 2").  The configured SSOT meaning is the external
         # input count, therefore keep the first term rather than summing it.
         if re.search(r"\d\s*\+\s*\d", value_text):
             return values[0]
+        package_counts = [
+            int(value)
+            for value in re.findall(
+                r"(\d+)\s+in\s+[A-Za-z][A-Za-z0-9/-]*\d+\b", value_text, re.I
+            )
+        ]
+        if package_counts:
+            return max(package_counts)
         # In combined rows such as "2 10", the smaller first number is the
         # ADC instance count and the larger number is the channel count.
         return max(values)
@@ -218,12 +251,61 @@ def reduce_values(
             for cell in unique
             if (value := peripheral_count(cell, config.get("value_parser", "first_integer"))) is not None
         ]
-        if not counts:
+        channel_parser = config.get("channel_value_parser")
+        channel_items = [
+            (cell, value)
+            for cell in unique
+            if channel_parser and (value := peripheral_count(cell, channel_parser)) is not None
+        ]
+        channel_counts = [value for _, value in channel_items]
+        if not counts and channel_parser == "adc_channel_count":
+            # Some matrices vertically merge one "ADCs / Number of channels"
+            # label across two value rows: a bare converter count followed by
+            # an explicitly qualified channel maximum.  Use that structural
+            # pairing only when both distinct values are present; a lone
+            # channel number must never be reinterpreted as an instance count.
+            by_label: dict[str, list[tuple[MappedCell, int]]] = defaultdict(list)
+            for cell in unique:
+                value = peripheral_count(cell, channel_parser)
+                if value is not None:
+                    by_label[compact(cell.label).lower()].append((cell, value))
+            paired_cells: list[MappedCell] = []
+            paired_instances: list[int] = []
+            for label, items in by_label.items():
+                bare = [
+                    (cell, value)
+                    for cell, value in items
+                    if re.fullmatch(r"\s*\d+\s*", str(cell.value))
+                ]
+                qualified = [
+                    (cell, value)
+                    for cell, value in items
+                    if re.search(
+                        r"\b(?:up\s*to|channels?)\b|\d+\s+in\s+[A-Za-z][A-Za-z0-9/-]*\d+\b",
+                        str(cell.value),
+                        re.I,
+                    )
+                ]
+                collapsed_bare_pair = (
+                    len(items) == 2
+                    and len(bare) == 2
+                    and "adc" in label
+                )
+                if bare and (qualified or collapsed_bare_pair) and len({value for _, value in items}) >= 2:
+                    instance_cell, instance_value = min(bare, key=lambda item: item[1])
+                    paired_cells.append(instance_cell)
+                    paired_instances.append(instance_value)
+            if paired_instances:
+                counts = paired_instances
+                paired_ids = {id(cell) for cell in paired_cells}
+                channel_counts = [value for cell, value in channel_items if id(cell) not in paired_ids]
+        if not counts and not channel_counts:
             continue
+        count = None
         reducer = config.get("reducer", "max")
-        if reducer == "sum":
+        if counts and reducer == "sum":
             count = sum(counts)
-        elif reducer == "sum_distinct_labels":
+        elif counts and reducer == "sum_distinct_labels":
             by_label: dict[str, int] = {}
             for cell in unique:
                 value = peripheral_count(cell, config.get("value_parser", "first_integer"))
@@ -231,9 +313,12 @@ def reduce_values(
                     label = compact(cell.label).lower()
                     by_label[label] = max(value, by_label.get(label, 0))
             count = sum(by_label.values())
-        else:
+        elif counts:
             count = max(counts)
-        item: dict[str, Any] = {"count": count}
+        item: dict[str, Any] = {"count": count if counts else None}
+        if channel_counts:
+            channel_reducer = config.get("channel_reducer", "max")
+            item["channel_count"] = sum(channel_counts) if channel_reducer == "sum" else max(channel_counts)
         if config.get("resolution_from_label"):
             resolutions = [
                 int(match.group(1))

@@ -151,13 +151,20 @@
     "peripherals.peripheral_type": {
       "enabled": true,
       "source_priority": ["型号功能表表头"],
-      "allowed": ["PWM", "ADC", "UART", "I2C", "SPI", "Touch"],
-      "rule": "只生成模板已使用的外设类型。"
+      "registry": "common_field_dictionary.fields[*].canonical",
+      "rule": "由公共字段字典中 peripheral_* 字段的 canonical 名称驱动；新增外设不修改执行代码。"
     },
     "peripherals.instance_count": {
       "enabled": true,
       "source_priority": ["型号功能表具体数量", "基本特性明确数量"],
-      "rule": "ADC填写外部输入通道数；PWM填写通道数；UART、I2C、SPI填写接口实例数。表格只有勾选时使用基本特性数量；仍不明确时通信接口按1处理并降低置信度。",
+      "rule": "填写外设控制器或通信接口实例数，不得写入输入/输出通道数；原文未明确实例数时保持空白。",
+      "normalization": ["整数"],
+      "validation": ["大于0"]
+    },
+    "peripherals.channel_count": {
+      "enabled": true,
+      "source_priority": ["型号功能表明确通道数", "基本特性明确通道数"],
+      "rule": "填写ADC输入通道、PWM输出通道等明确的通道数量；不得用控制器实例数代替。",
       "normalization": ["整数"],
       "validation": ["大于0"]
     },

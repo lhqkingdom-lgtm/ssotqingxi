@@ -76,15 +76,26 @@ def convert_values(
     factors = {compact(key).upper(): float(val) for key, val in config.get("factors", {}).items()}
     upper = text.upper()
     local_units: set[str] = set()
-    for alias, canonical in aliases.items():
+    occupied_spans: list[tuple[int, int]] = []
+    # Unit aliases overlap (for example B, BYTE, KBYTE and KBYTES).  Resolve
+    # textual occurrences longest-first so a suffix contained in KBYTES does
+    # not create a second, contradictory unit.  This is span based rather than
+    # a memory-specific special case and therefore also applies to other unit
+    # dictionaries with nested aliases.
+    for alias, canonical in sorted(aliases.items(), key=lambda item: len(item[0]), reverse=True):
         if not alias:
             continue
         if len(alias) == 1 and alias.isascii():
-            present = bool(re.search(rf"\d(?:\.\d+)?{re.escape(alias)}(?![A-Z])", upper))
+            occurrences = list(re.finditer(rf"\d(?:\.\d+)?({re.escape(alias)})(?![A-Z])", upper))
+            spans = [match.span(1) for match in occurrences]
         else:
-            present = alias in upper
-        if present and canonical in factors:
-            local_units.add(canonical)
+            spans = [match.span() for match in re.finditer(re.escape(alias), upper)]
+        for span in spans:
+            if any(start <= span[0] and span[1] <= end for start, end in occupied_spans):
+                continue
+            occupied_spans.append(span)
+            if canonical in factors:
+                local_units.add(canonical)
     if len(local_units) == 1:
         factor = factors[next(iter(local_units))]
         return [scalar_or_none(float(match.group(0)) * factor) for match in matches]

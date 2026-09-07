@@ -33,17 +33,17 @@
       "ignored_fields": ["af_code", "constraints"]
     },
     "peripherals": {
-      "fields": ["chip_id", "peripheral_type", "instance_count", "max_resolution", "max_frequency_mhz", "features", "pdf_source_file", "evidence_pages", "ingested_by", "ingested_at", "is_reviewed"],
+      "fields": ["chip_id", "peripheral_type", "instance_count", "channel_count", "max_resolution", "max_frequency_mhz", "features", "pdf_source_file", "evidence_pages", "ingested_by", "ingested_at", "is_reviewed"],
       "key": ["chip_id", "peripheral_type"],
-      "required": ["chip_id", "peripheral_type", "instance_count", "pdf_source_file", "evidence_pages", "ingested_by", "ingested_at", "is_reviewed"],
+      "required": ["chip_id", "peripheral_type", "pdf_source_file", "evidence_pages", "ingested_by", "ingested_at", "is_reviewed"],
       "field_types": {
-        "chip_id": ["string"], "peripheral_type": ["string"], "instance_count": ["number"],
+        "chip_id": ["string"], "peripheral_type": ["string"], "instance_count": ["number"], "channel_count": ["number"],
         "max_resolution": ["number"], "max_frequency_mhz": ["number"], "features": ["string"],
         "pdf_source_file": ["string"], "evidence_pages": ["string"], "ingested_by": ["string"],
         "ingested_at": ["iso_datetime"], "is_reviewed": ["boolean"]
       },
-      "canonical_units": {"instance_count": "count", "max_resolution": "bit", "max_frequency_mhz": "MHz"},
-      "ranges": {"instance_count": [0, 10000], "max_resolution": [0, 1024], "max_frequency_mhz": [0.01, 1000000]},
+      "canonical_units": {"instance_count": "count", "channel_count": "count", "max_resolution": "bit", "max_frequency_mhz": "MHz"},
+      "ranges": {"instance_count": [0, 10000], "channel_count": [0, 10000], "max_resolution": [0, 1024], "max_frequency_mhz": [0.01, 1000000]},
       "ignored_fields": ["features"]
     },
     "electrical": {

@@ -11,7 +11,7 @@
       "pin_name_preference": "rightmost",
       "function_aliases": ["alternatefunctions"],
       "default_function_aliases": ["mainfunction"],
-      "column_qualifier_preferences": ["unqualified", "smps"]
+      "column_qualifier_preferences": ["unqualified", "gp", "smps", "n"]
     },
     "af_matrix": {
       "title_any": ["alternate function"],

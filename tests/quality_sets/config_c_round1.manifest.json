@@ -1,0 +1,100 @@
+{
+  "version": 1,
+  "sets": {
+    "config_c_round1": {
+      "input_dir": "quality_corpus\\config_c_round1",
+      "files": [
+        {
+          "name": "infineon_xmc5200.pdf",
+          "bytes": 1768349,
+          "sha256": "a0806f9670e353f8bf33ce8f3434e0453c3ff7fffc4760ff5a2763b73a3acdf1",
+          "vendor": "Infineon",
+          "family": "XMC",
+          "layout": "infineon-spec-id",
+          "source_url": "https://www.infineon.com/assets/row/public/documents/30/49/infineon-xmc5200-datasheet-datasheet-en.pdf"
+        },
+        {
+          "name": "infineon_xmc7200.pdf",
+          "bytes": 2193198,
+          "sha256": "e040c25a45943b1630b75715e27083d16c60a010be752f349c120faac9fe2936",
+          "vendor": "Infineon",
+          "family": "XMC",
+          "layout": "infineon-spec-id",
+          "source_url": "https://www.infineon.com/assets/row/public/documents/30/49/infineon-xmc7200-datasheet-datasheet-en.pdf"
+        },
+        {
+          "name": "microchip_samd21.pdf",
+          "bytes": 11870237,
+          "sha256": "cd6d39e3e5c2f2116cf99224a102f707444e0395f6faa7ddec75093bd249e394",
+          "vendor": "Microchip",
+          "family": "SAM",
+          "layout": "microchip-chaptered-matrix",
+          "source_url": "https://ww1.microchip.com/downloads/aemDocuments/documents/MCU32/ProductDocuments/DataSheets/SAM-D21-DA1-Family-Data-Sheet-DS40001882.pdf"
+        },
+        {
+          "name": "microchip_samd5xe5x.pdf",
+          "bytes": 18725467,
+          "sha256": "9a911a0ec57f0a0db0f2056eefcfb47ffa6703e9de2e6b78f66cb24152a8a5ae",
+          "vendor": "Microchip",
+          "family": "SAM",
+          "layout": "microchip-chaptered-matrix",
+          "source_url": "https://ww1.microchip.com/downloads/aemDocuments/documents/MCU32/ProductDocuments/DataSheets/SAM-D5x-E5x-Family-Data-Sheet-DS60001507.pdf"
+        },
+        {
+          "name": "st_stm8l101g3.pdf",
+          "bytes": 2154306,
+          "sha256": "c8e0b0d1f3c75a468728c9e8e3cbb1b9cea78fef0cd1df190be4b18a4094d5e3",
+          "vendor": "STMicroelectronics",
+          "family": "STM8L",
+          "layout": "stm8-low-power",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm8l101g3.pdf"
+        },
+        {
+          "name": "st_stm8l152r8.pdf",
+          "bytes": 3039021,
+          "sha256": "193f2133f3d81d2bbd9f025b5b4c440d13e1b8e6e444cbde44b5d0c386fa2c78",
+          "vendor": "STMicroelectronics",
+          "family": "STM8L",
+          "layout": "stm8-low-power",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm8l152r8.pdf"
+        },
+        {
+          "name": "st_stm8s003f3.pdf",
+          "bytes": 1542433,
+          "sha256": "1a0775fefcda1553ffea5216b60acdb9566e487f60aad8afa5c859a32acaa8f2",
+          "vendor": "STMicroelectronics",
+          "family": "STM8S",
+          "layout": "stm8-mainstream",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm8s003f3.pdf"
+        },
+        {
+          "name": "st_stm8s105c4.pdf",
+          "bytes": 1980627,
+          "sha256": "fe7332066a7195758263817870fc4c73c5af06e411476a6d6f3e6eaa8dc387a3",
+          "vendor": "STMicroelectronics",
+          "family": "STM8S",
+          "layout": "stm8-mainstream",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm8s105c4.pdf"
+        },
+        {
+          "name": "ti_mspm0g150x.pdf",
+          "bytes": 7262514,
+          "sha256": "c0a42d9f76eabef9188faf90d77032238bd912149e3ffb3dab6f885f4b6869da",
+          "vendor": "Texas Instruments",
+          "family": "MSPM0",
+          "layout": "ti-device-comparison",
+          "source_url": "https://www.ti.com/lit/gpn/MSPM0G1507"
+        },
+        {
+          "name": "ti_mspm0l111x.pdf",
+          "bytes": 2497876,
+          "sha256": "f57999029c0d657c25aaa626ddee6ba0692656a13252141c5669c39a17001c8a",
+          "vendor": "Texas Instruments",
+          "family": "MSPM0",
+          "layout": "ti-device-comparison",
+          "source_url": "https://www.ti.com/lit/gpn/MSPM0L1116"
+        }
+      ]
+    }
+  }
+}

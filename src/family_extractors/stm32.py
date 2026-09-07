@@ -24,6 +24,7 @@ from core.text import clean, compact, parse_number, scalar_or_none
 from family_rules.stm32_matrix import (
     discover_device_summary_models,
     discover_model_variants,
+    ordering_suffix,
     package_header_observation,
     select_observations,
 )
@@ -102,6 +103,18 @@ def missing_review_fields(section: str, row: dict[str, Any]) -> list[str]:
     return [field for field in fields if row.get(field) in (None, "", [])]
 
 
+def preferred_model_voltage(
+    feature_values: dict[str, Any],
+    operating_values: dict[str, Any] | None,
+) -> tuple[Any, Any] | None:
+    """Prefer a model-applicable range over a document-wide fallback."""
+    if feature_values.get("voltage_min") is not None and feature_values.get("voltage_max") is not None:
+        return feature_values["voltage_min"], feature_values["voltage_max"]
+    if operating_values and operating_values.get("voltage_min") is not None:
+        return operating_values.get("voltage_min"), operating_values.get("voltage_max")
+    return None
+
+
 def configured_term_groups(section: str, name: str) -> list[list[str]]:
     return [
         [compact(item).lower() for item in group if compact(item)]
@@ -174,10 +187,10 @@ def model_codes(model: str) -> tuple[str, str]:
     # A concrete STM32 ordering code ends in a letter package code followed by
     # a density code.  Generic family names such as STM32MP157C must not be
     # backtracked into the false pair ("7", "C").
-    match = re.match(r"STM32[A-Z]{1,2}\d{2,3}([A-Z])([A-Z0-9])$", model, re.I)
-    if not match:
-        raise ValueError(f"unsupported STM32 model code: {model}")
-    return match.group(1).upper(), match.group(2).upper()
+    try:
+        return ordering_suffix(model)
+    except ValueError as error:
+        raise ValueError(f"unsupported STM32 model code: {model}") from error
 
 
 def ordering_flash_value(page_texts: list[str], model: str) -> tuple[float | int, int] | None:
@@ -235,6 +248,7 @@ def package_values_from_ir(
         package_label_terms=FEATURE_RECIPE["fields"]["package_types"]["rows"],
         pin_header_terms=definition["pin_name_aliases"],
         preferred_package_kinds=(preferred_package,) if preferred_package else (),
+        qualifier_preferences=definition["column_qualifier_preferences"],
         candidate_table_ids=candidate_table_ids,
     )
 
@@ -317,7 +331,11 @@ def pin_tables(
         model=model,
         pin_pattern=profile.pin_re,
         normalize_function=profile.normalize_function,
-        series_identity=profile.series_for_model(model),
+        # The merged pin-table header may repeat the same package under sibling
+        # product groups.  The ordering-code stem (everything before package
+        # and density) is the narrow identity needed to bind the right column;
+        # the broader profile series can match both groups.
+        series_identity=model[:-2],
         recipe=PIN_RECIPE["topologies"]["pin_definition"],
         package_types=packages,
         pin_count=pin_count,
@@ -363,14 +381,44 @@ def _process_single_model(doc: dict[str, Any], collector: Collector, aliases: di
         if hard_issues:
             raise ValueError("; ".join(issue.message for issue in hard_issues))
         values = {**reduced["fields"], "peripherals": reduced["peripherals"]}
+        aggregate_index = {
+            (item.field_group, item.field_name): item
+            for item in aggregates
+        }
         feature_page = feature_table.pages[0]
         feature = {
             "page": feature_page,
             "bbox": feature_table.bboxes[0],
             "text": texts[feature_page - 1],
         }
-        feature_evidence = make_evidence(doc, feature["page"], feature["bbox"], "model", "A", feature["text"], 1)
-        evidences.append(feature_evidence)
+        evidence_pages = {feature_page}
+        for aggregate in aggregates:
+            evidence_pages.update(aggregate.evidence_pages)
+        feature_evidence_by_page: dict[int, Evidence] = {}
+        for sequence, page in enumerate(sorted(evidence_pages), 1):
+            position = feature_table.pages.index(page)
+            evidence = make_evidence(
+                doc,
+                page,
+                feature_table.bboxes[position],
+                "model",
+                "A",
+                texts[page - 1],
+                sequence,
+            )
+            evidences.append(evidence)
+            feature_evidence_by_page[page] = evidence
+        feature_evidence = feature_evidence_by_page[feature_page]
+
+        def aggregate_evidence_ids(group: str, name: str) -> list[str]:
+            aggregate = aggregate_index.get((group, name))
+            if aggregate is None:
+                return []
+            return [
+                feature_evidence_by_page[page].evidence_id
+                for page in aggregate.evidence_pages
+                if page in feature_evidence_by_page
+            ]
         ordering_evidence = None
         ordering_flash = ordering_flash_value(texts, model)
         if ordering_flash is not None and ordering_flash[0] != values.get("flash_kb"):
@@ -429,11 +477,8 @@ def _process_single_model(doc: dict[str, Any], collector: Collector, aliases: di
         operating = operating_result.value if operating_result.status == "success" else None
         if operating_result.review_item:
             review_items.append(operating_result.review_item)
-        operating_voltage = (
-            (operating.get("voltage_min"), operating.get("voltage_max"))
-            if operating and operating.get("voltage_min") is not None
-            else None
-        )
+        matrix_voltage = preferred_model_voltage(values, None)
+        selected_voltage = preferred_model_voltage(values, operating)
         chip_row = {
             "chip_id": model,
             "series": profile.series_for_model(model),
@@ -442,22 +487,37 @@ def _process_single_model(doc: dict[str, Any], collector: Collector, aliases: di
             "ram_kb": values.get("ram_kb"),
             "max_freq_mhz": values.get("max_freq_mhz"),
             "package_types": values.get("package_types", []),
-            "voltage_min": operating_voltage[0] if operating_voltage else values.get("voltage_min"),
-            "voltage_max": operating_voltage[1] if operating_voltage else values.get("voltage_max"),
+            "voltage_min": selected_voltage[0] if selected_voltage else None,
+            "voltage_max": selected_voltage[1] if selected_voltage else None,
         }
-        feature_fields = {"chip_id", "series", "core", "ram_kb", "max_freq_mhz"}
+        chip_field_evidence: dict[str, str | list[str]] = {
+            "chip_id": feature_evidence.evidence_id,
+            "series": feature_evidence.evidence_id,
+            "core": feature_evidence.evidence_id,
+        }
+        for field_name in ("ram_kb", "max_freq_mhz"):
+            ids = aggregate_evidence_ids("fields", field_name)
+            if ids:
+                chip_field_evidence[field_name] = ids
         if ordering_evidence is None:
-            feature_fields.add("flash_kb")
+            ids = aggregate_evidence_ids("fields", "flash_kb")
+            if ids:
+                chip_field_evidence["flash_kb"] = ids
         if values.get("package_types") and package_evidence is None:
-            feature_fields.add("package_types")
-        if operating_voltage is None and chip_row.get("voltage_min") is not None:
-            feature_fields.update({"voltage_min", "voltage_max"})
+            ids = aggregate_evidence_ids("fields", "package_types")
+            if ids:
+                chip_field_evidence["package_types"] = ids
+        if matrix_voltage is not None:
+            for field_name in ("voltage_min", "voltage_max"):
+                ids = aggregate_evidence_ids("fields", field_name)
+                if ids:
+                    chip_field_evidence[field_name] = ids
         collector.add(
             "chips",
             chip_row,
             feature_evidence.evidence_id,
             "A",
-            {field: feature_evidence.evidence_id for field in feature_fields},
+            chip_field_evidence,
         )
         if ordering_evidence is not None:
             collector.add(
@@ -477,17 +537,22 @@ def _process_single_model(doc: dict[str, Any], collector: Collector, aliases: di
             )
         if values.get("flash_kb") is not None:
             flash_evidence = ordering_evidence or feature_evidence
-            collector.add("memory", {"chip_id": model, "memory_type": configured_output_value("memory_type", "flash", "Flash"), "size_kb": values["flash_kb"], "organization": None, "features": None}, flash_evidence.evidence_id, "A")
+            flash_ids = [ordering_evidence.evidence_id] if ordering_evidence else aggregate_evidence_ids("fields", "flash_kb")
+            collector.add("memory", {"chip_id": model, "memory_type": configured_output_value("memory_type", "flash", "Flash"), "size_kb": values["flash_kb"], "organization": None, "features": None}, flash_evidence.evidence_id, "A", {field: flash_ids or [flash_evidence.evidence_id] for field in ("chip_id", "memory_type", "size_kb")})
         if values.get("ram_kb") is not None:
-            collector.add("memory", {"chip_id": model, "memory_type": configured_output_value("memory_type", "ram", "SRAM_Internal"), "size_kb": values["ram_kb"], "organization": None, "features": None}, feature_evidence.evidence_id, "A")
+            ram_ids = aggregate_evidence_ids("fields", "ram_kb") or [feature_evidence.evidence_id]
+            collector.add("memory", {"chip_id": model, "memory_type": configured_output_value("memory_type", "ram", "SRAM_Internal"), "size_kb": values["ram_kb"], "organization": None, "features": None}, ram_ids[0], "A", {field: ram_ids for field in ("chip_id", "memory_type", "size_kb")})
         for peripheral_type, item in values.get("peripherals", {}).items():
-            collector.add("peripherals", {"chip_id": model, "peripheral_type": peripheral_type, "instance_count": item.get("count"), "max_resolution": item.get("resolution"), "max_frequency_mhz": None, "features": None}, feature_evidence.evidence_id, "A")
+            peripheral_ids = aggregate_evidence_ids("peripherals", peripheral_type) or [feature_evidence.evidence_id]
+            peripheral_row = {"chip_id": model, "peripheral_type": peripheral_type, "instance_count": item.get("count"), "channel_count": item.get("channel_count"), "max_resolution": item.get("resolution"), "max_frequency_mhz": None, "features": None}
+            evidenced_fields = ["chip_id", "peripheral_type"] + [field for field in ("instance_count", "channel_count", "max_resolution") if peripheral_row.get(field) is not None]
+            collector.add("peripherals", peripheral_row, peripheral_ids[0], "A", {field: peripheral_ids for field in evidenced_fields})
 
         electrical_voltage_added = False
         if operating:
             operating_evidence = make_evidence(doc, operating["page"], operating["bbox"], "electrical", "A", texts[operating["page"] - 1], 1)
             evidences.append(operating_evidence)
-            if operating.get("voltage_min") is not None:
+            if operating.get("voltage_min") is not None and matrix_voltage is None:
                 collector.add(
                     "chips",
                     chip_row,
@@ -501,6 +566,7 @@ def _process_single_model(doc: dict[str, Any], collector: Collector, aliases: di
                 collector.add("electrical", {"chip_id": model, "param_name": configured_output_value("electrical_param", "temperature", "T_operating"), "min_value": operating["temperature_min"], "max_value": operating["temperature_max"], "unit": "°C", "conditions": None}, operating_evidence.evidence_id, "A")
 
         if not electrical_voltage_added and chip_row.get("voltage_min") is not None:
+            voltage_ids = aggregate_evidence_ids("fields", "voltage_min") or [feature_evidence.evidence_id]
             collector.add(
                 "electrical",
                 {
@@ -511,8 +577,9 @@ def _process_single_model(doc: dict[str, Any], collector: Collector, aliases: di
                     "unit": "V",
                     "conditions": None,
                 },
-                feature_evidence.evidence_id,
+                voltage_ids[0],
                 "A",
+                {field: voltage_ids for field in ("chip_id", "param_name", "min_value", "max_value", "unit")},
             )
 
         missing_chip_fields = missing_review_fields("chips", chip_row)

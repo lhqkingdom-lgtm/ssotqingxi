@@ -13,7 +13,7 @@ import pdfplumber
 SHEET_FIELDS = {
     "chips": ["chip_id", "series", "core", "flash_kb", "ram_kb", "max_freq_mhz", "package_types", "voltage_min", "voltage_max"],
     "pin_mux": ["chip_id", "pin_name", "pin_number", "function_name", "is_supported", "default_function"],
-    "peripherals": ["chip_id", "peripheral_type", "instance_count", "max_resolution", "max_frequency_mhz"],
+    "peripherals": ["chip_id", "peripheral_type", "instance_count", "channel_count", "max_resolution", "max_frequency_mhz"],
     "electrical": ["chip_id", "param_name", "min_value", "max_value", "unit"],
     "memory": ["chip_id", "memory_type", "size_kb"],
 }

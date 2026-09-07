@@ -4,6 +4,7 @@ from dataclasses import replace
 from typing import Callable, Mapping, Sequence
 
 from core.ir import CellIR, TableIR
+from core.qualifiers import preferred_qualifier_indices
 from core.text import compact
 
 
@@ -129,19 +130,11 @@ def select_column_by_header_path(
         if identity_matches:
             matches = identity_matches
         if len(matches) > 1 and normalized_preferences:
-            qualifiers = tuple(item for item in normalized_preferences if item != "unqualified")
-            for preference in normalized_preferences:
-                preferred = []
-                for column in matches:
-                    joined = compact(" ".join(paths[column])).lower()
-                    if preference == "unqualified" and not any(item in joined for item in qualifiers):
-                        preferred.append(column)
-                    elif preference != "unqualified" and preference in joined:
-                        preferred.append(column)
-                if len(preferred) == 1:
-                    return preferred[0]
-                if preferred:
-                    matches = preferred
+            selected_indices = preferred_qualifier_indices(
+                [" ".join(paths[column]) for column in matches],
+                normalized_preferences,
+            )
+            matches = [matches[index] for index in selected_indices]
         return matches[0] if len(matches) == 1 else None
     return None
 

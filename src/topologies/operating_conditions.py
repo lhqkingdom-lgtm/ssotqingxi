@@ -31,6 +31,28 @@ def number_from_cell(value: object) -> float | None:
     return float(match.group(0)) if match else None
 
 
+def parse_compound_operating_conditions(value: object) -> dict[str, float]:
+    """Split order-independent voltage/temperature ranges by their units."""
+    text = clean(value).replace("–", "-").replace("—", "-").replace("−", "-")
+    result: dict[str, float] = {}
+    pattern = re.compile(
+        r"(-?\d+(?:\.\d+)?)\s*(V|℃|°\s*C)?\s*(?:-|~|～|至|TO)\s*"
+        r"(-?\d+(?:\.\d+)?)\s*(V|℃|°\s*C)",
+        re.I,
+    )
+    for match in pattern.finditer(text):
+        first_unit = compact(match.group(2) or "").upper()
+        final_unit = compact(match.group(4)).upper()
+        if first_unit and first_unit != final_unit:
+            continue
+        low, high = float(match.group(1)), float(match.group(3))
+        if final_unit == "V":
+            result["voltage_min"], result["voltage_max"] = low, high
+        else:
+            result["temperature_min"], result["temperature_max"] = low, high
+    return result
+
+
 def is_primary_voltage_row(row: list[Any], recipe: dict[str, Any]) -> bool:
     symbols = {compact(item).upper() for item in recipe.get("primary_voltage_symbols", ["VDD"])}
     return bool(row) and compact(row[0]).upper() in symbols

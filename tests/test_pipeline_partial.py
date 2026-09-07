@@ -7,6 +7,7 @@ from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch
 
+from core.evidence import Evidence
 from core.pipeline import run_extraction
 
 
@@ -112,6 +113,85 @@ class PipelinePartialTests(unittest.TestCase):
             self.assertNotIn("page_texts", partial_doc)
             self.assertNotIn("page_texts", failed_doc)
             self.assertNotIn("page_texts", zero_model_doc)
+
+    def test_unresolved_conflict_is_retained_and_marks_document_partial(self) -> None:
+        source_doc = {
+            "doc_id": "conflict-doc",
+            "sha256": "d" * 64,
+            "version": "1",
+            "path": Path("conflict.pdf"),
+            "duplicates": ["conflict.pdf"],
+        }
+
+        class Extractor:
+            @staticmethod
+            def process_document(doc, collector, aliases, profile):
+                base = {
+                    "chip_id": "TEST123",
+                    "series": "TEST",
+                    "core": "CORE",
+                    "ram_kb": 8,
+                    "max_freq_mhz": 16,
+                    "package_types": ["PKG"],
+                    "voltage_min": 2.0,
+                    "voltage_max": 3.6,
+                }
+                collector.add("chips", {**base, "flash_kb": 32}, "EV-OLD")
+                collector.add("chips", {**base, "flash_kb": 64}, "EV-NEW")
+                evidences = [
+                    Evidence("EV-OLD", doc["doc_id"], str(doc["path"]), 1, [0, 0, 1, 1], "table", "B", "32"),
+                    Evidence("EV-NEW", doc["doc_id"], str(doc["path"]), 1, [1, 0, 2, 1], "table", "B", "64"),
+                ]
+                return ({
+                    "doc_id": doc["doc_id"],
+                    "sha256": doc["sha256"],
+                    "version": doc["version"],
+                    "source_file": str(doc["path"]),
+                    "duplicate_paths": doc["duplicates"],
+                    "page_count": 1,
+                    "model_count": 1,
+                    "models": ["TEST123"],
+                    "evidence_count": 2,
+                    "status": "complete",
+                    "sections": {},
+                    "review_items": [],
+                }, evidences)
+
+        profile = SimpleNamespace(profile_id="test_family")
+        family = SimpleNamespace(
+            profile=profile,
+            rules={"rule_version": "test-1"},
+            aliases={},
+            extractor=Extractor,
+            rules_path=Path("rules.json"),
+        )
+
+        with tempfile.TemporaryDirectory() as temporary:
+            output_dir = Path(temporary)
+            with (
+                patch("core.pipeline.choose_pdfs", return_value=[source_doc]),
+                patch("core.pipeline.extract_page_texts", return_value=["one page"]),
+                patch("core.pipeline.load_family", return_value=family),
+                patch("core.pipeline.select_family", return_value=family),
+            ):
+                payload = run_extraction(
+                    input_dir=Path("input"),
+                    output_dir=output_dir,
+                    schema_path=PROJECT_ROOT / "config" / "schema.json",
+                    profile_paths=[Path("profile.json")],
+                    ingested_by="test",
+                    ingested_at="2026-09-02T00:00:00+08:00",
+                )
+
+            queue = [json.loads(line) for line in (output_dir / "review_queue.jsonl").read_text(encoding="utf-8").splitlines()]
+            self.assertEqual(payload["documents"][0]["status"], "partial")
+            self.assertEqual(payload["documents"][0]["sections"]["conflicts"], "partial")
+            self.assertEqual(payload["review_queue_count"], 1)
+            self.assertEqual(queue[0]["error_type"], "UnresolvedConflict")
+            self.assertTrue(payload["data"]["chips"][0]["_ambiguous"])
+            self.assertEqual(payload["data"]["chips"][0]["flash_kb"], 32)
+            self.assertEqual(payload["conflicts"][0]["incoming_candidate"]["flash_kb"], 64)
+            self.assertTrue(any(issue["message"].startswith("unresolved same-revision") for issue in payload["validation_issues"]))
 
 
 if __name__ == "__main__":

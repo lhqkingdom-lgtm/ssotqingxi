@@ -79,6 +79,41 @@ def table_identity(title: str) -> tuple[str | None, str, bool]:
     return number, base, continued
 
 
+def _repeated_entity_headers(fragment: TableFragment) -> set[str]:
+    """Return distinctive identifiers repeated by a matrix continuation.
+
+    A continuation page can lose its caption/table number during PDF text
+    extraction even though it repeats the physical entity columns.  Generic
+    headings such as ``Min/Typ/Max`` are deliberately excluded: joining on
+    those would merge unrelated electrical-characteristic tables.
+    """
+    tokens: set[str] = set()
+    for row in fragment.rows[:3]:
+        for value in row:
+            normalized = compact(value).upper()
+            if (
+                len(normalized) >= 3
+                and any(char.isalpha() for char in normalized)
+                and any(char.isdigit() for char in normalized)
+                and re.fullmatch(r"[A-Z0-9_./-]+", normalized)
+            ):
+                tokens.add(normalized)
+    return tokens
+
+
+def _is_structural_matrix_continuation(previous: TableFragment, current: TableFragment) -> bool:
+    """Recognize an uncaptioned next-page matrix by repeated entity columns."""
+    if current.table_number is not None or current.page != previous.page + 1:
+        return False
+    previous_headers = _repeated_entity_headers(previous)
+    current_headers = _repeated_entity_headers(current)
+    shared = previous_headers & current_headers
+    return (
+        len(shared) >= 3
+        and len(shared) / min(len(previous_headers), len(current_headers)) >= 0.7
+    )
+
+
 def iter_table_fragments(
     pdf: Any,
     page_texts: list[str],
@@ -142,6 +177,22 @@ def group_continued_tables(fragments: Iterable[TableFragment]) -> list[TableGrou
             )
             if existing is not None:
                 existing.append(fragment)
+                continue
+        else:
+            # Some PDFs repeat the matrix's entity header on the next page but
+            # omit the caption or place it outside the detected crop.  Join it
+            # only when at least three distinctive identifiers agree, avoiding
+            # unsafe joins based on generic column names alone.
+            structural = next(
+                (
+                    group
+                    for group in reversed(groups)
+                    if _is_structural_matrix_continuation(group[-1], fragment)
+                ),
+                None,
+            )
+            if structural is not None:
+                structural.append(fragment)
                 continue
         groups.append([fragment])
     result = []

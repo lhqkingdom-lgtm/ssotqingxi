@@ -86,6 +86,7 @@ class Collector:
             self.index[sheet][key] = normalized
             self.data[sheet].append(normalized)
             return
+        existing_before_merge = deepcopy(existing)
         for transaction in self._transactions:
             transaction_key = (sheet, key)
             if transaction_key not in transaction["inserted"] and transaction_key not in transaction["before"]:
@@ -108,6 +109,16 @@ class Collector:
         if evidence_id not in existing["_evidence_ids"]:
             existing["_evidence_ids"].append(evidence_id)
         if differences:
+            existing_candidate = {
+                key: deepcopy(value)
+                for key, value in existing_before_merge.items()
+                if key != "_ambiguous"
+            }
+            incoming_candidate = {
+                key: deepcopy(value)
+                for key, value in normalized.items()
+                if key != "_ambiguous"
+            }
             existing_rank = int(existing.get("_source_rank") or 0)
             incoming_rank = int(normalized.get("_source_rank") or 0)
             if incoming_rank > existing_rank:
@@ -123,4 +134,12 @@ class Collector:
             else:
                 existing["_ambiguous"] = True
                 resolution = "ambiguous_same_revision"
-            self.conflicts.append({"sheet": sheet, "key": key, "differences": differences, "evidence_id": evidence_id, "resolution": resolution})
+            self.conflicts.append({
+                "sheet": sheet,
+                "key": key,
+                "differences": differences,
+                "existing_candidate": existing_candidate,
+                "incoming_candidate": incoming_candidate,
+                "evidence_id": evidence_id,
+                "resolution": resolution,
+            })

@@ -5,7 +5,7 @@ from typing import Any, Iterable
 
 from core.ir import AggregatedFieldIR, FieldCandidateIR, ValidationIssueIR
 from core.mapped_cell import MappedCell
-from core.recipe_executor import memory_kb, parse_packages, peripheral_count, reduce_values
+from core.recipe_executor import frequency_mhz, memory_kb, parse_packages, peripheral_count, reduce_values
 from core.text import compact
 
 
@@ -61,6 +61,13 @@ def _field_contributors(
         mapped = candidate_to_mapped(candidate)
         if name in {"flash_kb", "ram_kb"} and memory_kb(mapped, unit_config) is None:
             continue
+        if name == "max_freq_mhz":
+            field_rule = rules.get("fields", {}).get(name, {})
+            frequency_unit = rules.get("units", {}).get(field_rule.get("unit"))
+            if frequency_unit is None:
+                raise ValueError(f"unit dictionary missing for common field: {name}")
+            if frequency_mhz(mapped, frequency_unit) is None:
+                continue
         if name == "package_types" and not parse_packages(candidate.raw_value, package_pattern):
             continue
         result.append(candidate)
@@ -72,10 +79,13 @@ def _peripheral_contributors(
     candidates: list[FieldCandidateIR],
     config: dict[str, Any],
 ) -> list[FieldCandidateIR]:
+    parsers = [config.get("value_parser", "first_integer")]
+    if config.get("channel_value_parser"):
+        parsers.append(config["channel_value_parser"])
     return [
         candidate
         for candidate in candidates
-        if peripheral_count(candidate_to_mapped(candidate), config.get("value_parser", "first_integer")) is not None
+        if any(peripheral_count(candidate_to_mapped(candidate), parser) is not None for parser in parsers)
     ]
 
 
@@ -187,8 +197,20 @@ def validate_hard_rules(
             if config.get("reducer") not in {"single", "first_nonempty"}:
                 continue
             grouped = defaultdict(list)
+            accepted_candidate_ids = {
+                candidate_id
+                for aggregate in aggregates
+                for candidate_id in aggregate.candidate_ids
+            }
             for candidate in candidates:
                 if candidate.field_group == group_name and candidate.field_name == field_name:
+                    # A hierarchy label may mention a numeric field while the
+                    # leaf value belongs to another concept (for example
+                    # "FMC / NOR flash memory" = "yes").  Reducers already
+                    # type-check contributors; contradictory-value checks must
+                    # operate on the same typed set, not on discarded matches.
+                    if accepted_candidate_ids and candidate.candidate_id not in accepted_candidate_ids:
+                        continue
                     grouped[(candidate.entity_key, candidate.source_table_id)].append(candidate)
             for (entity_key, _), items in grouped.items():
                 values = {compact(item.raw_value).lower() for item in items}

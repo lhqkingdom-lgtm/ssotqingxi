@@ -1,0 +1,11 @@
+{
+  "files": [
+    {
+      "name": "official-datasheet.pdf",
+      "vendor": "vendor",
+      "family": "product-family",
+      "layout": "row-model-table",
+      "source_url": "https://manufacturer.example/datasheet.pdf"
+    }
+  ]
+}

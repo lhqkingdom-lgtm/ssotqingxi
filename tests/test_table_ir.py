@@ -10,6 +10,7 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from core.table_engine import TableFragment, TableGroup
 from core.table_ir_builder import group_to_table_ir
+from topologies.matrix_observer import table_grids
 
 
 def fragment(page: int, rotation: int = 0, continued: bool = False) -> TableFragment:
@@ -38,6 +39,16 @@ class TableIRTests(unittest.TestCase):
         self.assertEqual((anchor.raw_text, anchor.normalized_text, anchor.column_span), ("Models", "models", 2))
         self.assertEqual(placeholder.inherited_from, anchor.cell_id)
         self.assertEqual(table.pages, (3,))
+
+    def test_merged_anchor_value_is_visible_in_every_spanned_grid_column(self) -> None:
+        table = group_to_table_ir(TableGroup("table-2", (fragment(3),)))
+        _, _, rows, _ = table_grids(table, inherit_merged_values=True)[0]
+        self.assertEqual(rows[0][:2], ["Models", "Models"])
+
+    def test_merged_values_are_not_inherited_without_explicit_topology_request(self) -> None:
+        table = group_to_table_ir(TableGroup("table-2", (fragment(3),)))
+        _, _, rows, _ = table_grids(table)[0]
+        self.assertEqual(rows[0][:2], ["Models", "A"])
 
     def test_cross_page_rotation_is_preserved(self) -> None:
         table = group_to_table_ir(TableGroup("table-2", (fragment(3, 90), fragment(4, 90, True))))

@@ -56,6 +56,15 @@ class PinIRTests(unittest.TestCase):
         self.assertEqual(issues[0]["kind"], "pin_name_multiple_numbers")
         self.assertEqual(definitions[0].pin_name, "PA1")
 
+    def test_documented_logical_aliases_may_share_one_physical_lead(self) -> None:
+        definitions = [definition("PA1", 9, "ADC_IN1"), definition("PA2", 9, "ADC_IN2")]
+        self.assertEqual(pin_identity_issues(definitions), [])
+
+    def test_package_dimension_prevents_false_cross_package_conflict(self) -> None:
+        first = definition("PA1", 9, "ADC_IN1")
+        second = PinDefinitionIR(**{**first.__dict__, "package_type": "LQFP48", "pin_number": 15})
+        self.assertEqual(pin_identity_issues([first, second]), [])
+
 
 if __name__ == "__main__":
     unittest.main()

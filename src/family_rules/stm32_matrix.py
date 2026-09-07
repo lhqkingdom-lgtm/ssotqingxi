@@ -27,10 +27,17 @@ def is_stm32_header(value: str) -> bool:
 
 
 def ordering_suffix(model: str) -> tuple[str, str]:
-    match = re.match(r"STM32[A-Z]{1,2}\d{2,3}([A-Z0-9])([A-Z0-9])", model, re.I)
-    if not match:
-        raise ValueError(f"unsupported STM32 ordering-code shape: {model}")
-    return match.group(1).upper(), match.group(2).upper()
+    match = re.match(r"STM32[A-Z]{1,2}\d{2,3}([A-Z])([A-Z0-9])", model, re.I)
+    if match:
+        return match.group(1).upper(), match.group(2).upper()
+    # Newer STM32 family stems are not always letters followed by a single
+    # digit run (for example L4R5 and G0B1).  Their concrete device code still
+    # ends with the package and density positions, so fall back to those two
+    # positions without naming any particular series.
+    fallback = re.fullmatch(r"STM32[A-Z0-9]{3,10}?([A-Z])([A-Z0-9])", model, re.I)
+    if fallback:
+        return fallback.group(1).upper(), fallback.group(2).upper()
+    raise ValueError(f"unsupported STM32 ordering-code shape: {model}")
 
 
 def header_model_patterns(header: str) -> list[str]:
@@ -78,7 +85,22 @@ def discover_model_variants(
     combined = compact(" ".join(headers.values())).upper()
     discovered: list[str] = []
 
-    suffix_base = re.search(r"(STM32[A-Z]{1,2}\d{2,3})_+", combined)
+    # Some matrices put the common family prefix only in the table title and
+    # use compact column suffixes such as R5VI/R5VG.  Infer the missing prefix
+    # from the seed only when one complete suffix is actually present, then
+    # apply that suffix's character shape to sibling headers.
+    target = compact(seed_model).upper()
+    short_match = _best_short_header_suffix(headers, target)
+    if short_match is not None:
+        _, suffix = short_match
+        prefix = target[: -len(suffix)]
+        shape = "".join(r"\d" if char.isdigit() else "[A-Z]" for char in suffix)
+        for _, header in sorted(headers.items()):
+            if "STM32" in header:
+                continue
+            discovered.extend(prefix + token for token in re.findall(shape, header))
+
+    suffix_base = re.search(r"(STM32[A-Z0-9]{3,10}?)_+", combined)
     suffixes = re.findall(r"_([A-Z0-9])([A-Z0-9])", combined)
     if suffix_base and suffixes:
         discovered.extend(suffix_base.group(1) + "".join(suffix) for suffix in suffixes)
@@ -86,7 +108,7 @@ def discover_model_variants(
     header_entries = sorted(headers.items())
     for _, header in header_entries:
         for pattern in header_model_patterns(header):
-            if re.fullmatch(r"STM32[A-Z]{1,2}\d{2,3}[A-WYZ0-9]{2}", pattern):
+            if re.fullmatch(r"STM32[A-Z0-9]{3,10}?[A-WYZ0-9]{2}", pattern):
                 discovered.append(pattern)
 
     aliases = [
@@ -119,7 +141,7 @@ def discover_model_variants(
                 else len(density_row)
             )
             for pattern in header_model_patterns(header):
-                if not re.fullmatch(r"STM32[A-Z]{1,2}\d{2,3}[A-Z0-9X]{2}", pattern) or not pattern.endswith("X"):
+                if not re.fullmatch(r"STM32[A-Z0-9]{3,10}?[A-Z0-9X]{2}", pattern) or not pattern.endswith("X"):
                     continue
                 resolved_prefix = "".join(
                     seed_model[index] if char == "X" and index < len(seed_model) else char
@@ -131,7 +153,7 @@ def discover_model_variants(
 
     concrete = [
         model for model in dict.fromkeys(discovered)
-        if re.fullmatch(r"STM32[A-Z]{1,2}\d{2,3}[A-Z0-9]{2}", model)
+        if re.fullmatch(r"STM32[A-Z0-9]{5,12}", model)
     ]
     return concrete or [compact(seed_model).upper()]
 
@@ -218,6 +240,22 @@ def wildcard_family_prefix_match(pattern: str, target: str) -> bool:
     return bool(re.match(f"^{expression}", target, re.I))
 
 
+def _best_short_header_suffix(headers: dict[int, str], target: str) -> tuple[int, str] | None:
+    matches: list[tuple[int, int, str]] = []
+    for column, header in headers.items():
+        normalized = compact(header).upper()
+        if not normalized or "STM32" in normalized:
+            continue
+        for length in range(3, min(8, len(target)) + 1):
+            suffix = target[-length:]
+            if suffix in normalized:
+                matches.append((length, -column, suffix))
+    if not matches:
+        return None
+    length, negative_column, suffix = max(matches)
+    return -negative_column, suffix
+
+
 def select_model_column(
     rows: list[list[str]],
     target_model: str,
@@ -266,6 +304,9 @@ def select_model_column(
                 if expected_flash in density_values(density_row[column]):
                     return column
         return start
+    short_match = _best_short_header_suffix(headers, target)
+    if short_match is not None:
+        return short_match[0]
     combined = compact(" ".join(headers.values())).upper()
     suffixes = re.findall(r"_([A-Z0-9])([A-Z0-9])", combined)
     candidates = [index + 2 for index, suffix in enumerate(suffixes) if suffix == (package_code, flash_code)]

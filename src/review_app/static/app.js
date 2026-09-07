@@ -12,7 +12,7 @@ const FIELD_LABELS = {
   voltage_min: "最低电压", voltage_max: "最高电压", pin_name: "管脚名",
   pin_number: "脚号", function_name: "功能", is_supported: "支持", af_code: "AF编号",
   default_function: "默认功能", constraints: "限制", peripheral_type: "外设类型",
-  instance_count: "数量 / 通道数", max_resolution: "最高分辨率", max_frequency_mhz: "最高频率",
+  instance_count: "实例数", channel_count: "通道数", max_resolution: "最高分辨率", max_frequency_mhz: "最高频率",
   features: "特性", param_name: "参数名", min_value: "最小值", max_value: "最大值",
   unit: "单位", conditions: "条件", memory_type: "存储类型", size_kb: "容量 (KB)",
   organization: "组织方式",
@@ -21,7 +21,7 @@ const FIELD_LABELS = {
 const HIDDEN_FIELDS = new Set(["chip_id", "pdf_source_file", "evidence_pages", "ingested_by", "ingested_at", "is_reviewed"]);
 const EXTRACTION_METHODS = { A: "直接提取", B: "结构转换", C: "回退推断" };
 const PAGE_SIZE = 50;
-const NUMERIC_FIELDS = new Set(["flash_kb", "ram_kb", "max_freq_mhz", "voltage_min", "voltage_max", "instance_count", "max_resolution", "max_frequency_mhz", "min_value", "max_value", "size_kb"]);
+const NUMERIC_FIELDS = new Set(["flash_kb", "ram_kb", "max_freq_mhz", "voltage_min", "voltage_max", "instance_count", "channel_count", "max_resolution", "max_frequency_mhz", "min_value", "max_value", "size_kb"]);
 const BOOLEAN_FIELDS = new Set(["is_supported"]);
 const LONG_TEXT_FIELDS = new Set(["function_name", "default_function", "constraints", "features", "conditions", "organization"]);
 const state = { data: null, reviewState: null, reviewBatchPath: null, serverRevision: 0, saveQueue: Promise.resolve(), saveState: "loading", query: "", reviewFilter: "all", activeChipId: null, activeSheet: "chips", page: 0, activeRowId: null, activeEvidenceId: null, sidebarCollapsed: false, evidenceZoom: "fit", editMode: false, editingRecord: null, inlineEditor: null, lastCellClick: null, pendingDeleteRowId: null };

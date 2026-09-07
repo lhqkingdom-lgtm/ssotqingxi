@@ -97,17 +97,28 @@ def resolve_pin_mux(
 
 
 def pin_identity_issues(definitions: Iterable[PinDefinitionIR]) -> list[dict[str, Any]]:
-    """Report contradictory GPIO identities without guessing a correction."""
-    by_name: dict[str, set[int | str]] = {}
-    by_number: dict[int | str, set[str]] = {}
+    """Report contradictory logical-pin placement within one concrete package.
+
+    A physical lead is not required to have exactly one logical GPIO name.
+    Small packages can expose documented aliases such as ``PA1/PA2`` on the
+    same lead.  The unsafe condition is the opposite direction: one logical
+    name resolving to different physical positions in the same chip/package.
+    Package is part of the identity so legitimate package variants are not
+    conflated either.
+    """
+    by_name: dict[tuple[str, str | None, str], set[int | str]] = {}
     for item in definitions:
-        by_name.setdefault(item.pin_name, set()).add(item.pin_number)
-        by_number.setdefault(item.pin_number, set()).add(item.pin_name)
+        by_name.setdefault((item.chip_id, item.package_type, item.pin_name), set()).add(item.pin_number)
     issues = []
-    for pin_name, numbers in sorted(by_name.items()):
+    for (chip_id, package_type, pin_name), numbers in sorted(
+        by_name.items(), key=lambda pair: tuple(str(item or "") for item in pair[0])
+    ):
         if len(numbers) > 1:
-            issues.append({"kind": "pin_name_multiple_numbers", "pin_name": pin_name, "values": sorted(map(str, numbers))})
-    for pin_number, names in sorted(by_number.items(), key=lambda pair: str(pair[0])):
-        if len(names) > 1:
-            issues.append({"kind": "pin_number_multiple_names", "pin_number": pin_number, "values": sorted(names)})
+            issues.append({
+                "kind": "pin_name_multiple_numbers",
+                "chip_id": chip_id,
+                "package_type": package_type,
+                "pin_name": pin_name,
+                "values": sorted(map(str, numbers)),
+            })
     return issues

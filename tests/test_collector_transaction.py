@@ -54,6 +54,20 @@ class CollectorTransactionTests(unittest.TestCase):
         collector.commit(document)
         self.assertEqual([row["chip_id"] for row in collector.data["chips"]], ["CORE"])
 
+    def test_same_revision_conflict_retains_both_complete_candidates(self) -> None:
+        collector = Collector(SCHEMA)
+        collector.add("chips", {"chip_id": "DEVICE", "flash_kb": 32}, "EV-OLD")
+        collector.add("chips", {"chip_id": "DEVICE", "flash_kb": 64}, "EV-NEW")
+
+        self.assertTrue(collector.data["chips"][0]["_ambiguous"])
+        self.assertEqual(len(collector.conflicts), 1)
+        conflict = collector.conflicts[0]
+        self.assertEqual(conflict["resolution"], "ambiguous_same_revision")
+        self.assertEqual(conflict["existing_candidate"]["flash_kb"], 32)
+        self.assertEqual(conflict["incoming_candidate"]["flash_kb"], 64)
+        self.assertEqual(conflict["existing_candidate"]["_evidence_ids"], ["EV-OLD"])
+        self.assertEqual(conflict["incoming_candidate"]["_evidence_ids"], ["EV-NEW"])
+
 
 if __name__ == "__main__":
     unittest.main()
