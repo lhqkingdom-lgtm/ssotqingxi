@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "review_method": "manual visual comparison against MiAi-603 page 9 and MiAi-6099 page 10 model tables",
+  "records": [
+    {"sheet":"chips","key":{"chip_id":"MJ6031S1"},"source_file_contains":"MiAi-603增强型","expected":{"flash_kb":8,"ram_kb":2,"package_types":["SOP8"]},"evidence_page":9},
+    {"sheet":"chips","key":{"chip_id":"MJ6031S3"},"source_file_contains":"MiAi-603增强型","expected":{"flash_kb":8,"ram_kb":2,"package_types":["SOP16"]},"evidence_page":9},
+    {"sheet":"chips","key":{"chip_id":"MJ6031S4"},"source_file_contains":"MiAi-603增强型","expected":{"flash_kb":8,"ram_kb":2,"package_types":["SOP20"]},"evidence_page":9},
+    {"sheet":"chips","key":{"chip_id":"MJ6031P4"},"source_file_contains":"MiAi-603增强型","expected":{"flash_kb":8,"ram_kb":2,"package_types":["SSOP20"]},"evidence_page":9},
+    {"sheet":"chips","key":{"chip_id":"MJ6031S6"},"source_file_contains":"MiAi-603增强型","expected":{"flash_kb":8,"ram_kb":2,"package_types":["SOP28"]},"evidence_page":9},
+    {"sheet":"chips","key":{"chip_id":"MJ6031A6"},"source_file_contains":"MiAi-603增强型","expected":{"flash_kb":8,"ram_kb":2,"package_types":["SSOP28"]},"evidence_page":9},
+    {"sheet":"chips","key":{"chip_id":"MJ6032N2"},"source_file_contains":"MiAi-603增强型","expected":{"flash_kb":16,"ram_kb":2,"package_types":["QFN20"]},"evidence_page":9},
+    {"sheet":"chips","key":{"chip_id":"MJ6032S4"},"source_file_contains":"MiAi-603增强型","expected":{"flash_kb":16,"ram_kb":2,"package_types":["SOP20"]},"evidence_page":9},
+    {"sheet":"chips","key":{"chip_id":"MJ6032P4"},"source_file_contains":"MiAi-603增强型","expected":{"flash_kb":16,"ram_kb":2,"package_types":["SSOP20"]},"evidence_page":9},
+    {"sheet":"chips","key":{"chip_id":"MJ6030S6"},"source_file_contains":"MiAi-603增强型","expected":{"flash_kb":32,"ram_kb":2,"package_types":["SOP28"]},"evidence_page":9},
+    {"sheet":"chips","key":{"chip_id":"MJ6030A6"},"source_file_contains":"MiAi-603增强型","expected":{"flash_kb":32,"ram_kb":2,"package_types":["SSOP28"]},"evidence_page":9},
+    {"sheet":"chips","key":{"chip_id":"MiAi-6099A1"},"source_file_contains":"MiAi-6099","expected":{"ram_kb":0.75,"package_types":["SOP16"],"voltage_min":2.2,"voltage_max":5.5},"evidence_page":10},
+    {"sheet":"chips","key":{"chip_id":"MiAi-6099A2"},"source_file_contains":"MiAi-6099","expected":{"ram_kb":0.75,"package_types":["TSSOP20"],"voltage_min":2.2,"voltage_max":5.5},"evidence_page":10},
+    {"sheet":"chips","key":{"chip_id":"MiAi-6099A3"},"source_file_contains":"MiAi-6099","expected":{"ram_kb":0.75,"package_types":["SOP20"],"voltage_min":2.2,"voltage_max":5.5},"evidence_page":10},
+    {"sheet":"chips","key":{"chip_id":"MiAi-6099A4"},"source_file_contains":"MiAi-6099","expected":{"ram_kb":0.75,"package_types":["SSOP28"],"voltage_min":2.2,"voltage_max":5.5},"evidence_page":10},
+    {"sheet":"chips","key":{"chip_id":"MiAi-6099A5"},"source_file_contains":"MiAi-6099","expected":{"ram_kb":0.75,"package_types":["SOP28"],"voltage_min":2.2,"voltage_max":5.5},"evidence_page":10},
+    {"sheet":"chips","key":{"chip_id":"MiAi-6099A6"},"source_file_contains":"MiAi-6099","expected":{"ram_kb":0.75,"package_types":["SOP28"],"voltage_min":2.2,"voltage_max":5.5},"evidence_page":10}
+  ]
+}

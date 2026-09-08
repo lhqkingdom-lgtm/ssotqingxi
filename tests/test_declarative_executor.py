@@ -125,6 +125,39 @@ class DeclarativeExecutorTests(unittest.TestCase):
         self.assertEqual([item["model_id"] for item in models], ["BY10", "BY20"])
         self.assertEqual(models[0]["values"][0]["label"], "Program memory")
 
+    def test_configured_variants_select_structure_without_filename_branch(self) -> None:
+        document = document_from_tables(
+            (
+                "Product selection",
+                [["Device", "Flash"], ["VZ10", "16 KB"], ["VZ20", "32 KB"]],
+            )
+        )
+        plan = {
+            "version": 1,
+            "sections": [{
+                "id": "models",
+                "component": "model_matrix",
+                "config": {
+                    "variants": [
+                        {
+                            "layout": "models_in_columns",
+                            "locator": {"required_any": ["flash"]},
+                        },
+                        {
+                            "layout": "models_in_rows",
+                            "locator": {"required_any": ["flash"]},
+                            "model_header_any": ["device"],
+                        },
+                    ]
+                },
+            }],
+        }
+        result = execute_declarative_plan(plan, document=document, page_texts=[""], profile=profile("VZ"))
+        self.assertEqual(
+            [item["model_id"] for item in result["models"]["models"]],
+            ["VZ10", "VZ20"],
+        )
+
     def test_operating_conditions_are_dependency_ordered_and_exclude_stress_table(self) -> None:
         document = document_from_tables(
             ("Absolute maximum ratings", [["Symbol", "Min", "Max"], ["VDD", "-0.3", "6"]]),
@@ -238,6 +271,30 @@ class DeclarativeExecutorTests(unittest.TestCase):
                 {"version": 1, "sections": [{"id": "x", "component": "vendor_parser", "config": {}}]},
                 {"model_matrix"},
             )
+
+    def test_unknown_parser_qualifier_and_missing_required_value_fail(self) -> None:
+        document = document_from_tables(
+            ("Device features", [["Feature", "RX1"], ["Flash", "16 KB"]])
+        )
+        base = {
+            "layout": "models_in_columns",
+            "locator": {"required_any": ["flash"]},
+        }
+        for fields, message in (
+            ({"flash_kb": {"parser": "vendor_magic"}}, "unsupported parser"),
+            ({"flash_kb": {"qualifiers": ["answer_is_16"]}}, "unknown qualifiers"),
+            ({"ram_kb": {"required": True}}, "required field ram_kb missing"),
+        ):
+            plan = {
+                "version": 1,
+                "sections": [{
+                    "id": "models",
+                    "component": "model_matrix",
+                    "config": {**base, "fields": fields},
+                }],
+            }
+            with self.subTest(fields=fields), self.assertRaisesRegex(ValueError, message):
+                execute_declarative_plan(plan, document=document, page_texts=[""], profile=profile("RX"))
         with self.assertRaisesRegex(ValueError, "dependency cycle"):
             validate_declarative_plan(
                 {

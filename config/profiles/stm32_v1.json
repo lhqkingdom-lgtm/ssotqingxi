@@ -58,10 +58,10 @@
             "separator_pattern": "[_\\s]+"
           },
           "fields": {
-            "flash_kb": {"reducer": "max"},
-            "ram_kb": {"reducer": "max"},
-            "max_freq_mhz": {"reducer": "max"},
-            "operating_voltage": {}
+            "flash_kb": {"parser": "quantity", "reducer": "max", "required": true},
+            "ram_kb": {"parser": "quantity", "reducer": "max", "required": true},
+            "max_freq_mhz": {"parser": "quantity", "reducer": "max", "required": true},
+            "operating_voltage": {"parser": "range", "qualifiers": ["not_absolute_maximum"], "required": true}
           }
         }
       }

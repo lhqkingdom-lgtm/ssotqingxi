@@ -12,7 +12,11 @@ from core.table_index import DocumentTableIndex, build_table_index
 from core.text import clean, compact, parse_range, scalar_or_none
 from core.units import convert_values
 from topologies.matrix_observer import table_grids, table_matches
-from topologies.operating_conditions import extract_operating_conditions
+from topologies.operating_conditions import (
+    extract_operating_conditions,
+    is_absolute_maximum_context,
+    parse_compound_operating_conditions,
+)
 from topologies.package_matrix import parse_package_names
 
 
@@ -175,6 +179,11 @@ def _models_in_columns(
             continue
         header_row, model_columns = max(candidates, key=lambda item: len(item[1]))
         first_model_column = min(column for column, _ in model_columns)
+        # A model token in the first column identifies a row-oriented matrix,
+        # not a model value column. Reject that shape instead of accepting the
+        # first data row as a one-model header.
+        if first_model_column == 0:
+            continue
         for column, model in model_columns:
             values = []
             for row_index, row in enumerate(rows):
@@ -189,6 +198,7 @@ def _models_in_columns(
                     "model_id": model,
                     "page": page,
                     "source_table_id": table.table_id,
+                    "source_table_title": table.title,
                     "model_source": _cell(cells, header_row, column),
                     "values": values,
                 }
@@ -235,6 +245,7 @@ def _models_in_rows(
                         "model_id": model,
                         "page": page,
                         "source_table_id": table.table_id,
+                        "source_table_title": table.title,
                         "model_source": _cell(cells, row_index, model_column),
                         "values": values,
                     }
@@ -316,6 +327,7 @@ def _models_in_grouped_columns(
                         "model_id": model,
                         "page": page,
                         "source_table_id": table.table_id,
+                        "source_table_title": table.title,
                         "model_source": _cell(cells, header_row, column),
                         "values": values,
                     }
@@ -339,6 +351,31 @@ def _reduce_numeric(values: list[int | float], reducer: str) -> int | float | No
     if reducer == "first":
         return values[0]
     raise ValueError(f"unsupported declarative numeric reducer: {reducer}")
+
+
+FIELD_PARSERS = {
+    "flash_kb": {"quantity"},
+    "ram_kb": {"quantity"},
+    "max_freq_mhz": {"quantity"},
+    "operating_voltage": {"range"},
+    "operating_conditions": {"compound_ranges"},
+    "package_types": {"package_names"},
+}
+DEFAULT_FIELD_PARSER = {name: next(iter(values)) for name, values in FIELD_PARSERS.items()}
+QUALIFIERS = {"nonempty", "not_absolute_maximum"}
+
+
+def _qualifier_accepts(
+    qualifier: str,
+    item: dict[str, Any],
+    model: dict[str, Any],
+) -> bool:
+    if qualifier == "nonempty":
+        return bool(compact(item.get("raw_value")))
+    if qualifier == "not_absolute_maximum":
+        context = f"{model.get('source_table_title', '')} {item.get('label', '')}"
+        return not is_absolute_maximum_context(context)
+    raise ValueError(f"unknown declarative qualifier: {qualifier}")
 
 
 def _map_model_fields(
@@ -366,11 +403,19 @@ def _map_model_fields(
     for field_name, settings in field_plan.items():
         if not isinstance(settings, dict):
             raise ValueError(f"model_matrix field {field_name} must be an object")
-        unknown_settings = set(settings) - {"reducer"}
+        unknown_settings = set(settings) - {"parser", "reducer", "qualifiers", "required"}
         if unknown_settings:
             raise ValueError(
                 f"model_matrix field {field_name} has unknown settings: {sorted(unknown_settings)}"
             )
+        parser = settings.get("parser", DEFAULT_FIELD_PARSER[field_name])
+        if parser not in FIELD_PARSERS[field_name]:
+            raise ValueError(f"unsupported parser {parser!r} for model_matrix field {field_name}")
+        qualifiers = settings.get("qualifiers", [])
+        if not isinstance(qualifiers, list) or any(item not in QUALIFIERS for item in qualifiers):
+            raise ValueError(f"model_matrix field {field_name} has unknown qualifiers")
+        if "required" in settings and not isinstance(settings["required"], bool):
+            raise ValueError(f"model_matrix field {field_name} required must be boolean")
     for model in models:
         grouped: dict[str, list[dict[str, Any]]] = {name: [] for name in field_plan}
         for value in model["values"]:
@@ -380,10 +425,22 @@ def _map_model_fields(
         fields: dict[str, Any] = {}
         sources: dict[str, list[dict[str, Any]]] = {}
         for field_name, items in grouped.items():
+            settings = field_plan[field_name]
+            parser = settings.get("parser", DEFAULT_FIELD_PARSER[field_name])
+            qualifiers = settings.get("qualifiers", [])
+            items = [
+                item
+                for item in items
+                if all(_qualifier_accepts(qualifier, item, model) for qualifier in qualifiers)
+            ]
             if not items:
+                if settings.get("required"):
+                    raise ValueError(
+                        f"required field {field_name} missing for model {model['model_id']}"
+                    )
                 continue
             sources[field_name] = items
-            if field_name in {"flash_kb", "ram_kb", "max_freq_mhz"}:
+            if parser == "quantity":
                 unit_name = dictionary["fields"][field_name].get("unit")
                 unit_config = dictionary.get("units", {}).get(unit_name)
                 if not unit_config:
@@ -393,10 +450,10 @@ def _map_model_fields(
                     for item in items
                     for number in convert_values(item["raw_value"], unit_config, item["label"])
                 ]
-                value = _reduce_numeric(values, field_plan[field_name].get("reducer", "max"))
+                value = _reduce_numeric(values, settings.get("reducer", "max"))
                 if value is not None:
                     fields[field_name] = value
-            elif field_name == "operating_voltage":
+            elif parser == "range":
                 ranges = [
                     value
                     for item in items
@@ -405,9 +462,7 @@ def _map_model_fields(
                 if ranges:
                     fields["voltage_min"] = min(item[0] for item in ranges)
                     fields["voltage_max"] = max(item[1] for item in ranges)
-            elif field_name == "operating_conditions":
-                from topologies.operating_conditions import parse_compound_operating_conditions
-
+            elif parser == "compound_ranges":
                 compound = [
                     parse_compound_operating_conditions(item["raw_value"])
                     for item in items
@@ -421,7 +476,7 @@ def _map_model_fields(
                     values = [item[target] for item in compound if target in item]
                     if values:
                         fields[target] = min(values) if target.endswith("_min") else max(values)
-            elif field_name == "package_types":
+            elif parser == "package_names":
                 packages = list(
                     dict.fromkeys(
                         package
@@ -433,6 +488,17 @@ def _map_model_fields(
                 )
                 if packages:
                     fields[field_name] = packages
+            if settings.get("required"):
+                targets = {
+                    "range": ("voltage_min", "voltage_max"),
+                    "compound_ranges": ("voltage_min", "voltage_max"),
+                }.get(parser, (field_name,))
+                missing_targets = [target for target in targets if fields.get(target) is None]
+                if missing_targets:
+                    raise ValueError(
+                        f"required field {field_name} incomplete for model {model['model_id']}: "
+                        f"{missing_targets}"
+                    )
         model["fields"] = fields
         model["field_sources"] = sources
 
@@ -442,6 +508,30 @@ def model_matrix_component(
     config: dict[str, Any],
     _: dict[str, Any],
 ) -> dict[str, Any]:
+    if "variants" in config:
+        if set(config) != {"variants"}:
+            raise ValueError("model_matrix variants cannot be mixed with single-layout keys")
+        variants = config["variants"]
+        if not isinstance(variants, list) or not variants:
+            raise ValueError("model_matrix variants must be a non-empty array")
+        matches: list[dict[str, Any]] = []
+        failures: list[str] = []
+        for index, variant in enumerate(variants):
+            if not isinstance(variant, dict):
+                raise ValueError(f"model_matrix variant {index} must be an object")
+            try:
+                matches.append(model_matrix_component(context, variant, {}))
+            except ValueError as exc:
+                failures.append(f"variant {index}: {exc}")
+        if not matches:
+            raise ValueError(f"no model_matrix variant matched: {failures}")
+        signatures = {
+            (item["table_id"], tuple(model["model_id"] for model in item["models"]))
+            for item in matches
+        }
+        if len(signatures) != 1 and len(matches) > 1:
+            raise ValueError(f"model_matrix variants are ambiguous: {sorted(signatures)}")
+        return matches[0]
     allowed = {
         "layout",
         "title_any",
@@ -449,6 +539,7 @@ def model_matrix_component(
         "model_header_any",
         "grouped_header",
         "fields",
+        "variants",
     }
     unknown = set(config) - allowed
     if unknown:

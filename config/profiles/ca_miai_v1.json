@@ -52,15 +52,31 @@
         "id": "models",
         "component": "model_matrix",
         "config": {
-          "layout": "models_in_columns",
-          "locator": {"required_all": ["flash", "sram"]},
-          "fields": {
-            "flash_kb": {"reducer": "max"},
-            "ram_kb": {"reducer": "max"},
-            "max_freq_mhz": {"reducer": "max"},
-            "operating_conditions": {},
-            "package_types": {}
-          }
+          "variants": [
+            {
+              "layout": "models_in_columns",
+              "locator": {"required_all": ["flash", "sram"]},
+              "fields": {
+                "flash_kb": {"reducer": "max"},
+                "ram_kb": {"reducer": "max"},
+                "max_freq_mhz": {"reducer": "max"},
+                "operating_conditions": {},
+                "package_types": {}
+              }
+            },
+            {
+              "layout": "models_in_rows",
+              "locator": {"required_any": ["flash", "sram", "mtp"]},
+              "model_header_any": ["芯片型号", "器件型号", "产品型号"],
+              "fields": {
+                "flash_kb": {"reducer": "max"},
+                "ram_kb": {"reducer": "max"},
+                "max_freq_mhz": {"reducer": "max"},
+                "operating_voltage": {},
+                "package_types": {}
+              }
+            }
+          ]
         }
       }
     ]

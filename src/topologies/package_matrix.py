@@ -29,11 +29,47 @@ def _canonical_order(values: list[str], preferred_kinds: Iterable[str] = ()) -> 
 
 def parse_package_names(text: str, package_pattern: str) -> list[str]:
     values: list[str] = []
-    for match in re.finditer(package_pattern, text, re.I):
-        value = compact(match.group(0)).upper()
-        if value not in values:
-            values.append(value)
-    return values
+    values_by_variant: list[list[str]] = []
+    dewrapped = re.sub(r"\s*[\r\n]+\s*", "", str(text))
+    variants = [dewrapped, clean(text)] if dewrapped != clean(text) else [clean(text)]
+    for variant in variants:
+        variant_values: list[str] = []
+        for match in re.finditer(package_pattern, variant, re.I):
+            # Removing a line break can place a physical dimension directly
+            # after a valid package count ("LQFP48\n7 mm"). Do not absorb the
+            # first dimension digit into the package identity.
+            suffix = variant[match.end() :]
+            if re.match(r"\s*(?:MM\b|X\s*\d)", suffix, re.I):
+                continue
+            value = compact(match.group(0)).upper()
+            if value not in values:
+                values.append(value)
+            if value not in variant_values:
+                variant_values.append(value)
+        values_by_variant.append(variant_values)
+    if len(values_by_variant) < 2:
+        return values
+    dewrapped_values, wrapped_values = values_by_variant
+    parsed = {
+        value: re.fullmatch(r"([A-Z]+)(\d+)(.*)", value)
+        for value in values
+    }
+    return [
+        value
+        for value in values
+        if not any(
+            other != value
+            and value in wrapped_values
+            and value not in dewrapped_values
+            and other in dewrapped_values
+            and parsed[value] is not None
+            and parsed[other] is not None
+            and parsed[value].group(1) == parsed[other].group(1)
+            and parsed[other].group(2).startswith(parsed[value].group(2))
+            and len(parsed[other].group(2)) > len(parsed[value].group(2))
+            for other in values
+        )
+    ]
 
 
 def find_package_values(
