@@ -36,7 +36,12 @@ def parse_size_kb(value: str) -> float | None:
 
 def parse_range(value: str) -> tuple[float, float] | None:
     text = compact(value).replace("至", "-").replace("～", "-").replace("~", "-")
-    match = re.search(r"(-?\d+(?:\.\d+)?)\s*-\s*(-?\d+(?:\.\d+)?)", text)
+    match = re.search(
+        r"(-?\d+(?:\.\d+)?)\s*(?:[A-Za-z°℃]+)?\s*(?:-|TO)\s*"
+        r"(-?\d+(?:\.\d+)?)",
+        text,
+        re.I,
+    )
     if not match:
         return None
     return float(match.group(1)), float(match.group(2))
@@ -46,4 +51,3 @@ def scalar_or_none(value: float | None) -> int | float | None:
     if value is None:
         return None
     return int(value) if math.isclose(value, round(value)) else round(value, 6)
-

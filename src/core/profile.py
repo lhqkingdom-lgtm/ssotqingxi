@@ -13,7 +13,7 @@ from core.text import compact
 REQUIRED_KEYS = {"profile_version", "profile_id", "config_version", "adapter", "detection", "dictionary", "model", "syntax", "topologies"}
 REQUIRED_MODEL_KEYS = {"pattern", "concatenation_boundary", "exact", "series", "aliases_file"}
 REQUIRED_SYNTAX_KEYS = {"package_pattern", "pin_pattern"}
-ALLOWED_TOP_LEVEL_KEYS = REQUIRED_KEYS | {"description", "normalization", "execution"}
+ALLOWED_TOP_LEVEL_KEYS = REQUIRED_KEYS | {"description", "normalization", "execution", "declarative"}
 FORBIDDEN_PROFILE_KEYS = {
     "rules_file",
     "field_dictionary_file",
@@ -183,6 +183,10 @@ def load_profile(path: Path) -> DocumentProfile:
         raise ValueError("profile execution.default must be legacy, shadow or declarative")
     if "declarative_adapter" in execution and execution["declarative_adapter"] != "family_extractors.declarative":
         raise ValueError("profile declarative_adapter must use the shared family_extractors.declarative module")
+    if "declarative" in payload:
+        from core.declarative_executor import COMPONENTS, validate_declarative_plan
+
+        validate_declarative_plan(payload["declarative"], set(COMPONENTS))
     if not isinstance(payload["model"], dict):
         raise ValueError("profile model must be an object")
     missing_model = REQUIRED_MODEL_KEYS - set(payload["model"])

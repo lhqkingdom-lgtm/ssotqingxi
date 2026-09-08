@@ -73,6 +73,11 @@ def extract_operating_conditions(
         for item in table_index.rank(
             TableCandidateQuery(
                 text_any=tuple(table_terms),
+                required_features=(
+                    frozenset({"min_typ_max"})
+                    if recipe.get("require_min_typ_max")
+                    else frozenset()
+                ),
                 preferred_features=frozenset({"min_typ_max"}),
             )
         )

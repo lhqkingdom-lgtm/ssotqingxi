@@ -4,6 +4,10 @@
   "config_version": "ca-miai-2.0.0",
   "description": "CA32/CA51/CA51M/MiAi/MJ 文字版手册。",
   "adapter": "family_extractors.ca_miai",
+  "execution": {
+    "default": "legacy",
+    "declarative_adapter": "family_extractors.declarative"
+  },
   "detection": {
     "filename_any": ["CA32", "CA51", "MiAi", "MIAI", "MJ", "SQ-CA"],
     "text_any": ["基本特性", "芯片型号", "器件型号", "管脚功能", "引脚功能"],
@@ -40,5 +44,25 @@
   "topologies": {
     "pipeline": ["basic_text", "model_row", "model_transposed", "pin_definition", "electrical_limits"],
     "presets": {"family_tables": "../table_presets/ca_miai_tables.json"}
+  },
+  "declarative": {
+    "version": 1,
+    "sections": [
+      {
+        "id": "models",
+        "component": "model_matrix",
+        "config": {
+          "layout": "models_in_columns",
+          "locator": {"required_all": ["flash", "sram"]},
+          "fields": {
+            "flash_kb": {"reducer": "max"},
+            "ram_kb": {"reducer": "max"},
+            "max_freq_mhz": {"reducer": "max"},
+            "operating_conditions": {},
+            "package_types": {}
+          }
+        }
+      }
+    ]
   }
 }

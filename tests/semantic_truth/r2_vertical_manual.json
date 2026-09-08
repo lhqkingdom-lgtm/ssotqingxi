@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "review_method": "manual visual comparison against the rendered source tables",
+  "records": [
+    {"sheet": "chips", "key": {"chip_id": "CA32F0156L1"}, "source_file_contains": "CA32F0156", "expected": {"flash_kb": 128, "ram_kb": 16, "max_freq_mhz": 64, "package_types": ["LQFP44"], "voltage_min": 2.0, "voltage_max": 5.5}, "evidence_page": 6},
+    {"sheet": "chips", "key": {"chip_id": "CA32F0156L2"}, "source_file_contains": "CA32F0156", "expected": {"flash_kb": 128, "ram_kb": 16, "max_freq_mhz": 64, "package_types": ["LQFP48"], "voltage_min": 2.0, "voltage_max": 5.5}, "evidence_page": 6},
+    {"sheet": "chips", "key": {"chip_id": "CA32F0156N6"}, "source_file_contains": "CA32F0156", "expected": {"flash_kb": 128, "ram_kb": 16, "max_freq_mhz": 64, "package_types": ["QFN48"], "voltage_min": 2.0, "voltage_max": 5.5}, "evidence_page": 6},
+    {"sheet": "chips", "key": {"chip_id": "STM32C031F4"}, "source_file_contains": "stm32c031c4", "expected": {"flash_kb": 16, "ram_kb": 12, "max_freq_mhz": 48, "voltage_min": 2.0, "voltage_max": 3.6}, "evidence_page": 9},
+    {"sheet": "chips", "key": {"chip_id": "STM32C031F6"}, "source_file_contains": "stm32c031c4", "expected": {"flash_kb": 32, "ram_kb": 12, "max_freq_mhz": 48, "voltage_min": 2.0, "voltage_max": 3.6}, "evidence_page": 9},
+    {"sheet": "chips", "key": {"chip_id": "STM32C031G4"}, "source_file_contains": "stm32c031c4", "expected": {"flash_kb": 16, "ram_kb": 12, "max_freq_mhz": 48, "voltage_min": 2.0, "voltage_max": 3.6}, "evidence_page": 9},
+    {"sheet": "chips", "key": {"chip_id": "STM32C031G6"}, "source_file_contains": "stm32c031c4", "expected": {"flash_kb": 32, "ram_kb": 12, "max_freq_mhz": 48, "voltage_min": 2.0, "voltage_max": 3.6}, "evidence_page": 9},
+    {"sheet": "chips", "key": {"chip_id": "STM32C031K4"}, "source_file_contains": "stm32c031c4", "expected": {"flash_kb": 16, "ram_kb": 12, "max_freq_mhz": 48, "voltage_min": 2.0, "voltage_max": 3.6}, "evidence_page": 9},
+    {"sheet": "chips", "key": {"chip_id": "STM32C031K6"}, "source_file_contains": "stm32c031c4", "expected": {"flash_kb": 32, "ram_kb": 12, "max_freq_mhz": 48, "voltage_min": 2.0, "voltage_max": 3.6}, "evidence_page": 9},
+    {"sheet": "chips", "key": {"chip_id": "STM32C031C4"}, "source_file_contains": "stm32c031c4", "expected": {"flash_kb": 16, "ram_kb": 12, "max_freq_mhz": 48, "voltage_min": 2.0, "voltage_max": 3.6}, "evidence_page": 9},
+    {"sheet": "chips", "key": {"chip_id": "STM32C031C6"}, "source_file_contains": "stm32c031c4", "expected": {"flash_kb": 32, "ram_kb": 12, "max_freq_mhz": 48, "voltage_min": 2.0, "voltage_max": 3.6}, "evidence_page": 9}
+  ]
+}

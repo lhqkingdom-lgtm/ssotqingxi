@@ -17,6 +17,35 @@
       },
       "additionalProperties": false
     },
+    "declarative": {
+      "type": "object",
+      "required": ["version", "sections"],
+      "properties": {
+        "version": {"const": 1},
+        "sections": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["id", "component"],
+            "properties": {
+              "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+              "component": {"enum": ["model_matrix", "operating_conditions"]},
+              "depends_on": {"type": "array", "items": {"type": "string"}},
+              "required": {"type": "boolean"},
+              "preset": {"type": "string", "minLength": 1},
+              "config": {"type": "object"}
+            },
+            "oneOf": [
+              {"required": ["preset"], "not": {"required": ["config"]}},
+              {"required": ["config"], "not": {"required": ["preset"]}}
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
     "detection": {
       "type": "object",
       "required": ["filename_any", "text_any", "minimum_score", "scan_pages"],

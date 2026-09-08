@@ -4,6 +4,10 @@
   "config_version": "stm32-2.0.0",
   "description": "STM32 文字版数据手册，订货码含义只取自原文图例。",
   "adapter": "family_extractors.stm32",
+  "execution": {
+    "default": "legacy",
+    "declarative_adapter": "family_extractors.declarative"
+  },
   "detection": {
     "filename_any": ["stm32"],
     "text_any": ["STM32", "device features and peripheral counts", "Pin name", "General operating conditions"],
@@ -37,5 +41,30 @@
       "operating_conditions": "../table_presets/operating_conditions.json",
       "pin_relations": "../table_presets/pin_definition_af.json"
     }
+  },
+  "declarative": {
+    "version": 1,
+    "sections": [
+      {
+        "id": "models",
+        "component": "model_matrix",
+        "config": {
+          "layout": "models_in_grouped_columns",
+          "title_any": ["device features", "features and peripheral counts"],
+          "locator": {"required_all": ["flash", "sram"]},
+          "grouped_header": {
+            "prefix_pattern": "(STM32[A-Z0-9]+_)",
+            "suffix_pattern": "_([A-Z][0-9A-Z])",
+            "separator_pattern": "[_\\s]+"
+          },
+          "fields": {
+            "flash_kb": {"reducer": "max"},
+            "ram_kb": {"reducer": "max"},
+            "max_freq_mhz": {"reducer": "max"},
+            "operating_voltage": {}
+          }
+        }
+      }
+    ]
   }
 }
