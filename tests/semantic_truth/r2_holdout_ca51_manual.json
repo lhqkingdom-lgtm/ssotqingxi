@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "review_method": "manual visual comparison against CA51F152S3 page 8 model table after candidate 5902103 was frozen",
+  "records": [
+    {
+      "sheet": "chips",
+      "key": {"chip_id": "CA51F152S3A"},
+      "source_file_contains": "CA51F152S3",
+      "expected": {"flash_kb": 16, "ram_kb": 0.75, "package_types": ["SOP16"], "voltage_min": 2.3, "voltage_max": 5.5},
+      "evidence_page": 8
+    },
+    {
+      "sheet": "chips",
+      "key": {"chip_id": "CA51F152S3B"},
+      "source_file_contains": "CA51F152S3",
+      "expected": {"flash_kb": 16, "ram_kb": 0.75, "package_types": ["SOP16"], "voltage_min": 2.3, "voltage_max": 5.5},
+      "evidence_page": 8
+    }
+  ]
+}
