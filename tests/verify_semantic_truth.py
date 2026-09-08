@@ -42,10 +42,15 @@ def verify(output_dir: Path, truth_path: Path) -> list[str]:
                 continue
             ids = row.get("_field_evidence", {}).get(field, [])
             pages = {evidence[item]["page"] for item in ids if item in evidence}
-            if expected_record["evidence_page"] not in pages:
+            expected_page = expected_record.get("evidence_pages", {}).get(
+                field, expected_record.get("evidence_page")
+            )
+            if expected_page is None:
+                errors.append(f"{label}.{field}: manual truth has no evidence page")
+            elif expected_page not in pages:
                 errors.append(
                     f"{label}.{field}: value matched but evidence page "
-                    f"{expected_record['evidence_page']} was absent; pages={sorted(pages)}"
+                    f"{expected_page} was absent; pages={sorted(pages)}"
                 )
     return errors
 

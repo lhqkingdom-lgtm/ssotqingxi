@@ -11,13 +11,15 @@ from core.ir import DocumentIR, TableIR
 from core.table_index import DocumentTableIndex, build_table_index
 from core.text import clean, compact, parse_range, scalar_or_none
 from core.units import convert_values
-from topologies.matrix_observer import table_grids, table_matches
+from topologies.matrix_observer import table_grids, table_matches, text_direction_variants
 from topologies.operating_conditions import (
     extract_operating_conditions,
     is_absolute_maximum_context,
     parse_compound_operating_conditions,
 )
 from topologies.package_matrix import parse_package_names
+from topologies.model_column_matrix import wildcard_match
+from topologies.ordering_code_legend import parse_ordering_code_legend
 
 
 FORBIDDEN_PLAN_KEYS = {
@@ -341,6 +343,214 @@ def _models_in_grouped_columns(
     return result
 
 
+def ordering_code_legend_component(
+    context: DeclarativeContext,
+    config: dict[str, Any],
+    _: dict[str, Any],
+) -> dict[str, Any]:
+    allowed = {"required_relations"}
+    unknown = set(config) - allowed
+    if unknown:
+        raise ValueError(f"ordering_code_legend config has unknown keys: {sorted(unknown)}")
+    required = config.get("required_relations", [])
+    supported = {"pin_count_codes", "flash_code_kb", "package_type_codes"}
+    if not isinstance(required, list) or any(item not in supported for item in required):
+        raise ValueError("ordering_code_legend required_relations contains unknown relations")
+    legend = parse_ordering_code_legend(context.page_texts)
+    result = {
+        "pin_count_codes": legend.pin_count_codes,
+        "flash_code_kb": legend.flash_code_kb,
+        "package_type_codes": legend.package_type_codes,
+        "evidence_pages": list(legend.evidence_pages),
+    }
+    missing = [name for name in required if not result[name]]
+    if missing:
+        raise ValueError(f"ordering code legend missing required relations: {missing}")
+    return result
+
+
+def _position_relation_accepts(
+    model: str,
+    rule: dict[str, Any],
+    legend: dict[str, Any],
+) -> bool:
+    if set(rule) != {"relation", "offset"}:
+        raise ValueError("model catalog code position requires relation and offset")
+    relation = str(rule["relation"])
+    if relation not in {"pin_count_codes", "flash_code_kb", "package_type_codes"}:
+        raise ValueError(f"model catalog references unknown ordering relation: {relation}")
+    offset = rule["offset"]
+    if not isinstance(offset, int) or offset >= 0 or abs(offset) > len(model):
+        raise ValueError("model catalog code offset must be a valid negative integer")
+    return model[offset].upper() in legend.get(relation, {})
+
+
+def model_catalog_component(
+    context: DeclarativeContext,
+    config: dict[str, Any],
+    outputs: dict[str, Any],
+) -> dict[str, Any]:
+    allowed = {"title_any", "ordering_section", "code_positions"}
+    unknown = set(config) - allowed
+    if unknown:
+        raise ValueError(f"model_catalog config has unknown keys: {sorted(unknown)}")
+    title_any = config.get("title_any")
+    ordering_section = config.get("ordering_section")
+    code_positions = config.get("code_positions", [])
+    if not isinstance(title_any, list) or not title_any:
+        raise ValueError("model_catalog requires title_any")
+    if not isinstance(ordering_section, str) or ordering_section not in outputs:
+        raise ValueError("model_catalog requires an executed ordering_section")
+    if not isinstance(code_positions, list) or not code_positions:
+        raise ValueError("model_catalog requires code_positions")
+    legend = outputs[ordering_section]
+    candidates: list[dict[str, Any]] = []
+    for table in context.document.tables:
+        if not table_matches(table, {"title_any": title_any}):
+            continue
+        for _, page, rows, cells in table_grids(table):
+            sources = [
+                (cell.raw_text, _cell(cells, cell.row, cell.column))
+                for cell in cells.values()
+            ]
+            if 1 <= page <= len(context.page_texts):
+                sources.append(
+                    (
+                        context.page_texts[page - 1],
+                        {
+                            "source_cell_id": None,
+                            "page": page,
+                            "bbox": table.bboxes[0] if table.bboxes else None,
+                            "raw_value": context.page_texts[page - 1],
+                        },
+                    )
+                )
+            for row_index, row in enumerate(rows):
+                row_text = "".join(clean(value) for value in row)
+                if not compact(row_text):
+                    continue
+                first_column = next((index for index, value in enumerate(row) if compact(value)), 0)
+                row_source = _cell(cells, row_index, first_column)
+                row_source = {**row_source, "page": page, "raw_value": row_text}
+                sources.append((row_text, row_source))
+            for raw_text, source in sources:
+                for model in context.profile.model_tokens(raw_text, exact_only=True):
+                    upper = model.upper()
+                    if not all(
+                        _position_relation_accepts(upper, rule, legend)
+                        for rule in code_positions
+                    ):
+                        continue
+                    if upper not in {item["model_id"] for item in candidates}:
+                        candidates.append({"model_id": upper, "model_source": source})
+    if not candidates:
+        raise ValueError("model_catalog found no concrete models satisfying ordering relations")
+    return {"models": sorted(candidates, key=lambda item: item["model_id"])}
+
+
+def _raw_model_patterns(text: str, context: DeclarativeContext) -> list[str]:
+    result: list[str] = []
+    for variant in text_direction_variants(text):
+        prepared = context.profile.boundary_re.sub(" ", variant)
+        result.extend(compact(match.group(0)).upper() for match in context.profile.model_re.finditer(prepared))
+    return list(dict.fromkeys(result))
+
+
+def _models_from_catalog(
+    table: TableIR,
+    context: DeclarativeContext,
+    config: dict[str, Any],
+    outputs: dict[str, Any],
+) -> list[dict[str, Any]]:
+    catalog_section = config.get("catalog_section")
+    ordering_section = config.get("ordering_section")
+    density = config.get("density_relation")
+    if not isinstance(catalog_section, str) or catalog_section not in outputs:
+        raise ValueError("models_from_catalog requires an executed catalog_section")
+    if not isinstance(ordering_section, str) or ordering_section not in outputs:
+        raise ValueError("models_from_catalog requires an executed ordering_section")
+    if not isinstance(density, dict) or set(density) != {"relation", "offset", "field"}:
+        raise ValueError("models_from_catalog requires density_relation relation, offset and field")
+    if density["relation"] not in {"flash_code_kb"} or density["field"] != "flash_kb":
+        raise ValueError("models_from_catalog density_relation must use registered flash semantics")
+    offset = density["offset"]
+    if not isinstance(offset, int) or offset >= 0:
+        raise ValueError("models_from_catalog density offset must be negative")
+    legend = outputs[ordering_section]
+    density_map = legend[density["relation"]]
+    catalog = outputs[catalog_section]["models"]
+    dictionary = load_field_dictionary(
+        context.profile.field_dictionary_file, context.profile.field_aliases
+    )
+    unit_config = dictionary["units"]["memory_kb"]
+    accumulated: dict[str, dict[str, Any]] = {}
+    for _, page, rows, cells in table_grids(table, inherit_merged_values=True):
+        if not rows:
+            continue
+        headers: list[tuple[int, int, str]] = []
+        for row_index, row in enumerate(rows[:6]):
+            for column, value in enumerate(row):
+                source_cell = cells.get((row_index, column))
+                if source_cell is not None and source_cell.inherited_from:
+                    continue
+                for pattern in _raw_model_patterns(value, context):
+                    if "X" in pattern:
+                        headers.append((row_index, column, pattern))
+        if not headers:
+            continue
+        first_model_column = min(column for _, column, _ in headers)
+        starts = sorted({column for _, column, _ in headers})
+        for catalog_item in catalog:
+            model = catalog_item["model_id"]
+            matches = [(row, column, pattern) for row, column, pattern in headers if wildcard_match(pattern, model)]
+            if not matches:
+                continue
+            header_row, start, _ = matches[0]
+            end = next((column for column in starts if column > start), len(rows[header_row]))
+            expected = density_map.get(model[offset].upper()) if abs(offset) <= len(model) else None
+            if expected is None:
+                raise ValueError(f"no ordering density relation for model {model}")
+            density_columns: list[int] = []
+            has_density_row = False
+            for row_index, row in enumerate(rows):
+                labels = [clean(value) for value in row[:first_model_column] if compact(value)]
+                if match_common_field(" / ".join(labels), dictionary) != density["field"]:
+                    continue
+                has_density_row = True
+                for column in range(start, min(end, len(row))):
+                    values = convert_values(row[column], unit_config, " ".join(labels))
+                    if any(float(value) == float(expected) for value in values):
+                        density_columns.append(column)
+            density_columns = list(dict.fromkeys(density_columns))
+            if not has_density_row and end - start == 1:
+                # A continued fragment can collapse density subcolumns when
+                # every value on that page applies to the whole package group.
+                density_columns = [start]
+            if len(density_columns) != 1:
+                raise ValueError(
+                    f"model {model} density relation selected {len(density_columns)} columns"
+                )
+            column = density_columns[0]
+            item = accumulated.setdefault(
+                model,
+                {
+                    "model_id": model,
+                    "page": page,
+                    "source_table_id": table.table_id,
+                    "source_table_title": table.title,
+                    "model_source": catalog_item["model_source"],
+                    "values": [],
+                },
+            )
+            for row_index, row in enumerate(rows):
+                if row_index <= header_row or column >= len(row) or not compact(row[column]):
+                    continue
+                labels = [clean(value) for value in row[:first_model_column] if compact(value)]
+                if labels:
+                    item["values"].append({"label": " / ".join(labels), **_cell(cells, row_index, column)})
+    return list(accumulated.values())
+
+
 def _reduce_numeric(values: list[int | float], reducer: str) -> int | float | None:
     if not values:
         return None
@@ -506,7 +716,7 @@ def _map_model_fields(
 def model_matrix_component(
     context: DeclarativeContext,
     config: dict[str, Any],
-    _: dict[str, Any],
+    outputs: dict[str, Any],
 ) -> dict[str, Any]:
     if "variants" in config:
         if set(config) != {"variants"}:
@@ -520,7 +730,7 @@ def model_matrix_component(
             if not isinstance(variant, dict):
                 raise ValueError(f"model_matrix variant {index} must be an object")
             try:
-                matches.append(model_matrix_component(context, variant, {}))
+                matches.append(model_matrix_component(context, variant, outputs))
             except ValueError as exc:
                 failures.append(f"variant {index}: {exc}")
         if not matches:
@@ -538,6 +748,9 @@ def model_matrix_component(
         "locator",
         "model_header_any",
         "grouped_header",
+        "catalog_section",
+        "ordering_section",
+        "density_relation",
         "fields",
         "variants",
     }
@@ -545,7 +758,12 @@ def model_matrix_component(
     if unknown:
         raise ValueError(f"model_matrix config has unknown keys: {sorted(unknown)}")
     layout = config.get("layout")
-    if layout not in {"models_in_columns", "models_in_rows", "models_in_grouped_columns"}:
+    if layout not in {
+        "models_in_columns",
+        "models_in_rows",
+        "models_in_grouped_columns",
+        "models_from_catalog",
+    }:
         raise ValueError("model_matrix layout must explicitly describe its model header structure")
     locator = {"title_any": config.get("title_any", []), **config.get("locator", {})}
     candidates = [table for table in context.document.tables if table_matches(table, locator)]
@@ -555,8 +773,10 @@ def model_matrix_component(
             models = _models_in_columns(table, context.profile)
         elif layout == "models_in_rows":
             models = _models_in_rows(table, context.profile, config)
-        else:
+        elif layout == "models_in_grouped_columns":
             models = _models_in_grouped_columns(table, context.profile, config)
+        else:
+            models = _models_from_catalog(table, context, config, outputs)
         if models:
             parsed.append((len(models), table, models))
     if not parsed:
@@ -596,6 +816,8 @@ def operating_conditions_component(
 
 
 COMPONENTS: dict[str, Component] = {
+    "ordering_code_legend": ordering_code_legend_component,
+    "model_catalog": model_catalog_component,
     "model_matrix": model_matrix_component,
     "operating_conditions": operating_conditions_component,
 }

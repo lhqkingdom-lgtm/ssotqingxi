@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from types import SimpleNamespace
 from pathlib import Path
+import re
 import sys
 import unittest
 
@@ -50,18 +51,88 @@ def document_from_tables(*tables: tuple[str, list[list[str]]]) -> DocumentIR:
 
 def profile(prefix: str) -> SimpleNamespace:
     def model_tokens(value: str, exact_only: bool = False) -> list[str]:
-        token = value.strip().upper()
-        return [token] if token.startswith(prefix) and any(char.isdigit() for char in token) else []
+        del exact_only
+        return list(dict.fromkeys(item.upper() for item in re.findall(rf"{prefix}[A-Z0-9]+", value, re.I)))
 
     return SimpleNamespace(
         model_tokens=model_tokens,
         field_dictionary_file=ROOT / "config" / "common_field_dictionary.json",
         field_aliases={},
         package_re=SimpleNamespace(pattern=r"(?:LQFP|TSSOP|QFN)\s*\d+"),
+        boundary_re=re.compile(r"(?!)"),
+        model_re=re.compile(rf"{prefix}[A-Z0-9]+", re.I),
     )
 
 
 class DeclarativeExecutorTests(unittest.TestCase):
+    def test_cross_table_catalog_ordering_and_wildcard_matrix_are_joined(self) -> None:
+        document = document_from_tables(
+            (
+                "Device summary",
+                [["Reference", "Part number"], ["ZX90x1", "X90A1, ZX90B2"]],
+            ),
+            (
+                "Device features",
+                [
+                    ["Feature", "ZX90Ax", "", "ZX90Bx", ""],
+                    ["Flash memory", "16 KB", "32 KB", "16 KB", "32 KB"],
+                    ["SRAM", "4 KB", "4 KB", "8 KB", "8 KB"],
+                ],
+            ),
+        )
+        plan = {
+            "version": 1,
+            "sections": [
+                {
+                    "id": "codes",
+                    "component": "ordering_code_legend",
+                    "config": {"required_relations": ["pin_count_codes", "flash_code_kb"]},
+                },
+                {
+                    "id": "catalog",
+                    "component": "model_catalog",
+                    "depends_on": ["codes"],
+                    "config": {
+                        "title_any": ["device summary"],
+                        "ordering_section": "codes",
+                        "code_positions": [
+                            {"relation": "pin_count_codes", "offset": -2},
+                            {"relation": "flash_code_kb", "offset": -1},
+                        ],
+                    },
+                },
+                {
+                    "id": "models",
+                    "component": "model_matrix",
+                    "depends_on": ["codes", "catalog"],
+                    "config": {
+                        "layout": "models_from_catalog",
+                        "title_any": ["device features"],
+                        "locator": {"required_all": ["flash", "sram"]},
+                        "catalog_section": "catalog",
+                        "ordering_section": "codes",
+                        "density_relation": {
+                            "relation": "flash_code_kb", "offset": -1, "field": "flash_kb"
+                        },
+                        "fields": {
+                            "flash_kb": {"parser": "quantity", "required": True},
+                            "ram_kb": {"parser": "quantity", "required": True},
+                        },
+                    },
+                },
+            ],
+        }
+        texts = [
+            "Device summary\nZX90A1, ZX90B2\nOrdering information\n"
+            "Pin count\nA = 20 pins\nB = 32 pins\n"
+            "Flash memory size\n1 = 16 Kbytes\n2 = 32 Kbytes"
+        ]
+        result = execute_declarative_plan(plan, document=document, page_texts=texts, profile=profile("ZX"))
+        models = result["models"]["models"]
+        self.assertEqual([item["model_id"] for item in models], ["ZX90A1", "ZX90B2"])
+        self.assertEqual(models[0]["fields"], {"flash_kb": 16, "ram_kb": 4})
+        self.assertEqual(models[1]["fields"], {"flash_kb": 32, "ram_kb": 8})
+
     def test_same_component_reads_models_in_columns_with_evidence(self) -> None:
         document = document_from_tables(
             (

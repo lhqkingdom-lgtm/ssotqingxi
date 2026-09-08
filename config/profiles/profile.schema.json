@@ -30,7 +30,7 @@
             "required": ["id", "component"],
             "properties": {
               "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
-              "component": {"enum": ["model_matrix", "operating_conditions"]},
+              "component": {"enum": ["ordering_code_legend", "model_catalog", "model_matrix", "operating_conditions"]},
               "depends_on": {"type": "array", "items": {"type": "string"}},
               "required": {"type": "boolean"},
               "preset": {"type": "string", "minLength": 1},
