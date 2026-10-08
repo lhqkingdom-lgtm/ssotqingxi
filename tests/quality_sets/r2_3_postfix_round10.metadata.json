@@ -1,0 +1,18 @@
+{
+  "files": [
+    {
+      "name": "stm32f303c6.pdf",
+      "vendor": "STMicroelectronics",
+      "family": "STM32F3",
+      "layout": "mixed-signal-mainstream",
+      "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32f303c6.pdf"
+    },
+    {
+      "name": "stm32u585ai.pdf",
+      "vendor": "STMicroelectronics",
+      "family": "STM32U5",
+      "layout": "modern-ultra-low-power",
+      "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32u585ai.pdf"
+    }
+  ]
+}

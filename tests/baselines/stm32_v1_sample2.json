@@ -37639,7 +37639,7 @@
       {
         "chip_id": "STM32F103R8",
         "peripheral_type": "ADC",
-        "instance_count": null,
+        "instance_count": 2,
         "channel_count": 16,
         "max_resolution": 12,
         "max_frequency_mhz": null,
@@ -37695,7 +37695,7 @@
       {
         "chip_id": "STM32F103RB",
         "peripheral_type": "ADC",
-        "instance_count": null,
+        "instance_count": 2,
         "channel_count": 16,
         "max_resolution": 12,
         "max_frequency_mhz": null,

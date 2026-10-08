@@ -1,0 +1,136 @@
+{
+  "profile_version": 2,
+  "profile_id": "ti_mspm0_v1",
+  "config_version": "ti-mspm0-1.0.0",
+  "description": "TI MSPM0 textual device datasheets parsed by the shared declarative adapter.",
+  "adapter": "family_extractors.declarative",
+  "execution": {
+    "default": "declarative",
+    "declarative_adapter": "family_extractors.declarative"
+  },
+  "detection": {
+    "filename_any": ["mspm0"],
+    "text_any": ["MSPM0", "Device Comparison", "Pin Configuration and Functions"],
+    "filename_weight": 10,
+    "text_weight": 2,
+    "minimum_score": 4,
+    "scan_pages": 3
+  },
+  "dictionary": {
+    "base": "../common_field_dictionary.json",
+    "aliases": {
+      "package_types": ["package [package size]", "package"]
+    }
+  },
+  "model": {
+    "pattern": "MSPM0[A-Z]\\d{4}",
+    "concatenation_boundary": "(?=MSPM0)",
+    "skip_suffixes": [],
+    "wildcard_markers": ["X"],
+    "exact": [
+      {"prefix": "MSPM0", "min_suffix_length": 5, "require_alpha": true, "require_digit": true}
+    ],
+    "series": [
+      {"kind": "regex", "pattern": "^(MSPM0[A-Z]\\d{3})", "group": 1}
+    ],
+    "filename_rules": [
+      {"pattern": "^(MSPM0[A-Z]\\d{4})", "group": 1}
+    ],
+    "aliases_file": "../ti_mspm0_aliases.json"
+  },
+  "syntax": {
+    "package_pattern": "(?:LQFP|VQFN|VSSOP|DSBGA|BSBGA|WLCSP|TSSOP)\\s*\\d+",
+    "pin_pattern": "P[A-Z]\\d{1,2}"
+  },
+  "normalization": {
+    "function_aliases": {}
+  },
+  "topologies": {
+    "pipeline": ["model_matrix", "pin_definition"],
+    "presets": {
+      "family_tables": "../table_presets/ti_mspm0_tables.json"
+    }
+  },
+  "declarative": {
+    "version": 1,
+    "sections": [
+      {
+        "id": "models",
+        "component": "model_matrix",
+        "config": {
+          "layout": "models_in_rows",
+          "title_any": ["device comparison"],
+          "locator": {"required_all": ["device name", "flash", "sram", "package"]},
+          "model_header_any": ["device name"],
+          "composite_columns": {
+            "separator_pattern": "\\s*/\\s*",
+            "part_aliases": {
+              "chan": {"semantic": "peripheral_adc", "normalized_label": "channel"}
+            }
+          },
+          "fields": {
+            "flash_kb": {"parser": "quantity", "reducer": "unique", "required": true},
+            "ram_kb": {"parser": "quantity", "reducer": "unique", "required": true},
+            "package_types": {"parser": "package_names", "required": true}
+          }
+        }
+      },
+      {
+        "id": "document_conditions",
+        "component": "document_ranges",
+        "required": true,
+        "config": {
+          "fields": ["operating_voltage", "operating_temperature"],
+          "scan_page_count": 6
+        }
+      },
+      {
+        "id": "memory",
+        "component": "memory_projection",
+        "depends_on": ["models"],
+        "config": {
+          "model_section": "models",
+          "mappings": [
+            {"source_field": "flash_kb", "memory_type": "Flash"},
+            {"source_field": "ram_kb", "memory_type": "SRAM_Internal"}
+          ]
+        }
+      },
+      {
+        "id": "electrical",
+        "component": "electrical_projection",
+        "depends_on": ["models", "document_conditions"],
+        "config": {
+          "model_section": "models",
+          "mappings": [
+            {"semantic": "operating_voltage", "param_name": "VDD", "unit": "V", "evidence_fields": ["operating_voltage"], "fallback_section": "document_conditions"},
+            {"semantic": "operating_temperature", "param_name": "T_operating", "unit": "°C", "evidence_fields": ["operating_temperature"], "fallback_section": "document_conditions"}
+          ]
+        }
+      },
+      {
+        "id": "peripherals",
+        "component": "peripheral_projection",
+        "depends_on": ["models"],
+        "config": {
+          "model_section": "models",
+          "fields": {
+            "peripheral_uart": {"value_parser": "first_integer", "reducer": "max"},
+            "peripheral_i2c": {"value_parser": "first_integer", "reducer": "max"},
+            "peripheral_spi": {"value_parser": "first_integer", "reducer": "max"},
+            "peripheral_adc": {"value_parser": "adc_instance_count", "reducer": "max", "channel_value_parser": "adc_channel_count", "channel_reducer": "max", "resolution_from_label": true}
+          }
+        }
+      },
+      {
+        "id": "pins",
+        "component": "pin_projection",
+        "depends_on": ["models"],
+        "config": {
+          "model_section": "models",
+          "recipe_preset": "family_tables"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "sets": {
+    "r3_4_pin_blind_novel_round1": {
+      "input_dir": "D:\\ssot\\quality_corpus\\r3_4_pin_blind_novel_round1",
+      "files": [
+        {
+          "name": "stm32h753vi.pdf",
+          "bytes": 7020854,
+          "sha256": "607b9eadaef1c54f93e02d7cea58c862a1552bda47c848d96f2de5c0ee84c032",
+          "vendor": "STMicroelectronics",
+          "family": "STM32H7",
+          "layout": "device-datasheet",
+          "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32h753vi.pdf"
+        },
+        {
+          "name": "stm32u083kc.pdf",
+          "bytes": 10357169,
+          "sha256": "de2a1571cb4429bf1d148649b24b43658313e57aadf2bc9a23db070771259212",
+          "vendor": "STMicroelectronics",
+          "family": "STM32U0",
+          "layout": "device-datasheet",
+          "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32u083kc.pdf"
+        }
+      ]
+    }
+  }
+}

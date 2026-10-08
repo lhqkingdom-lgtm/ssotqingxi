@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "sets": {
+    "r2_3_postfix_round11": {
+      "input_dir": "quality_corpus\\r2_3_postfix_round11",
+      "files": [
+        {
+          "name": "stm32f070c6.pdf",
+          "bytes": 1833096,
+          "sha256": "2df852372bb7bbe3cb3adcc5153d258a9d67d156b1aaec706f17216806f18977",
+          "vendor": "STMicroelectronics",
+          "family": "STM32F0",
+          "layout": "mainstream-entry",
+          "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32f070c6.pdf"
+        },
+        {
+          "name": "stm32l476je.pdf",
+          "bytes": 5509345,
+          "sha256": "a45a857e3aa75ac166dd532c76d76d5dd8377b9c5bf6f15c03c9cf85aeec0f65",
+          "vendor": "STMicroelectronics",
+          "family": "STM32L4",
+          "layout": "low-power-mainstream",
+          "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32l476je.pdf"
+        }
+      ]
+    }
+  }
+}

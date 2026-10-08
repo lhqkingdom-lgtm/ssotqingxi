@@ -1,0 +1,6 @@
+{
+  "files": [
+    {"name":"stm32h753vi.pdf","vendor":"STMicroelectronics","family":"STM32H7","layout":"device-datasheet","source_url":"local-inventory:D:/rag_mo/STM32/STM32/stm32h753vi.pdf"},
+    {"name":"stm32u083kc.pdf","vendor":"STMicroelectronics","family":"STM32U0","layout":"device-datasheet","source_url":"local-inventory:D:/rag_mo/STM32/STM32/stm32u083kc.pdf"}
+  ]
+}

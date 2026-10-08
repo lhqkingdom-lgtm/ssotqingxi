@@ -70,11 +70,49 @@ def convert_values(
     explicit unit in the value cell (for example ``96 K`` below a ``bytes``
     group heading).
     """
-    text = compact(value)
-    matches = list(re.finditer(r"[-+]?\d+(?:\.\d+)?", text))
+    # Preserve whitespace while locating numbers so prose boundaries (for
+    # example "up to 48 MHz") remain distinguishable from identifiers such
+    # as "QZ575". Individual conversion helpers still compact their slice.
+    text = str(value or "")
+    # A hyphen between two positive alternatives is a separator, not a unary
+    # minus. Preserve a leading/sign-delimited minus for genuinely signed data.
+    text = re.sub(r"(?<=[A-Za-z0-9)])\s*-\s*(?=\d)", " ", text)
     aliases = {compact(key).upper(): compact(val).upper() for key, val in config.get("aliases", {}).items()}
     factors = {compact(key).upper(): float(val) for key, val in config.get("factors", {}).items()}
+    multiplied: list[tuple[int, int | float]] = []
+    multiplied_spans: list[tuple[int, int]] = []
+    if config.get("allow_count_multiplier"):
+        unit_alias_pattern = "|".join(
+            re.escape(alias) for alias in sorted(aliases, key=len, reverse=True) if alias
+        )
+        for match in re.finditer(
+            rf"(\d+(?:\.\d+)?)\s*[X×]\s*(\d+(?:\.\d+)?)\s*({unit_alias_pattern})",
+            text,
+            re.I,
+        ):
+            quantity = convert_number(f"{match.group(2)}{match.group(3)}", config)
+            if quantity is None:
+                continue
+            multiplied.append(
+                (match.start(), scalar_or_none(float(match.group(1)) * float(quantity)))
+            )
+            multiplied_spans.append(match.span())
     upper = text.upper()
+    def embedded_identifier_number(match: re.Match[str]) -> bool:
+        before = upper[match.start() - 1] if match.start() else ""
+        if before.isascii() and before.isalpha():
+            return True
+        after = upper[match.end() :]
+        if after and after[0].isascii() and after[0].isalpha():
+            return not any(after.startswith(alias) for alias in aliases if alias)
+        return False
+
+    matches = [
+        match
+        for match in re.finditer(r"[-+]?\d+(?:\.\d+)?", text)
+        if not any(start <= match.start() and match.end() <= end for start, end in multiplied_spans)
+        and not embedded_identifier_number(match)
+    ]
     local_units: set[str] = set()
     occupied_spans: list[tuple[int, int]] = []
     # Unit aliases overlap (for example B, BYTE, KBYTE and KBYTES).  Resolve
@@ -82,14 +120,15 @@ def convert_values(
     # not create a second, contradictory unit.  This is span based rather than
     # a memory-specific special case and therefore also applies to other unit
     # dictionaries with nested aliases.
+    compact_upper = compact(text).upper()
     for alias, canonical in sorted(aliases.items(), key=lambda item: len(item[0]), reverse=True):
         if not alias:
             continue
         if len(alias) == 1 and alias.isascii():
-            occurrences = list(re.finditer(rf"\d(?:\.\d+)?({re.escape(alias)})(?![A-Z])", upper))
+            occurrences = list(re.finditer(rf"\d(?:\.\d+)?({re.escape(alias)})(?![A-Z])", compact_upper))
             spans = [match.span(1) for match in occurrences]
         else:
-            spans = [match.span() for match in re.finditer(re.escape(alias), upper)]
+            spans = [match.span() for match in re.finditer(re.escape(alias), compact_upper)]
         for span in spans:
             if any(start <= span[0] and span[1] <= end for start, end in occupied_spans):
                 continue
@@ -98,7 +137,11 @@ def convert_values(
                 local_units.add(canonical)
     if len(local_units) == 1:
         factor = factors[next(iter(local_units))]
-        return [scalar_or_none(float(match.group(0)) * factor) for match in matches]
+        ordinary = [
+            (match.start(), scalar_or_none(float(match.group(0)) * factor))
+            for match in matches
+        ]
+        return [value for _, value in sorted([*multiplied, *ordinary])]
 
     explicit: list[int | float] = []
     for index, match in enumerate(matches):
@@ -107,10 +150,10 @@ def convert_values(
         if converted is not None:
             explicit.append(converted)
     if explicit or fallback_unit_source is None:
-        return explicit
+        return [value for _, value in multiplied] + explicit
     fallback: list[int | float] = []
     for match in matches:
         converted = convert_scalar(float(match.group(0)), fallback_unit_source, config)
         if converted is not None:
             fallback.append(converted)
-    return fallback
+    return [value for _, value in multiplied] + fallback

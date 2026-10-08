@@ -15,8 +15,15 @@
       "supporting_any": ["封装", "Flash", "FLASH", "MTP"]
     },
     "pin_definition": {
+      "layout": "multi_package_columns",
       "required_any": ["默认功能", "管脚功能", "引脚功能", "通用双向"],
-      "minimum_pin_tokens": 3
+      "minimum_pin_tokens": 3,
+      "identity_header_aliases": ["管脚名称", "引脚名称", "管脚名", "pinname"],
+      "default_function_header_aliases": ["默认功能", "defaultfunction"],
+      "default_function_fallback": "通用双向I/O口",
+      "function_separator_pattern": "[/,，]+",
+      "variant_pattern": "\\(\\s*([A-Z0-9]+)\\s*\\)",
+      "continuation_position_tolerance": 0.035
     }
   }
 }

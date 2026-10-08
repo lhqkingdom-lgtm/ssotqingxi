@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "sets": {
+    "r3_4_pin_blind_novel_round3": {
+      "input_dir": "quality_corpus\\r3_4_pin_blind_novel_round3",
+      "files": [
+        {
+          "name": "stm32h562ag.pdf",
+          "bytes": 5783743,
+          "sha256": "f9497fcad236b767810db349d3b8e54829c29cf81a3e4c46ea31ade437871144",
+          "vendor": "STMicroelectronics",
+          "family": "STM32H5",
+          "layout": "multi-device-datasheet",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32h562ag.pdf"
+        },
+        {
+          "name": "stm32u535re.pdf",
+          "bytes": 3960846,
+          "sha256": "ca3634c93b2f3a3392333fa885d1f4e2f40b565cf2e7f9531b956d345859080e",
+          "vendor": "STMicroelectronics",
+          "family": "STM32U5",
+          "layout": "multi-package-device-datasheet",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32u535re.pdf"
+        }
+      ]
+    }
+  }
+}

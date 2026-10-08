@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+from collections import Counter
 from pathlib import Path
 from typing import Any
 
@@ -11,6 +12,16 @@ METADATA_FIELDS = {"pdf_source_file", "evidence_pages", "ingested_by", "ingested
 ADDITIVE_INTERNAL_FIELDS = {"_field_evidence"}
 ADDITIVE_DOCUMENT_FIELDS = {"status", "sections", "review_items"}
 ADDITIVE_TOP_LEVEL_FIELDS = {"review_queue_count"}
+
+
+def business_row(row: dict[str, Any], ignored_fields: set[str] | None = None) -> dict[str, Any]:
+    """Project a normalized row to domain facts, excluding extraction provenance."""
+    ignored_fields = ignored_fields or set()
+    return {
+        key: value
+        for key, value in row.items()
+        if not key.startswith("_") and key not in METADATA_FIELDS | ignored_fields
+    }
 
 
 def load_json(path: Path) -> Any:
@@ -117,6 +128,17 @@ def main() -> None:
         default=[],
         help="Ignore one intentionally added business field during a controlled compatibility comparison.",
     )
+    compare.add_argument(
+        "--business-data-only",
+        action="store_true",
+        help="Compare normalized business rows without treating legacy evidence ordering as semantic truth.",
+    )
+    compare.add_argument(
+        "--allow-additive-sheet",
+        action="append",
+        default=[],
+        help="Require every baseline row to remain present while allowing new rows in this sheet.",
+    )
     args = parser.parse_args()
 
     if args.command == "freeze":
@@ -133,6 +155,53 @@ def main() -> None:
     if args.ignore_rule_version:
         expected.pop("rule_version", None)
         actual.pop("rule_version", None)
+    if args.business_data_only:
+        ignored_fields = set(args.ignore_field)
+        expected_data = {
+            sheet: [business_row(row, ignored_fields) for row in rows]
+            for sheet, rows in expected.get("data", {}).items()
+        }
+        actual_data = {
+            sheet: [business_row(row, ignored_fields) for row in rows]
+            for sheet, rows in actual.get("data", {}).items()
+        }
+        if set(expected_data) != set(actual_data):
+            difference = (
+                "root.data: sheets missing="
+                f"{sorted(set(expected_data) - set(actual_data))} "
+                f"extra={sorted(set(actual_data) - set(expected_data))}"
+            )
+        else:
+            difference = None
+            additive = set(args.allow_additive_sheet)
+            unknown_additive = additive - set(expected_data)
+            if unknown_additive:
+                difference = f"unknown additive sheets: {sorted(unknown_additive)}"
+            for sheet in expected_data:
+                if difference:
+                    break
+                if sheet not in additive:
+                    difference = first_difference(
+                        expected_data[sheet], actual_data[sheet], f"root.data.{sheet}"
+                    )
+                    continue
+                expected_rows = Counter(
+                    json.dumps(row, ensure_ascii=False, sort_keys=True)
+                    for row in expected_data[sheet]
+                )
+                actual_rows = Counter(
+                    json.dumps(row, ensure_ascii=False, sort_keys=True)
+                    for row in actual_data[sheet]
+                )
+                missing = expected_rows - actual_rows
+                if missing:
+                    row, count = next(iter(missing.items()))
+                    difference = f"root.data.{sheet}: missing {count} baseline row(s), first={row}"
+        if difference:
+            print(json.dumps({"status": "FAIL", "first_difference": difference}, ensure_ascii=False))
+            raise SystemExit(1)
+        print(json.dumps({"status": "PASS", "mode": "business_data_only", "summary": actual.get("summary")}, ensure_ascii=False))
+        return
     difference = first_difference(expected, actual)
     if difference:
         print(json.dumps({"status": "FAIL", "first_difference": difference}, ensure_ascii=False))

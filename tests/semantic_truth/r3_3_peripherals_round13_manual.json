@@ -1,0 +1,40 @@
+{
+  "groups": [
+    {
+      "models": ["STM32L151VD", "STM32L152VD"],
+      "source_file_contains": "stm32l151vd-x.pdf",
+      "evidence_page": 10,
+      "expected": {"ADC": {"instance_count": 1, "channel_count": 25}, "SPI": {"instance_count": 8}, "I2C": {"instance_count": 2}, "UART": {"instance_count": 5}}
+    },
+    {
+      "models": ["STM32L162RD"],
+      "source_file_contains": "stm32l162vd.pdf",
+      "evidence_page": 12,
+      "expected": {"ADC": {"instance_count": 1, "channel_count": 21}, "SPI": {"instance_count": 8}, "I2C": {"instance_count": 2}, "UART": {"instance_count": 5}}
+    },
+    {
+      "models": ["STM32L162VD"],
+      "source_file_contains": "stm32l162vd.pdf",
+      "evidence_page": 12,
+      "expected": {"ADC": {"instance_count": 1, "channel_count": 25}, "SPI": {"instance_count": 8}, "I2C": {"instance_count": 2}, "UART": {"instance_count": 5}}
+    },
+    {
+      "models": ["STM32L162QD", "STM32L162ZD"],
+      "source_file_contains": "stm32l162vd.pdf",
+      "evidence_page": 12,
+      "expected": {"ADC": {"instance_count": 1, "channel_count": 40}, "SPI": {"instance_count": 8}, "I2C": {"instance_count": 2}, "UART": {"instance_count": 5}}
+    },
+    {
+      "models": ["STM32L162RC"],
+      "source_file_contains": "stm32l162vc.pdf",
+      "evidence_page": 10,
+      "expected": {"ADC": {"instance_count": 1, "channel_count": 21}, "SPI": {"instance_count": 8}, "I2C": {"instance_count": 2}, "UART": {"instance_count": 3}}
+    },
+    {
+      "models": ["STM32L162VC"],
+      "source_file_contains": "stm32l162vc.pdf",
+      "evidence_page": 10,
+      "expected": {"ADC": {"instance_count": 1, "channel_count": 25}, "SPI": {"instance_count": 8}, "I2C": {"instance_count": 2}, "UART": {"instance_count": 3}}
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "sets": {
+    "r2_3_postfix_round9": {
+      "input_dir": "quality_corpus\\r2_3_postfix_round9",
+      "files": [
+        {
+          "name": "stm32g070cb.pdf",
+          "bytes": 2059012,
+          "sha256": "9b3d197e88347be96d55a07dfca6f7802a85a5de68d94d4821c62404445a5222",
+          "vendor": "STMicroelectronics",
+          "family": "STM32G0",
+          "layout": "mainstream-value-line",
+          "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32g070cb.pdf"
+        },
+        {
+          "name": "stm32l552cc.pdf",
+          "bytes": 6632112,
+          "sha256": "b15b1557a4a6a6d9fda696fdab5600b4021009db8861b8fe8f30f4d09b94aff8",
+          "vendor": "STMicroelectronics",
+          "family": "STM32L5",
+          "layout": "modern-low-power-security",
+          "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32l552cc.pdf"
+        }
+      ]
+    }
+  }
+}

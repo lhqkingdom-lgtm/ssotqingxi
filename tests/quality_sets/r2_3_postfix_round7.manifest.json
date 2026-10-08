@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "sets": {
+    "r2_3_postfix_round7": {
+      "input_dir": "D:\\ssot\\quality_corpus\\r2_3_postfix_round7",
+      "files": [
+        {
+          "name": "stm32f101rc.pdf",
+          "bytes": 1900156,
+          "sha256": "1828693b7ac44c2e023a6fa04186c21f170d2a3333f479da1ab0a2605f425e60",
+          "vendor": "STMicroelectronics",
+          "family": "STM32F1",
+          "layout": "legacy-mainstream",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32f101rc.pdf"
+        },
+        {
+          "name": "stm32l151qd.pdf",
+          "bytes": 2318887,
+          "sha256": "74f2f27523d8058addcec7f8d15d3c3ec40c4df9343022cdf092dafacb5eb987",
+          "vendor": "STMicroelectronics",
+          "family": "STM32L1",
+          "layout": "legacy-low-power",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32l151qd.pdf"
+        }
+      ]
+    }
+  }
+}

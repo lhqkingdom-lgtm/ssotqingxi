@@ -1,0 +1,21 @@
+{
+  "expected": [
+    {"chip_id":"STM32H523CC","package_type":"LQFP48","pin_name":"PA0","pin_number":10,"function_name":"ADC12_INP0","evidence_pages":[66],"source_file_contains":"stm32h523rc.pdf"},
+    {"chip_id":"STM32H523CC","package_type":"UFQFPN48","pin_name":"PA0","pin_number":10,"function_name":"ADC12_INP0","evidence_pages":[66],"source_file_contains":"stm32h523rc.pdf"},
+    {"chip_id":"STM32H523HE","package_type":"WLCSP39","pin_name":"PA0","pin_number":"E9","function_name":"ADC12_INP0","evidence_pages":[66],"source_file_contains":"stm32h523rc.pdf"},
+    {"chip_id":"STM32H523VC","package_type":"LQFP100","pin_name":"PA0","pin_number":23,"function_name":"ADC12_INP0","evidence_pages":[66],"source_file_contains":"stm32h523rc.pdf"},
+    {"chip_id":"STM32H523VC","package_type":"UFBGA100","pin_name":"PA0","pin_number":"L3","function_name":"ADC12_INP0","evidence_pages":[66],"source_file_contains":"stm32h523rc.pdf"},
+    {"chip_id":"STM32H523ZC","package_type":"LQFP144","pin_name":"PA0","pin_number":34,"function_name":"ADC12_INP0","evidence_pages":[66],"source_file_contains":"stm32h523rc.pdf"},
+    {"chip_id":"STM32H523ZC","package_type":"UFBGA144","pin_name":"PA0","pin_number":"L2","function_name":"ADC12_INP0","evidence_pages":[66],"source_file_contains":"stm32h523rc.pdf"},
+    {"chip_id":"STM32WBA52CE","package_type":"UFQFPN48","pin_name":"PA0","pin_number":13,"function_name":"ADC4_IN9","evidence_pages":[71],"source_file_contains":"stm32wba52kg.pdf"},
+    {"chip_id":"STM32WBA52CG","package_type":"UFQFPN48","pin_name":"PA5","pin_number":7,"function_name":"ADC4_IN4","evidence_pages":[71],"source_file_contains":"stm32wba52kg.pdf"},
+    {"chip_id":"STM32WBA52KE","package_type":"UFQFPN32","pin_name":"PA0","pin_number":9,"function_name":"ADC4_IN9","evidence_pages":[71],"source_file_contains":"stm32wba52kg.pdf"},
+    {"chip_id":"STM32WBA52KG","package_type":"UFQFPN32","pin_name":"PA5","pin_number":6,"function_name":"ADC4_IN4","evidence_pages":[71],"source_file_contains":"stm32wba52kg.pdf"}
+  ],
+  "forbidden": [
+    {"chip_id":"STM32H523VC","package_type":"LQFP100","pin_name":"PA0","pin_number":"L3","function_name":"ADC12_INP0"},
+    {"chip_id":"STM32H523VC","package_type":"UFBGA100","pin_name":"PA0","pin_number":23,"function_name":"ADC12_INP0"},
+    {"chip_id":"STM32H523ZC","package_type":"LQFP144","pin_name":"PA0","pin_number":"L2","function_name":"ADC12_INP0"},
+    {"chip_id":"STM32WBA52CE","package_type":"UFQFPN48S","pin_name":"PA0","pin_number":13,"function_name":"ADC4_IN9"}
+  ]
+}

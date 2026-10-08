@@ -1,0 +1,37 @@
+{
+  "electrical_groups": [
+    {
+      "source_file_contains": "CA51F2",
+      "models": [
+        "CA51F251L2", "CA51F251L3", "CA51F252L2",
+        "CA51F252L3", "CA51F253L2", "CA51F253L3"
+      ],
+      "expected": {
+        "VDD": {"min_value": 1.8, "max_value": 5.5, "unit": "V", "evidence_page": 7},
+        "T_operating": {"min_value": -40.0, "max_value": 85.0, "unit": "°C", "evidence_page": 229}
+      }
+    },
+    {
+      "source_file_contains": "MiAi-6030",
+      "models": ["MiAi-6030A6", "MiAi-6031A6"],
+      "expected": {
+        "VDD": {"min_value": 1.8, "max_value": 5.5, "unit": "V", "evidence_page": 6},
+        "T_operating": {"min_value": -40.0, "max_value": 85.0, "unit": "°C", "evidence_page": 169}
+      }
+    },
+    {
+      "source_file_contains": "stm32g474",
+      "models": [
+        "STM32G474CB", "STM32G474CC", "STM32G474CE",
+        "STM32G474MB", "STM32G474MC", "STM32G474ME",
+        "STM32G474PB", "STM32G474PC", "STM32G474PE",
+        "STM32G474QB", "STM32G474QC", "STM32G474QE",
+        "STM32G474RB", "STM32G474RC", "STM32G474RE",
+        "STM32G474VB", "STM32G474VC", "STM32G474VE"
+      ],
+      "expected": {
+        "VDD": {"min_value": 1.71, "max_value": 3.6, "unit": "V", "evidence_page": 16}
+      }
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "expected": [
+    {"chip_id":"STM32C031C4","pin_name":"PA0","pin_number":11,"function_name":"ADC_IN0","af_code":null,"default_function":"PA0","evidence_pages":[32],"source_file_contains":"stm32c031c4.pdf"},
+    {"chip_id":"STM32C031F4","pin_name":"PA0","pin_number":7,"function_name":"ADC_IN0","af_code":null,"default_function":"PA0","evidence_pages":[32],"source_file_contains":"stm32c031c4.pdf"},
+    {"chip_id":"STM32C031G4","pin_name":"PA0","pin_number":6,"function_name":"ADC_IN0","af_code":null,"default_function":"PA0","evidence_pages":[32],"source_file_contains":"stm32c031c4.pdf"},
+    {"chip_id":"STM32C031K4","pin_name":"PA0","pin_number":7,"function_name":"ADC_IN0","af_code":null,"default_function":"PA0","evidence_pages":[32],"source_file_contains":"stm32c031c4.pdf"},
+    {"chip_id":"STM32C031C4","pin_name":"PA1","pin_number":12,"function_name":"USART2_RTS_DE_CK","af_code":"AF1","default_function":"PA1","evidence_pages":[32,35],"source_file_contains":"stm32c031c4.pdf"},
+    {"chip_id":"STM32C031C4","pin_name":"PA9","pin_number":29,"function_name":"USART1_TX","af_code":"AF1","default_function":"PA9","evidence_pages":[33,35],"source_file_contains":"stm32c031c4.pdf"},
+    {"chip_id":"STM32C031K4","pin_name":"PA9","pin_number":19,"function_name":"USART1_TX","af_code":"AF1","default_function":"PA9","evidence_pages":[33,35],"source_file_contains":"stm32c031c4.pdf"},
+    {"chip_id":"STM32F103C8","pin_name":"PB14","pin_number":27,"function_name":"USART3_RTS","af_code":null,"default_function":"PB14","evidence_pages":[30],"source_file_contains":"stm32f103c8.pdf"},
+    {"chip_id":"STM32F103C8","pin_name":"PA9","pin_number":30,"function_name":"USART1_TX","af_code":null,"default_function":"PA9","evidence_pages":[31],"source_file_contains":"stm32f103c8.pdf"},
+    {"chip_id":"STM32F103R8","pin_name":"PA9","pin_number":42,"function_name":"USART1_TX","af_code":null,"default_function":"PA9","evidence_pages":[31],"source_file_contains":"stm32f103c8.pdf"},
+    {"chip_id":"STM32F103T8","pin_name":"PA9","pin_number":21,"function_name":"USART1_TX","af_code":null,"default_function":"PA9","evidence_pages":[31],"source_file_contains":"stm32f103c8.pdf"},
+    {"chip_id":"STM32F103V8","pin_name":"PA9","pin_number":68,"function_name":"USART1_TX","af_code":null,"default_function":"PA9","evidence_pages":[31],"source_file_contains":"stm32f103c8.pdf"}
+  ],
+  "forbidden": [
+    {"chip_id":"STM32C031G4","pin_name":"PA0","pin_number":11,"function_name":"ADC_IN0"},
+    {"chip_id":"STM32F103T8","pin_name":"PA9","pin_number":68,"function_name":"USART1_TX"}
+  ]
+}

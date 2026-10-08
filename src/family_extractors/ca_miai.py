@@ -255,6 +255,30 @@ def basic_page_index(texts: list[str]) -> int | None:
     return best[1] if best else None
 
 
+CHINESE_DIGITS = {"零": 0, "〇": 0, "一": 1, "二": 2, "两": 2, "三": 3, "四": 4, "五": 5, "六": 6, "七": 7, "八": 8, "九": 9}
+CHINESE_UNITS = {"十": 10, "百": 100, "千": 1000}
+COUNT_TOKEN_RE = r"(?:\d+|[零〇一二两三四五六七八九十百千]+)"
+
+
+def parse_count_token(value: str) -> int | None:
+    """Parse an Arabic or common Chinese integer used as a component count."""
+    token = clean(value)
+    if token.isdigit():
+        return int(token)
+    if not token or any(char not in CHINESE_DIGITS and char not in CHINESE_UNITS for char in token):
+        return None
+    total = 0
+    digit = 0
+    for char in token:
+        if char in CHINESE_DIGITS:
+            digit = CHINESE_DIGITS[char]
+            continue
+        unit = CHINESE_UNITS[char]
+        total += (digit or 1) * unit
+        digit = 0
+    return total + digit
+
+
 def parse_basic_defaults(text: str) -> dict[str, Any]:
     normalized = clean(text).replace("I²C", "I2C").replace("I 2 C", "I2C")
     normalized = normalized.replace("‐", "-").replace("–", "-").replace("—", "-")
@@ -315,12 +339,11 @@ def parse_basic_defaults(text: str) -> dict[str, Any]:
         defaults["eeprom_kb"] = parse_memory_kb(f"{eeprom.group(1)}{eeprom.group(2) or ''}")
 
     peripheral_patterns = {
-        "UART": [r"(?:支持|内置|最多支持)\s*(\d+)\s*(?:个|路)?\s*(?:全双工)?\s*UART", r"(\d+)\s*路\s*全双工串口"],
-        "I2C": [r"(?:支持|内置)\s*(\d+)\s*(?:个|路)?\s*I2C"],
-        "SPI": [r"(?:支持|内置)\s*(\d+)\s*(?:个|路)?\s*(?:4\s*线)?\s*SPI"],
-        "PWM": [r"(?:支持|最多有|最多支持)\s*(\d+)\s*(?:个|路|通道)?\s*PWM"],
-        "ADC": [r"(?:支持|最多支持)\s*(\d+)\s*(?:个|路|通道)?\s*(\d+)\s*位\s*(?:SAR\s*)?ADC"],
-        "Touch": [r"(?:最大|最多)?\s*支持\s*(\d+)\s*(?:个|路|通道)?\s*(?:触摸|Touch)"],
+        "UART": [rf"(?:支持|内置|最多支持)\s*({COUNT_TOKEN_RE})\s*(?:个|路)?\s*(?:全双工)?\s*UART", rf"({COUNT_TOKEN_RE})\s*路\s*全双工串口"],
+        "I2C": [rf"(?:支持|内置)\s*({COUNT_TOKEN_RE})\s*(?:个|路)?\s*I2C"],
+        "SPI": [rf"(?:支持|内置)\s*({COUNT_TOKEN_RE})\s*(?:个|路)?\s*(?:4\s*线)?\s*SPI"],
+        "PWM": [rf"(?:支持|最多有|最多支持)\s*({COUNT_TOKEN_RE})\s*(?:个|路|通道)?\s*PWM"],
+        "Touch": [rf"(?:最大|最多)?\s*支持\s*({COUNT_TOKEN_RE})\s*(?:个|路|通道)?\s*(?:触摸|Touch)"],
     }
     for ptype, patterns in peripheral_patterns.items():
         for pattern in patterns:
@@ -328,10 +351,25 @@ def parse_basic_defaults(text: str) -> dict[str, Any]:
             if match:
                 count_semantic = peripheral_count_field(FIELD_DICTIONARY, ptype)
                 output_field = "channel_count" if count_semantic in {"channel_count", "mixed"} else "count"
-                defaults["peripherals"][ptype] = {output_field: int(match.group(1))}
-                if ptype == "ADC" and match.lastindex and match.lastindex >= 2:
-                    defaults["peripherals"][ptype]["resolution"] = int(match.group(2))
+                count = parse_count_token(match.group(1))
+                if count is not None:
+                    defaults["peripherals"][ptype] = {output_field: count}
                 break
+
+    # A classifier counter carries meaning for ADCs: "个" counts converter
+    # instances, whereas "路/通道" counts input channels.  The resolution is
+    # captured independently, so a channel count can never masquerade as an
+    # ADC instance count.
+    adc_pattern = rf"(?:支持|最多支持|内置|集成)?\s*({COUNT_TOKEN_RE})\s*(个|路|通道)?\s*(\d+)\s*位\s*(?:SAR\s*)?ADC"
+    for match in re.finditer(adc_pattern, normalized, re.I):
+        count = parse_count_token(match.group(1))
+        if count is None:
+            continue
+        counter = match.group(2)
+        output_field = "channel_count" if counter in {"路", "通道"} else "count"
+        adc = defaults["peripherals"].setdefault("ADC", {})
+        adc[output_field] = count
+        adc["resolution"] = int(match.group(3))
     pwm_res = re.search(r"(\d+)\s*(?:Bit|位)\s*PWM", normalized, re.I)
     if pwm_res:
         defaults["peripherals"].setdefault("PWM", {})["resolution"] = int(pwm_res.group(1))
@@ -430,6 +468,9 @@ def semantic_columns(
         "chip_id": "chip_id",
         "flash_kb": "flash",
         "ram_kb": "ram_total",
+        "ram_total_kb": "ram_total",
+        "ram_internal_kb": "internal_ram",
+        "ram_external_kb": "external_ram",
         "max_freq_mhz": "max_freq_mhz",
         "mtp_kb": "mtp",
         "eeprom_kb": "eeprom",
@@ -652,10 +693,12 @@ def extract_pin_tables(
     table_index: DocumentTableIndex,
 ) -> list[dict[str, Any]]:
     by_package: dict[str, list[str]] = defaultdict(list)
+    model_package_by_id: dict[str, str] = {}
     for model in models:
         package = compact((model.get("package_types") or [""])[0]).upper()
         if package:
             by_package[package].append(model["chip_id"])
+            model_package_by_id[model["chip_id"]] = package
     extracted = []
     active_columns: dict[float, tuple[list[str], str]] = {}
     locator = TABLE_RECIPE["topologies"]["pin_definition"]
@@ -828,6 +871,7 @@ def extract_pin_tables(
                         for function in functions:
                             page_rows.append({
                                 "chip_id": chip_id,
+                                "package_type": model_package_by_id.get(chip_id),
                                 "pin_name": pin_name,
                                 "pin_number": int(number_text),
                                 "function_name": function,

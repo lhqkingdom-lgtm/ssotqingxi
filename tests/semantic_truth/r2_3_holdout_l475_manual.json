@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "review_method": "manual visual comparison against STM32L475RC pages 2, 13 and 14 before any holdout-driven code change",
+  "records": [
+    {"sheet":"chips","key":{"chip_id":"STM32L475RC"},"source_file_contains":"stm32l475rc","expected":{"flash_kb":256,"ram_kb":128,"max_freq_mhz":80,"voltage_min":1.71,"voltage_max":3.6,"package_types":["LQFP64"]},"evidence_pages":{"flash_kb":13,"ram_kb":13,"max_freq_mhz":14,"voltage_min":14,"voltage_max":14,"package_types":14}},
+    {"sheet":"chips","key":{"chip_id":"STM32L475RE"},"source_file_contains":"stm32l475rc","expected":{"flash_kb":512,"ram_kb":128,"max_freq_mhz":80,"voltage_min":1.71,"voltage_max":3.6,"package_types":["LQFP64"]},"evidence_pages":{"flash_kb":13,"ram_kb":13,"max_freq_mhz":14,"voltage_min":14,"voltage_max":14,"package_types":14}},
+    {"sheet":"chips","key":{"chip_id":"STM32L475RG"},"source_file_contains":"stm32l475rc","expected":{"flash_kb":1024,"ram_kb":128,"max_freq_mhz":80,"voltage_min":1.71,"voltage_max":3.6,"package_types":["LQFP64"]},"evidence_pages":{"flash_kb":13,"ram_kb":13,"max_freq_mhz":14,"voltage_min":14,"voltage_max":14,"package_types":14}},
+    {"sheet":"chips","key":{"chip_id":"STM32L475VC"},"source_file_contains":"stm32l475rc","expected":{"flash_kb":256,"ram_kb":128,"max_freq_mhz":80,"voltage_min":1.71,"voltage_max":3.6,"package_types":["LQFP100"]},"evidence_pages":{"flash_kb":13,"ram_kb":13,"max_freq_mhz":14,"voltage_min":14,"voltage_max":14,"package_types":14}},
+    {"sheet":"chips","key":{"chip_id":"STM32L475VE"},"source_file_contains":"stm32l475rc","expected":{"flash_kb":512,"ram_kb":128,"max_freq_mhz":80,"voltage_min":1.71,"voltage_max":3.6,"package_types":["LQFP100"]},"evidence_pages":{"flash_kb":13,"ram_kb":13,"max_freq_mhz":14,"voltage_min":14,"voltage_max":14,"package_types":14}},
+    {"sheet":"chips","key":{"chip_id":"STM32L475VG"},"source_file_contains":"stm32l475rc","expected":{"flash_kb":1024,"ram_kb":128,"max_freq_mhz":80,"voltage_min":1.71,"voltage_max":3.6,"package_types":["LQFP100"]},"evidence_pages":{"flash_kb":13,"ram_kb":13,"max_freq_mhz":14,"voltage_min":14,"voltage_max":14,"package_types":14}}
+  ]
+}

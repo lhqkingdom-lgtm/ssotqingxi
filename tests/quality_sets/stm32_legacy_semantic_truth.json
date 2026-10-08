@@ -1,0 +1,117 @@
+{
+  "records": [
+    {
+      "sheet": "chips",
+      "key": {"chip_id": "STM32L151C6"},
+      "source_file_contains": "stm32l151c6.pdf",
+      "expected": {
+        "flash_kb": 32,
+        "ram_kb": 10,
+        "max_freq_mhz": 32,
+        "package_types": ["LQFP48", "UFQFPN48"]
+      },
+      "evidence_page": 11
+    },
+    {
+      "sheet": "chips",
+      "key": {"chip_id": "STM32L151C6-A"},
+      "source_file_contains": "stm32l151c6-a.pdf",
+      "expected": {
+        "flash_kb": 32,
+        "ram_kb": 16,
+        "max_freq_mhz": 32,
+        "package_types": ["LQFP48", "UFQFPN48"]
+      },
+      "evidence_page": 11
+    },
+    {
+      "sheet": "chips",
+      "key": {"chip_id": "STM32L151VD-X"},
+      "source_file_contains": "stm32l151vd-x.pdf",
+      "expected": {
+        "flash_kb": 384,
+        "ram_kb": 80,
+        "max_freq_mhz": 32,
+        "package_types": ["LQFP100", "WLCSP104"]
+      },
+      "evidence_page": 10
+    },
+    {
+      "sheet": "chips",
+      "key": {"chip_id": "STM32N657X0H3Q"},
+      "source_file_contains": "stm32n657a0.pdf",
+      "expected": {
+        "flash_kb": 0,
+        "ram_kb": 4300.8,
+        "max_freq_mhz": 800,
+        "package_types": ["VFBGA264"],
+        "voltage_min": 1.71,
+        "voltage_max": 3.6
+      },
+      "evidence_pages": {
+        "flash_kb": 254,
+        "ram_kb": 21,
+        "max_freq_mhz": 22,
+        "package_types": 16,
+        "voltage_min": 22,
+        "voltage_max": 22
+      }
+    },
+    {
+      "sheet": "chips",
+      "key": {"chip_id": "STM32WB5MMG"},
+      "source_file_contains": "stm32wb5mmg.pdf",
+      "expected": {
+        "flash_kb": 1024,
+        "ram_kb": 256,
+        "max_freq_mhz": 64,
+        "package_types": ["LGA86L"],
+        "voltage_min": 1.71,
+        "voltage_max": 3.6
+      },
+      "evidence_page": 1
+    },
+    {
+      "sheet": "chips",
+      "key": {"chip_id": "STM32MP157C"},
+      "source_file_contains": "stm32mp157c.pdf",
+      "expected": {
+        "flash_kb": 0,
+        "ram_kb": 708,
+        "max_freq_mhz": 650,
+        "package_types": ["TFBGA361", "TFBGA257", "LFBGA448", "LFBGA354"],
+        "voltage_min": 1.71,
+        "voltage_max": 3.6
+      },
+      "evidence_pages": {
+        "flash_kb": 1,
+        "ram_kb": 1,
+        "max_freq_mhz": 16,
+        "package_types": 1,
+        "voltage_min": 1,
+        "voltage_max": 1
+      }
+    },
+    {
+      "sheet": "chips",
+      "key": {"chip_id": "STM32MP251C"},
+      "source_file_contains": "stm32mp251c.pdf",
+      "expected": {
+        "flash_kb": 0,
+        "ram_kb": 808,
+        "max_freq_mhz": 1500,
+        "package_types": ["TFBGA361", "VFBGA361", "VFBGA424", "TFBGA436"],
+        "voltage_min": 1.71,
+        "voltage_max": 3.6
+      },
+      "evidence_pages": {
+        "flash_kb": 1,
+        "ram_kb": 7,
+        "max_freq_mhz": 1,
+        "package_types": 1,
+        "voltage_min": 1,
+        "voltage_max": 1
+      }
+    }
+  ]
+}

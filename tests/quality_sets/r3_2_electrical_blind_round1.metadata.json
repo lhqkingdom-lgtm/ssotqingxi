@@ -1,0 +1,25 @@
+{
+  "files": [
+    {
+      "name": "CA51F2系列MCU用户手册 REV2.3（CA51F252L2）.pdf",
+      "vendor": "Chipanalog",
+      "family": "CA51F2",
+      "layout": "family-manual",
+      "source_url": "local-inventory:D:/工作文档/CA51F2系列MCU用户手册 REV2.3（CA51F252L2）.pdf"
+    },
+    {
+      "name": "MiAi-6030A6、MiAi-6031A6 MCU用户手册 REV 2.3(2).pdf",
+      "vendor": "Chipanalog",
+      "family": "MiAi-603",
+      "layout": "two-model-manual",
+      "source_url": "local-inventory:D:/工作文档/MiAi-6030A6、MiAi-6031A6 MCU用户手册 REV 2.3(2).pdf"
+    },
+    {
+      "name": "stm32g474cb.pdf",
+      "vendor": "STMicroelectronics",
+      "family": "STM32G4",
+      "layout": "device-datasheet",
+      "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32g474cb.pdf"
+    }
+  ]
+}

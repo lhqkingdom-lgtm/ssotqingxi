@@ -1,0 +1,8 @@
+{
+  "files": [
+    {"name": "stm32f103c8.pdf", "vendor": "STMicroelectronics", "family": "STM32F1", "layout": "device-datasheet", "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32f103c8.pdf"},
+    {"name": "stm32l072v8.pdf", "vendor": "STMicroelectronics", "family": "STM32L0", "layout": "device-datasheet", "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32l072v8.pdf"},
+    {"name": "stm32l562ce.pdf", "vendor": "STMicroelectronics", "family": "STM32L5", "layout": "device-datasheet", "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32l562ce.pdf"},
+    {"name": "stm32wb55cc.pdf", "vendor": "STMicroelectronics", "family": "STM32WB", "layout": "wireless-device-datasheet", "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32wb55cc.pdf"}
+  ]
+}

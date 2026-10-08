@@ -89,13 +89,26 @@ def extract_operating_conditions(
             if not any(term in joined for term in table_terms):
                 continue
             bbox = table.bboxes[fragment - 1] if fragment - 1 < len(table.bboxes) else (0, 0, 0, 0)
-            result: dict[str, Any] = {"page": page, "bbox": bbox, "rows": rows}
+            result: dict[str, Any] = {
+                "page": page,
+                "bbox": bbox,
+                "rows": rows,
+                "field_sources": {},
+            }
             for row in rows:
                 label = compact(" ".join(clean(cell) for cell in row[:2])).lower()
+                source = {
+                    "label": clean(" ".join(clean(cell) for cell in row[:2])),
+                    "page": page,
+                    "bbox": bbox,
+                    "raw_value": clean(" ".join(clean(cell) for cell in row)),
+                    "source_cell_id": None,
+                }
                 if any(term in label for term in table_terms) and is_primary_voltage_row(row, recipe):
                     values = [number for cell in row if (number := number_from_cell(cell)) is not None]
                     if len(values) >= 2:
                         result["voltage_min"], result["voltage_max"] = values[-2], values[-1]
+                        result["field_sources"]["operating_voltage"] = [source]
                 full_row = compact(" ".join(clean(cell) for cell in row)).lower()
                 if any(term in label for term in temperature_terms) and not any(
                     term in full_row for term in temperature_exclusions
@@ -103,5 +116,7 @@ def extract_operating_conditions(
                     values = [number for cell in row if (number := number_from_cell(cell)) is not None]
                     if len(values) >= 2:
                         result["temperature_min"], result["temperature_max"] = values[-2], values[-1]
-            return result
+                        result["field_sources"]["operating_temperature"] = [source]
+            if any(key in result for key in ("voltage_min", "temperature_min")):
+                return result
     return None

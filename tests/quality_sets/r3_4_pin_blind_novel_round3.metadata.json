@@ -1,0 +1,18 @@
+{
+  "files": [
+    {
+      "name": "stm32h562ag.pdf",
+      "vendor": "STMicroelectronics",
+      "family": "STM32H5",
+      "layout": "multi-device-datasheet",
+      "source_url": "https://www.st.com/resource/en/datasheet/stm32h562ag.pdf"
+    },
+    {
+      "name": "stm32u535re.pdf",
+      "vendor": "STMicroelectronics",
+      "family": "STM32U5",
+      "layout": "multi-package-device-datasheet",
+      "source_url": "https://www.st.com/resource/en/datasheet/stm32u535re.pdf"
+    }
+  ]
+}

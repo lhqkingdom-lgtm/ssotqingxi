@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "sets": {
+    "r2_3_postfix_round4": {
+      "input_dir": "D:\\ssot\\quality_corpus\\r2_3_postfix_round4",
+      "files": [
+        {
+          "name": "stm32f328c8.pdf",
+          "bytes": 1600372,
+          "sha256": "4cc67cea34d0e0855bc426938aca2d3dc1010effbf8aa998a47682bf8da89a3b",
+          "vendor": "STMicroelectronics",
+          "family": "STM32F3",
+          "layout": "mixed-signal",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32f328c8.pdf"
+        },
+        {
+          "name": "stm32l162re.pdf",
+          "bytes": 1962665,
+          "sha256": "e569c33e8dbef949444a47734ced53cba41bd765437a54ecbe06ebb720f156e2",
+          "vendor": "STMicroelectronics",
+          "family": "STM32L1",
+          "layout": "legacy-low-power",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32l162re.pdf"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "files": [
+    {
+      "name": "stm32g070cb.pdf",
+      "vendor": "STMicroelectronics",
+      "family": "STM32G0",
+      "layout": "mainstream-value-line",
+      "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32g070cb.pdf"
+    },
+    {
+      "name": "stm32l552cc.pdf",
+      "vendor": "STMicroelectronics",
+      "family": "STM32L5",
+      "layout": "modern-low-power-security",
+      "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32l552cc.pdf"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "sets": {
+    "r2_3_postfix_holdout": {
+      "input_dir": "quality_corpus\\r2_3_postfix_holdout",
+      "files": [
+        {
+          "name": "stm32f415rg.pdf",
+          "bytes": 6257109,
+          "sha256": "fd9d2b7df5be5d808d7912cfa30863f4e8b4d2669f121a43aa0ad769e7be32f5",
+          "vendor": "STMicroelectronics",
+          "family": "STM32F4",
+          "layout": "legacy-performance",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32f415rg.pdf"
+        },
+        {
+          "name": "stm32l486jg.pdf",
+          "bytes": 5250650,
+          "sha256": "97379fe98911233ea09862a0248d320448a9c194c88ebc4989d32e0baf3d9676",
+          "vendor": "STMicroelectronics",
+          "family": "STM32L4",
+          "layout": "modern-low-power",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32l486jg.pdf"
+        }
+      ]
+    }
+  }
+}

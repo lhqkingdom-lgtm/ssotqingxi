@@ -34,17 +34,34 @@ def parse_size_kb(value: str) -> float | None:
     return number
 
 
-def parse_range(value: str) -> tuple[float, float] | None:
+def parse_ranges(value: str) -> list[tuple[float, float]]:
     text = compact(value).replace("至", "-").replace("～", "-").replace("~", "-")
-    match = re.search(
+    direct = [
+        (match.start(), (float(match.group(1)), float(match.group(2))))
+        for match in re.finditer(
         r"(-?\d+(?:\.\d+)?)\s*(?:[A-Za-z°℃]+)?\s*(?:-|TO)\s*"
-        r"(-?\d+(?:\.\d+)?)",
+        r"([-+]?\d+(?:\.\d+)?)",
         text,
         re.I,
-    )
-    if not match:
-        return None
-    return float(match.group(1)), float(match.group(2))
+        )
+    ]
+    tolerance = []
+    for match in re.finditer(
+        r"(-?\d+(?:\.\d+)?)\s*(?:[A-Za-z°℃]+)?\s*(?:±|\+/-)\s*"
+        r"(\d+(?:\.\d+)?)\s*%",
+        text,
+        re.I,
+    ):
+        center = float(match.group(1))
+        fraction = float(match.group(2)) / 100.0
+        bounds = sorted((center * (1.0 - fraction), center * (1.0 + fraction)))
+        tolerance.append((match.start(), (bounds[0], bounds[1])))
+    return [item for _, item in sorted([*direct, *tolerance], key=lambda entry: entry[0])]
+
+
+def parse_range(value: str) -> tuple[float, float] | None:
+    ranges = parse_ranges(value)
+    return ranges[0] if ranges else None
 
 
 def scalar_or_none(value: float | None) -> int | float | None:

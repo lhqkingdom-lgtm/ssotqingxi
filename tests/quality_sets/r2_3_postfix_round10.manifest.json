@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "sets": {
+    "r2_3_postfix_round10": {
+      "input_dir": "quality_corpus\\r2_3_postfix_round10",
+      "files": [
+        {
+          "name": "stm32f303c6.pdf",
+          "bytes": 2613246,
+          "sha256": "a2ef8412ae529745ef0a2ef0b77484e9b0156724e7cf10fc3f357101d0767f11",
+          "vendor": "STMicroelectronics",
+          "family": "STM32F3",
+          "layout": "mixed-signal-mainstream",
+          "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32f303c6.pdf"
+        },
+        {
+          "name": "stm32u585ai.pdf",
+          "bytes": 4842120,
+          "sha256": "6483871075d4889d39356648a9c1f1fb34f48dce2ce3e8c5a8d73a73f7e935e3",
+          "vendor": "STMicroelectronics",
+          "family": "STM32U5",
+          "layout": "modern-ultra-low-power",
+          "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32u585ai.pdf"
+        }
+      ]
+    }
+  }
+}

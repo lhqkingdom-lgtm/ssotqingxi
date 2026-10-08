@@ -40,6 +40,22 @@ def ordering_suffix(model: str) -> tuple[str, str]:
     raise ValueError(f"unsupported STM32 ordering-code shape: {model}")
 
 
+def ordering_codes(model: str, ordering_config: dict[str, Any]) -> tuple[str, str]:
+    """Locate a unique adjacent package/density pair from PDF relations."""
+    target = compact(model).upper()
+    package_codes = {str(item).upper() for item in ordering_config.get("pin_count_codes", {})}
+    flash_codes = {str(item).upper() for item in ordering_config.get("flash_code_kb", {})}
+    matches = [
+        (target[index], target[index + 1])
+        for index in range(len(target) - 1)
+        if target[index] in package_codes and target[index + 1] in flash_codes
+    ]
+    unique = list(dict.fromkeys(matches))
+    if len(unique) == 1:
+        return unique[0]
+    return ordering_suffix(target)
+
+
 def header_model_patterns(header: str) -> list[str]:
     """Split a physical column header that lists multiple STM32 variants."""
     result = []
@@ -108,7 +124,21 @@ def discover_model_variants(
     header_entries = sorted(headers.items())
     for _, header in header_entries:
         for pattern in header_model_patterns(header):
-            if re.fullmatch(r"STM32[A-Z0-9]{3,10}?[A-WYZ0-9]{2}", pattern):
+            is_concrete_x = False
+            if "X" in pattern:
+                try:
+                    pattern_pair = "".join(ordering_codes(pattern, ordering_config))
+                    target_pair = "".join(ordering_codes(target, ordering_config))
+                    is_concrete_x = (
+                        pattern.split(pattern_pair, 1)[0]
+                        == target.split(target_pair, 1)[0]
+                    )
+                except ValueError:
+                    is_concrete_x = False
+            # A source-declared X package code is concrete; an X in the
+            # family stem is a wildcard heading and must be resolved through
+            # the concrete seed in the grouped-header path below.
+            if ("X" not in pattern or is_concrete_x) and re.fullmatch(r"STM32[A-Z0-9]{3,10}?[A-WYZ0-9]{2}", pattern):
                 discovered.append(pattern)
 
     aliases = [
@@ -134,6 +164,8 @@ def discover_model_variants(
             for column, header in header_entries
             if header_model_patterns(header)
         ]
+        seed_family = target[:-2]
+        family_wildcard_prefix = seed_family[:-1] + "X"
         for position, (start, header) in enumerate(model_header_entries):
             end = (
                 model_header_entries[position + 1][0]
@@ -141,6 +173,14 @@ def discover_model_variants(
                 else len(density_row)
             )
             for pattern in header_model_patterns(header):
+                if pattern.startswith(family_wildcard_prefix) and len(pattern) > len(family_wildcard_prefix):
+                    package_code = pattern[len(family_wildcard_prefix)]
+                    for column in range(start, min(end, len(density_row))):
+                        for value in convert_values(density_row[column], unit_config, density_label):
+                            discovered.extend(
+                                seed_family + package_code + code
+                                for code in flash_codes.get(float(value), [])
+                            )
                 if not re.fullmatch(r"STM32[A-Z0-9]{3,10}?[A-Z0-9X]{2}", pattern) or not pattern.endswith("X"):
                     continue
                 resolved_prefix = "".join(
@@ -155,12 +195,26 @@ def discover_model_variants(
         model for model in dict.fromkeys(discovered)
         if re.fullmatch(r"STM32[A-Z0-9]{5,12}", model)
     ]
+    # When a matrix prints both a family shorthand and a full ordering code,
+    # the shorthand is a strict prefix, not a separately orderable device.
+    concrete = [
+        model for model in concrete
+        if not (
+            any(other != model and other.startswith(model) for other in concrete)
+            and any(
+                model.endswith(package_code + flash_code)
+                for package_code in ordering_config.get("pin_count_codes", {})
+                for flash_code in ordering_config.get("flash_code_kb", {})
+            )
+        )
+    ]
     return concrete or [compact(seed_model).upper()]
 
 
 def discover_device_summary_models(
     page_texts: list[str],
     ordering_config: dict[str, Any],
+    seed_model: str | None = None,
 ) -> list[str]:
     """Return concrete part numbers explicitly listed in device summaries."""
     package_codes = {
@@ -174,15 +228,47 @@ def discover_device_summary_models(
     if not package_codes or not flash_codes:
         return []
 
+    seed_prefix: str | None = None
+    seed_requires_trailer = False
+    if seed_model:
+        try:
+            seed_pair = "".join(ordering_codes(seed_model, ordering_config))
+            seed_parts = compact(seed_model).upper().split(seed_pair, 1)
+            seed_prefix = seed_parts[0]
+            seed_requires_trailer = bool(seed_parts[1])
+        except ValueError:
+            seed_prefix = None
+
     result: list[str] = []
     for text in page_texts:
         normalized = compact(text).lower()
         if "devicesummary" not in normalized and "器件汇总" not in normalized:
             continue
-        for model in re.findall(r"STM32[A-Z]{1,2}\d{2,3}[A-Z0-9]{2}", text, re.I):
+        # Capture the maximal printed identifier.  A fixed two-character tail
+        # truncates newer ordering codes (for example package/temperature/
+        # pinout suffixes) into plausible-looking but nonexistent devices.
+        for model in re.findall(r"STM32[A-Z]{1,2}\d{2,3}[A-Z0-9]{2,12}", text, re.I):
             candidate = compact(model).upper()
-            package_code, flash_code = ordering_suffix(candidate)
-            if package_code in package_codes and flash_code in flash_codes:
+            try:
+                package_code, flash_code = ordering_codes(candidate, ordering_config)
+            except ValueError:
+                continue
+            pair = package_code + flash_code
+            if seed_prefix is not None and not candidate.startswith(seed_prefix + pair[:0]):
+                candidate_prefix = candidate.split(pair, 1)[0]
+                if candidate_prefix != seed_prefix:
+                    continue
+            if seed_requires_trailer and not candidate.split(pair, 1)[1]:
+                continue
+            # With a concrete seed, the prefix comparison above distinguishes
+            # a family placeholder (STM32L15x...) from a legitimate X code in
+            # the ordering suffix (for example STM32N657X0H3Q).  Without a
+            # seed, remain conservative and do not publish X-bearing tokens.
+            if (
+                package_code in package_codes
+                and flash_code in flash_codes
+                and (seed_prefix is not None or "X" not in candidate)
+            ):
                 result.append(candidate)
     return list(dict.fromkeys(result))
 
@@ -262,10 +348,13 @@ def select_model_column(
     recipe: dict[str, Any],
     ordering_config: dict[str, Any],
 ) -> int:
-    target = compact(target_model).upper()
+    target = re.sub(r"-[A-Z0-9]+$", "", compact(target_model).upper())
     headers = structural_column_headers(rows, is_stm32_header)
-    package_code, flash_code = ordering_suffix(target)
-    expected_flash = ordering_config.get("flash_code_kb", {}).get(flash_code)
+    try:
+        package_code, flash_code = ordering_codes(target, ordering_config)
+    except ValueError:
+        package_code, flash_code = None, None
+    expected_flash = ordering_config.get("flash_code_kb", {}).get(flash_code) if flash_code else None
     aliases = [
         compact(item).lower()
         for item in recipe.get("fields", {}).get("flash_kb", {}).get("rows", ["flash"])
@@ -281,6 +370,8 @@ def select_model_column(
         return convert_values(value, unit_config, density_label)
     exact_direct = []
     wildcard_direct = []
+    grouped_family_direct = []
+    target_family = target[:-2]
     for column, header in headers.items():
         patterns = header_model_patterns(header)
         if any(target == pattern or target in pattern for pattern in patterns):
@@ -290,8 +381,23 @@ def select_model_column(
             for pattern in patterns
         ):
             wildcard_direct.append(column)
+        elif package_code and any(
+            pattern.startswith(target_family[:-1] + "X" + package_code)
+            for pattern in patterns
+            if len(target_family) > 1
+        ):
+            # Some legacy matrices print a family wildcard followed by the
+            # package group and further ordering placeholders, such as
+            # ``...xCxxxA``.  Package and density still select the column;
+            # the trailing placeholders are not part of the device stem.
+            grouped_family_direct.append(column)
     if exact_direct:
         return exact_direct[0]
+    wildcard_direct.extend(grouped_family_direct)
+    if package_code is None or flash_code is None:
+        if len(set(wildcard_direct)) == 1:
+            return wildcard_direct[0]
+        raise ValueError(f"cannot select target column for {target_model}")
     for start in wildcard_direct:
         later_groups = [
             column

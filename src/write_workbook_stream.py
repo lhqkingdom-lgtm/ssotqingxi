@@ -42,15 +42,18 @@ def public_value(field: str, value: object) -> object:
         return None
     if field == "ingested_at":
         return excel_date_serial(value)
-    if field == "package_types":
-        return json.dumps(value, ensure_ascii=False, separators=(",", ":")) if isinstance(value, list) else str(value)
+    # PostgreSQL json/jsonb values are represented as native lists/dicts by the
+    # database mapping layer.  Excel must receive valid JSON text rather than
+    # Python's repr (which uses single quotes and cannot be imported as JSON).
+    if isinstance(value, (list, dict)):
+        return json.dumps(value, ensure_ascii=False, separators=(",", ":"))
     return value
 
 
 def cell_xml(reference: str, value: object, style: int = 0) -> str:
     style_attr = f' s="{style}"' if style else ""
     if value is None:
-        return ""
+        return f'<c r="{reference}"{style_attr}/>' if style else ""
     if isinstance(value, bool):
         return f'<c r="{reference}" t="b"{style_attr}><v>{1 if value else 0}</v></c>'
     if isinstance(value, (int, float)) and math.isfinite(float(value)):
@@ -83,12 +86,13 @@ def english_sort_text(value: object) -> str:
 
 def write_sheet(archive, sheet_index, sheet_name, fields, rows, row_map) -> None:
     widths = {
-        "chip_id": 18, "series": 12, "core": 12, "package_types": 22, "pin_name": 14,
+        "chip_id": 18, "series": 12, "core": 12, "package_types": 22, "package_type": 18, "pin_name": 14,
         "function_name": 20, "af_code": 14, "default_function": 28, "constraints": 28,
         "peripheral_type": 18, "features": 28, "param_name": 18, "unit": 10,
         "conditions": 28, "memory_type": 18, "organization": 24, "max_frequency_mhz": 22,
         "pdf_source_file": 42, "evidence_pages": 24, "ingested_by": 16, "ingested_at": 22,
-        "is_reviewed": 14,
+        "is_reviewed": 14, "updated_at": 22, "source_doc_name": 34, "source_page": 16,
+        "submitter": 18, "reviewer": 18, "audit_status": 14,
     }
     last_col = column_name(len(fields) - 1)
     last_row = len(rows) + 1
@@ -108,11 +112,14 @@ def write_sheet(archive, sheet_index, sheet_name, fields, rows, row_map) -> None
         emit(f'<row r="1" ht="20" customHeight="1">{header_cells}</row>')
         date_column = fields.index("ingested_at") if "ingested_at" in fields else -1
         for row_number, row in enumerate(rows, 2):
+            stripe_style = 3 if row_number % 2 == 0 else 0
             cells = "".join(
                 cell_xml(
                     f"{column_name(column)}{row_number}",
                     public_value(field, row.get(field)),
-                    2 if column == date_column and row.get(field) is not None else 0,
+                    (4 if stripe_style else 2)
+                    if column == date_column and row.get(field) is not None
+                    else stripe_style,
                 )
                 for column, field in enumerate(fields)
             )
@@ -120,14 +127,12 @@ def write_sheet(archive, sheet_index, sheet_name, fields, rows, row_map) -> None
             for evidence_id in row.get("_evidence_ids", []):
                 row_map[evidence_id][sheet_name].append(row_number)
         emit('</sheetData>')
-        if rows:
-            emit(f'<autoFilter ref="A1:{last_col}{last_row}"/>')
-            emit(f'<conditionalFormatting sqref="A2:{last_col}{last_row}"><cfRule type="expression" dxfId="0" priority="1"><formula>MOD(ROW(),2)=0</formula></cfRule></conditionalFormatting>')
         emit('<pageMargins left="0.7" right="0.7" top="0.75" bottom="0.75" header="0.3" footer="0.3"/>')
         emit('<tableParts count="1"><tablePart r:id="rId1"/></tableParts></worksheet>')
 
 
-def static_parts(sheet_names: list[str]) -> dict[str, str]:
+def static_parts(sheet_names: list[str], *, include_theme: bool = False) -> dict[str, str]:
+    created_at = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     overrides = "".join(
         f'<Override PartName="/xl/worksheets/sheet{index}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>'
         for index in range(1, len(sheet_names) + 1)
@@ -145,13 +150,24 @@ def static_parts(sheet_names: list[str]) -> dict[str, str]:
         for index in range(1, len(sheet_names) + 1)
     )
     style_id = len(sheet_names) + 1
+    theme_override = (
+        '<Override PartName="/xl/theme/theme1.xml" '
+        'ContentType="application/vnd.openxmlformats-officedocument.theme+xml"/>'
+        if include_theme else ""
+    )
+    theme_relationship = (
+        f'<Relationship Id="rId{style_id + 1}" '
+        'Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme" '
+        'Target="theme/theme1.xml"/>'
+        if include_theme else ""
+    )
     return {
-        "[Content_Types].xml": f'''<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>{overrides}{table_overrides}<Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/><Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/></Types>''',
+        "[Content_Types].xml": f'''<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/><Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>{theme_override}{overrides}{table_overrides}<Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/><Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/></Types>''',
         "_rels/.rels": '''<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties" Target="docProps/app.xml"/></Relationships>''',
         "xl/workbook.xml": f'''<?xml version="1.0" encoding="UTF-8" standalone="yes"?><workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><bookViews><workbookView/></bookViews><sheets>{sheets}</sheets><calcPr calcId="191029"/></workbook>''',
-        "xl/_rels/workbook.xml.rels": f'''<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">{relationships}<Relationship Id="rId{style_id}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/></Relationships>''',
-        "xl/styles.xml": '''<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><numFmts count="1"><numFmt numFmtId="164" formatCode="yyyy-mm-dd hh:mm:ss"/></numFmts><fonts count="2"><font><sz val="10"/><name val="Calibri"/><family val="2"/></font><font><b/><color rgb="FFFFFFFF"/><sz val="10"/><name val="Calibri"/><family val="2"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF1F4E78"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="3"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf><xf numFmtId="164" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles><dxfs count="1"><dxf><fill><patternFill patternType="solid"><fgColor rgb="FFD9E7F5"/><bgColor indexed="64"/></patternFill></fill></dxf></dxfs><tableStyles count="0" defaultTableStyle="TableStyleMedium2" defaultPivotStyle="PivotStyleLight16"/></styleSheet>''',
-        "docProps/core.xml": f'''<?xml version="1.0" encoding="UTF-8" standalone="yes"?><cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><dc:creator>SSOT</dc:creator><cp:lastModifiedBy>SSOT</cp:lastModifiedBy><dcterms:created xsi:type="dcterms:W3CDTF">{datetime.now(timezone.utc).isoformat()}</dcterms:created></cp:coreProperties>''',
+        "xl/_rels/workbook.xml.rels": f'''<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">{relationships}<Relationship Id="rId{style_id}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>{theme_relationship}</Relationships>''',
+        "xl/styles.xml": '''<?xml version="1.0" encoding="UTF-8" standalone="yes"?><styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><numFmts count="1"><numFmt numFmtId="164" formatCode="yyyy-mm-dd hh:mm:ss"/></numFmts><fonts count="2"><font><sz val="10"/><name val="Calibri"/><family val="2"/></font><font><b/><color rgb="FFFFFFFF"/><sz val="10"/><name val="Calibri"/><family val="2"/></font></fonts><fills count="4"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF1F4E78"/><bgColor indexed="64"/></patternFill></fill><fill><patternFill patternType="solid"><fgColor rgb="FFD9E7F5"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="5"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf><xf numFmtId="164" fontId="0" fillId="0" borderId="0" xfId="0" applyNumberFormat="1"/><xf numFmtId="0" fontId="0" fillId="3" borderId="0" xfId="0" applyFill="1"/><xf numFmtId="164" fontId="0" fillId="3" borderId="0" xfId="0" applyNumberFormat="1" applyFill="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles><dxfs count="0"/><tableStyles count="0" defaultPivotStyle="PivotStyleLight16"/></styleSheet>''',
+        "docProps/core.xml": f'''<?xml version="1.0" encoding="UTF-8" standalone="yes"?><cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><dc:creator>SSOT</dc:creator><cp:lastModifiedBy>SSOT</cp:lastModifiedBy><dcterms:created xsi:type="dcterms:W3CDTF">{created_at}</dcterms:created></cp:coreProperties>''',
         "docProps/app.xml": f'''<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties" xmlns:vt="http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes"><Application>SSOT</Application><TitlesOfParts><vt:vector size="{len(sheet_names)}" baseType="lpstr">{"".join(f"<vt:lpstr>{xml_text(name)}</vt:lpstr>" for name in sheet_names)}</vt:vector></TitlesOfParts></Properties>''',
     }
 
@@ -166,7 +182,7 @@ def table_parts(sheet_index: int, sheet_name: str, fields: list[str], row_count:
         for index, field in enumerate(fields, 1)
     )
     return {
-        f"xl/tables/table{sheet_index}.xml": f'''<?xml version="1.0" encoding="UTF-8" standalone="yes"?><table xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" id="{sheet_index}" name={quoteattr(table_name)} displayName={quoteattr(table_name)} ref="{reference}" headerRowCount="1"><autoFilter ref="{reference}"/><tableColumns count="{len(fields)}">{columns}</tableColumns><tableStyleInfo name="TableStyleMedium2" showFirstColumn="0" showLastColumn="0" showRowStripes="1" showColumnStripes="0"/></table>''',
+        f"xl/tables/table{sheet_index}.xml": f'''<?xml version="1.0" encoding="UTF-8" standalone="yes"?><table xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" id="{sheet_index}" name={quoteattr(table_name)} displayName={quoteattr(table_name)} ref="{reference}" headerRowCount="1"><autoFilter ref="{reference}"/><tableColumns count="{len(fields)}">{columns}</tableColumns></table>''',
         f"xl/worksheets/_rels/sheet{sheet_index}.xml.rels": f'''<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/table" Target="../tables/table{sheet_index}.xml"/></Relationships>''',
     }
 
@@ -231,9 +247,15 @@ def main() -> None:
     row_map = defaultdict(lambda: defaultdict(list))
     args.output.parent.mkdir(parents=True, exist_ok=True)
     temporary = args.output.with_suffix(args.output.suffix + ".tmp")
+    theme = None
+    with zipfile.ZipFile(args.template) as template_archive:
+        if "xl/theme/theme1.xml" in template_archive.namelist():
+            theme = template_archive.read("xl/theme/theme1.xml")
     with zipfile.ZipFile(temporary, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=6, allowZip64=True) as archive:
-        for name, content in static_parts(sheet_names).items():
+        for name, content in static_parts(sheet_names, include_theme=theme is not None).items():
             archive.writestr(name, content)
+        if theme is not None:
+            archive.writestr("xl/theme/theme1.xml", theme)
         for index, sheet_name in enumerate(sheet_names, 1):
             config = schema["sheets"][sheet_name]
             rows = list(extracted.get("data", {}).get(sheet_name, []))

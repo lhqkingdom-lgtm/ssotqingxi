@@ -1,0 +1,18 @@
+{
+  "files": [
+    {
+      "name": "stm32f070c6.pdf",
+      "vendor": "STMicroelectronics",
+      "family": "STM32F0",
+      "layout": "mainstream-entry",
+      "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32f070c6.pdf"
+    },
+    {
+      "name": "stm32l476je.pdf",
+      "vendor": "STMicroelectronics",
+      "family": "STM32L4",
+      "layout": "low-power-mainstream",
+      "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32l476je.pdf"
+    }
+  ]
+}

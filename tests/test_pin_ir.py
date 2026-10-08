@@ -29,10 +29,16 @@ class PinIRTests(unittest.TestCase):
         self.assertEqual(resolved[0].af_code, "AF7")
         self.assertEqual(resolved[0].af_source_cell_id, "af-cell")
         self.assertEqual(resolved[0].output_row()["function_name"], "USART1_TX")
+        self.assertEqual(resolved[0].output_row()["package_type"], "LQFP64")
 
     def test_missing_af_is_kept_as_unresolved_not_guessed(self) -> None:
         resolved = resolve_pin_mux([definition("PA9", 30, "USART1_TX")], {})
         self.assertIsNone(resolved[0].af_code)
+
+    def test_explicit_function_code_survives_without_separate_af_matrix(self) -> None:
+        item = PinDefinitionIR(**{**definition("PA0", 1, "UART0_TX").__dict__, "af_code": "2"})
+        resolved = resolve_pin_mux([item], {})
+        self.assertEqual(resolved[0].af_code, "2")
 
     def test_wrapped_fragments_join_only_when_af_proves_the_identity(self) -> None:
         definitions = [

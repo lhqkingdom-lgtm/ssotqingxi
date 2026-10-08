@@ -1,0 +1,18 @@
+{
+  "files": [
+    {
+      "name": "stm32f328c8.pdf",
+      "vendor": "STMicroelectronics",
+      "family": "STM32F3",
+      "layout": "mixed-signal",
+      "source_url": "https://www.st.com/resource/en/datasheet/stm32f328c8.pdf"
+    },
+    {
+      "name": "stm32l162re.pdf",
+      "vendor": "STMicroelectronics",
+      "family": "STM32L1",
+      "layout": "legacy-low-power",
+      "source_url": "https://www.st.com/resource/en/datasheet/stm32l162re.pdf"
+    }
+  ]
+}

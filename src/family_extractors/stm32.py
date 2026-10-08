@@ -24,6 +24,7 @@ from core.text import clean, compact, parse_number, scalar_or_none
 from family_rules.stm32_matrix import (
     discover_device_summary_models,
     discover_model_variants,
+    ordering_codes,
     ordering_suffix,
     package_header_observation,
     select_observations,
@@ -71,6 +72,7 @@ def source_ordering_config(profile: DocumentProfile, page_texts: list[str]) -> d
         ("pin_count_codes", legend.pin_count_codes),
         ("flash_code_kb", legend.flash_code_kb),
         ("package_type_codes", legend.package_type_codes),
+        ("pinout_qualifier_codes", legend.pinout_qualifier_codes),
     ):
         result[name] = dict(source_values)
     result["ordering_legend_pages"] = list(legend.evidence_pages)
@@ -135,7 +137,7 @@ def indexed_tables(
 
 def feature_candidate_tables(document: Any, table_index: DocumentTableIndex) -> list[Any]:
     locator = FEATURE_RECIPE.get("locator", {})
-    return indexed_tables(
+    candidates = indexed_tables(
         document,
         table_index,
         TableCandidateQuery(
@@ -144,6 +146,18 @@ def feature_candidate_tables(document: Any, table_index: DocumentTableIndex) -> 
             preferred_features=frozenset({"continued", "merged_cells"}),
         ),
     )
+    # A concrete ordering-code table can contain the model plus words such as
+    # RAM/package and therefore outrank a wildcard feature matrix.  When an
+    # explicitly titled feature matrix exists, constrain this extraction stage
+    # to that semantic table class.  Caption-damaged documents retain the
+    # structural fallback.
+    title_terms = [compact(item).casefold() for item in FEATURE_RECIPE.get("title_any", [])]
+    titled = [
+        table
+        for table in candidates
+        if any(term in compact(table_index.get(table.table_id).title).casefold() for term in title_terms)
+    ]
+    return titled or candidates
 
 
 def header_matches(value: str, terms: Iterable[str] = (), term_groups: Iterable[Iterable[str]] = ()) -> bool:
@@ -176,31 +190,41 @@ def target_model(path: Path, profile: DocumentProfile) -> str:
     for rule in profile.payload["model"].get("filename_rules", []):
         candidate = re.search(str(rule["pattern"]), stem, re.I)
         if candidate:
-            return candidate.group(int(rule.get("group", 1))).upper()
+            model = candidate.group(int(rule.get("group", 1))).upper()
+            option = re.search(rf"{re.escape(model)}-([A-Z])(?:$|[^A-Z0-9])", stem, re.I)
+            return f"{model}-{option.group(1).upper()}" if option else model
     match = profile.model_re.search(stem)
     if not match:
         raise ValueError(f"STM32 profile cannot derive a target model from filename: {path.name}")
     return match.group(0).upper()
 
 
-def model_codes(model: str) -> tuple[str, str]:
+def model_codes(model: str, ordering_config: dict[str, Any] | None = None) -> tuple[str, str]:
     # A concrete STM32 ordering code ends in a letter package code followed by
     # a density code.  Generic family names such as STM32MP157C must not be
     # backtracked into the false pair ("7", "C").
     try:
+        if ordering_config:
+            return ordering_codes(model, ordering_config)
         return ordering_suffix(model)
     except ValueError as error:
         raise ValueError(f"unsupported STM32 model code: {model}") from error
 
 
-def ordering_flash_value(page_texts: list[str], model: str) -> tuple[float | int, int] | None:
+def ordering_flash_value(
+    page_texts: list[str], model: str, ordering_config: dict[str, Any] | None = None
+) -> tuple[float | int, int] | None:
     locator = SECTION_RECIPE.get("ordering_legend", {})
     page_terms = [compact(item).lower() for item in locator.get("page_any", [])]
     label_terms = [compact(item).lower() for item in locator.get("flash_label_any", [])]
     try:
-        _, flash_code = model_codes(model)
+        _, flash_code = model_codes(model, ordering_config)
     except ValueError:
         return None
+    if ordering_config and flash_code in ordering_config.get("flash_code_kb", {}):
+        pages = ordering_config.get("ordering_legend_pages", [])
+        if pages:
+            return ordering_config["flash_code_kb"][flash_code], int(pages[0])
     unit_factors = {"KBYTE": 1, "KBYTES": 1, "MBYTE": 1024, "MBYTES": 1024}
     for page, text in enumerate(page_texts, 1):
         normalized = compact(text).lower()
@@ -235,7 +259,7 @@ def package_values_from_ir(
 ) -> tuple[list[str], int | None, tuple[float, ...] | None]:
     ordering = ordering_config or {}
     try:
-        package_code, _ = model_codes(model)
+        package_code, _ = model_codes(model, ordering)
         pin_counts = pin_counts_for_code(ordering, package_code)
     except (KeyError, ValueError):
         return [], None, None
@@ -299,6 +323,133 @@ def infer_pin_header_depth(
     )
 
 
+def summary_values(page_texts: list[str], profile: DocumentProfile) -> tuple[dict[str, Any], int]:
+    """Read explicitly labelled cover/summary facts without a matrix layout."""
+    text = "\n".join(page_texts[:8])
+    values: dict[str, Any] = {}
+
+    def memory_value(label: str) -> float | int | None:
+        patterns = {
+            "flash": r"(\d+(?:\.\d+)?)\s*[- ]?(Mbytes?|Kbytes?)\s+(?:of\s+)?(?:embedded\s+)?flash\s+memory|(?:flash\s+memory|flash)[^\n,;]{0,30}?(\d+(?:\.\d+)?)\s*[- ]?(Mbytes?|Kbytes?)",
+            "ram": r"(\d+(?:\.\d+)?)\s*[- ]?Kbytes?\s+(?:of\s+)?(?:internal\s+)?SRAM|(?:embedded\s+)?SRAM\s*\(?\s*(\d+(?:\.\d+)?)\s*[- ]?Kbytes?",
+        }
+        found = re.search(patterns[label], text, re.I)
+        if not found:
+            return None
+        groups = [item for item in found.groups() if item]
+        number = float(groups[0])
+        if label == "flash" and len(groups) > 1 and groups[1].lower().startswith("m"):
+            number *= 1024
+        return scalar_or_none(number)
+
+    flash = memory_value("flash")
+    ram = memory_value("ram")
+    if flash is not None:
+        values["flash_kb"] = flash
+    elif re.search(r"external\s+DDR\s+memory", text, re.I) and re.search(r"(?:Quad|Octo)-?SPI\s+(?:flash\s+)?memory\s+interface", text, re.I):
+        values["flash_kb"] = 0
+    if ram is not None:
+        values["ram_kb"] = ram
+    frequency = re.search(r"(?:up\s+to\s+|at\s+)(\d+(?:\.\d+)?)\s*(GHz|MHz)\b", text, re.I)
+    if frequency:
+        values["max_freq_mhz"] = scalar_or_none(float(frequency.group(1)) * (1000 if frequency.group(2).lower() == "ghz" else 1))
+    voltage_ranges = [
+        (float(low), float(high))
+        for low, high in re.findall(r"(\d+(?:\.\d+)?)\s*(?:V\s*)?to\s+(\d+(?:\.\d+)?)\s*V", text, re.I)
+    ]
+    if voltage_ranges:
+        values["voltage_min"] = scalar_or_none(min(item[0] for item in voltage_ranges))
+        values["voltage_max"] = scalar_or_none(max(item[1] for item in voltage_ranges))
+    source_page = next((index for index, value in enumerate(page_texts[:8], 1) if re.search(r"\bFeatures\b|Product summary", value, re.I)), 1)
+    packages = parse_package_names(page_texts[source_page - 1], profile.package_re.pattern)
+    packages = [item for item in packages if not any(other != item and other.startswith(item) for other in packages)]
+    if packages:
+        values["package_types"] = packages
+    return values, source_page
+
+
+def summary_peripheral_counts(page_texts: list[str]) -> tuple[dict[str, int], int | None]:
+    """Count only explicitly numbered feature-list bullets."""
+    for page, source in enumerate(page_texts[:10], 1):
+        if not re.search(r"peripherals|communication", source, re.I):
+            continue
+        counts: dict[str, int] = {}
+        for kind, aliases in {"SPI": ("SPI",), "I2C": ("I2C",), "UART": ("USART", "UART", "LPUART"), "ADC": ("ADC",)}.items():
+            total = 0
+            for alias in aliases:
+                total += sum(int(value) for value in re.findall(rf"(?:•|–)\s*(\d+)\s*[×x]\s*{alias}s?\b", source, re.I))
+                total += sum({"one": 1, "two": 2, "three": 3, "four": 4}.get(value.lower(), 0) for value in re.findall(rf"(?:•|–)\s*(one|two|three|four)\s+{alias}s?\b", source, re.I))
+            if total:
+                counts[kind] = total
+        if counts:
+            return counts, page
+    return {}, None
+
+
+def process_summary_document(
+    doc: dict[str, Any], collector: Collector, profile: DocumentProfile, document_ir: Any
+) -> tuple[dict[str, Any], list[Evidence]]:
+    """Extract a single-product summary document with a definition-only pin map."""
+    path: Path = doc["path"]
+    texts = doc["page_texts"]
+    model = target_model(path, profile)
+    values, page = summary_values(texts, profile)
+    required = ("flash_kb", "ram_kb", "max_freq_mhz", "package_types", "voltage_min", "voltage_max")
+    missing = [item for item in required if values.get(item) in (None, [], "")]
+    if missing:
+        raise ValueError(f"summary document lacks explicit required fields: {', '.join(missing)}")
+    page_ir = document_ir.pages[page - 1]
+    evidence = make_evidence(doc, page, (0, 0, page_ir.width, page_ir.height), "summary", "A", texts[page - 1], 1)
+    evidences = [evidence]
+    chip = {
+        "chip_id": model,
+        "series": profile.series_for_model(model),
+        "core": "ARM",
+        **{field: values[field] for field in required},
+    }
+    collector.add("chips", chip, evidence.evidence_id, "A")
+    collector.add("memory", {"chip_id": model, "memory_type": "Flash", "size_kb": values["flash_kb"], "organization": None, "features": None}, evidence.evidence_id, "A")
+    collector.add("memory", {"chip_id": model, "memory_type": "SRAM_Internal", "size_kb": values["ram_kb"], "organization": None, "features": None}, evidence.evidence_id, "A")
+    collector.add("electrical", {"chip_id": model, "param_name": "VDD", "min_value": values["voltage_min"], "max_value": values["voltage_max"], "unit": "V", "conditions": None}, evidence.evidence_id, "A")
+
+    counts, peripheral_page = summary_peripheral_counts(texts)
+    peripheral_count = 0
+    if peripheral_page:
+        source = texts[peripheral_page - 1]
+        p = document_ir.pages[peripheral_page - 1]
+        peripheral_evidence = make_evidence(doc, peripheral_page, (0, 0, p.width, p.height), "peripheral", "A", source, 1)
+        evidences.append(peripheral_evidence)
+        for kind, count in counts.items():
+            collector.add("peripherals", {"chip_id": model, "peripheral_type": kind, "instance_count": count, "channel_count": None, "max_resolution": None, "max_frequency_mhz": None, "features": None}, peripheral_evidence.evidence_id, "A")
+            peripheral_count += 1
+
+    pin_rows = 0
+    for table in document_ir.tables:
+        grid = next(iter(table_grids(table)), None)
+        if grid is None:
+            continue
+        _, table_page, rows, _ = grid
+        header = compact(" ".join(str(cell) for row in rows[:3] for cell in row)).lower()
+        if "pinname" not in header or "functionafterreset" not in header:
+            continue
+        pin_page = document_ir.pages[table_page - 1]
+        pin_evidence = make_evidence(doc, table_page, table.bboxes[0], "pin", "A", texts[table_page - 1], len(evidences) + 1)
+        added_here = 0
+        for row in rows:
+            if not row or not re.fullmatch(r"\d+", compact(row[0])):
+                continue
+            pin_name = next((match.group(0).upper() for cell in row[1:] for match in [profile.pin_re.search(clean(cell))] if match), None)
+            if not pin_name:
+                continue
+            collector.add("pin_mux", {"chip_id": model, "pin_name": pin_name, "pin_number": int(compact(row[0])), "function_name": pin_name, "is_supported": True, "af_code": None, "default_function": pin_name, "constraints": None}, pin_evidence.evidence_id, "A")
+            pin_rows += 1
+            added_here += 1
+        if added_here:
+            evidences.append(pin_evidence)
+    sections = {"chips": "success", "memory": "success", "electrical": "success", "peripherals": "success" if peripheral_count else "not_applicable", "pin_mux": "success" if pin_rows else "not_applicable", "pin_af": "not_applicable"}
+    return {"doc_id": doc["doc_id"], "sha256": doc["sha256"], "version": doc.get("version"), "source_file": str(path), "duplicate_paths": doc["duplicates"], "page_count": len(texts), "basic_page": page, "model_count": 1, "models": [model], "evidence_count": len(evidences), "status": "complete", "sections": sections, "review_items": []}, evidences
+
+
 def pin_tables(
     pdf: Any,
     page_texts: list[str],
@@ -311,32 +462,48 @@ def pin_tables(
     ordering = ordering_config or {}
     packages = list(package_types)
     try:
-        package_code, _ = model_codes(model)
+        package_code, _ = model_codes(model, ordering)
     except ValueError:
         package_code = None
     definition_recipe = PIN_RECIPE["topologies"]["pin_definition"]
     pin_variant_preferences = definition_recipe["column_qualifier_preferences"]
-    # The original SSOT pin_mux contract has no package column. STM32 ordering
-    # codes separate different lead counts into different chip_ids; compatible
-    # package alternatives for one chip_id share one canonical pin map.
-    pin_package_targets: list[str | None] = packages[:1] or [None]
-    pin_count = None
-    if not packages:
-        pin_counts = pin_counts_for_code(ordering, package_code)
-        if not pin_counts:
-            return []
-        pin_count = pin_counts
+    selected_pinout_qualifier = next(
+        (
+            qualifier
+            for code, qualifier in sorted(
+                ordering.get("pinout_qualifier_codes", {}).items(),
+                key=lambda item: len(str(item[0])),
+                reverse=True,
+            )
+            if model.endswith(str(code).upper())
+        ),
+        None,
+    )
+    if selected_pinout_qualifier:
+        pin_variant_preferences = [
+            selected_pinout_qualifier,
+            *[item for item in pin_variant_preferences if item != selected_pinout_qualifier],
+        ]
+    pin_counts = pin_counts_for_code(ordering, package_code)
+    if not packages and not pin_counts:
+        return []
+    pin_count = pin_counts or None
     return extract_pin_definitions(
         pdf,
         model=model,
         pin_pattern=profile.pin_re,
+        package_pattern=profile.package_re,
         normalize_function=profile.normalize_function,
         # The merged pin-table header may repeat the same package under sibling
         # product groups.  The ordering-code stem (everything before package
         # and density) is the narrow identity needed to bind the right column;
         # the broader profile series can match both groups.
-        series_identity=model[:-2],
-        recipe=PIN_RECIPE["topologies"]["pin_definition"],
+        series_identity=(
+            model[: model.find(package_code)]
+            if package_code and model.find(package_code) >= len(profile.series_for_model(model))
+            else profile.series_for_model(model)
+        ),
+        recipe={**definition_recipe, "column_qualifier_preferences": pin_variant_preferences},
         package_types=packages,
         pin_count=pin_count,
         table_index=table_index,
@@ -381,6 +548,33 @@ def _process_single_model(doc: dict[str, Any], collector: Collector, aliases: di
         if hard_issues:
             raise ValueError("; ".join(issue.message for issue in hard_issues))
         values = {**reduced["fields"], "peripherals": reduced["peripherals"]}
+        cover, cover_page = summary_values(texts, profile)
+        summary_overrides: set[str] = set()
+        try:
+            model_codes(model, ordering_config)
+            generic_model = False
+        except ValueError:
+            generic_model = True
+        for field_name in ("flash_kb", "max_freq_mhz", "voltage_min", "voltage_max"):
+            if values.get(field_name) is None and cover.get(field_name) is not None:
+                values[field_name] = cover[field_name]
+                summary_overrides.add(field_name)
+        if cover.get("ram_kb") is not None and (
+            values.get("ram_kb") is None or cover["ram_kb"] > values["ram_kb"]
+        ):
+            values["ram_kb"] = cover["ram_kb"]
+            summary_overrides.add("ram_kb")
+        if generic_model and cover.get("package_types"):
+            values["package_types"] = cover["package_types"]
+            summary_overrides.add("package_types")
+        if not values.get("peripherals"):
+            summary_counts, _ = summary_peripheral_counts(texts)
+            if summary_counts:
+                values["peripherals"] = {
+                    kind: {"count": count, "channel_count": None, "resolution": None}
+                    for kind, count in summary_counts.items()
+                }
+                summary_overrides.add("peripherals")
         aggregate_index = {
             (item.field_group, item.field_name): item
             for item in aggregates
@@ -409,6 +603,19 @@ def _process_single_model(doc: dict[str, Any], collector: Collector, aliases: di
             evidences.append(evidence)
             feature_evidence_by_page[page] = evidence
         feature_evidence = feature_evidence_by_page[feature_page]
+        summary_evidence = None
+        if summary_overrides:
+            cover_ir = document_ir.pages[cover_page - 1]
+            summary_evidence = make_evidence(
+                doc,
+                cover_page,
+                (0, 0, cover_ir.width, cover_ir.height),
+                "summary",
+                "A",
+                texts[cover_page - 1],
+                1,
+            )
+            evidences.append(summary_evidence)
 
         def aggregate_evidence_ids(group: str, name: str) -> list[str]:
             aggregate = aggregate_index.get((group, name))
@@ -420,7 +627,7 @@ def _process_single_model(doc: dict[str, Any], collector: Collector, aliases: di
                 if page in feature_evidence_by_page
             ]
         ordering_evidence = None
-        ordering_flash = ordering_flash_value(texts, model)
+        ordering_flash = ordering_flash_value(texts, model, ordering_config)
         if ordering_flash is not None and ordering_flash[0] != values.get("flash_kb"):
             flash_value, ordering_page = ordering_flash
             values["flash_kb"] = flash_value
@@ -495,15 +702,20 @@ def _process_single_model(doc: dict[str, Any], collector: Collector, aliases: di
             "series": feature_evidence.evidence_id,
             "core": feature_evidence.evidence_id,
         }
+        if summary_evidence is not None:
+            for field_name in summary_overrides:
+                chip_field_evidence[field_name] = summary_evidence.evidence_id
         for field_name in ("ram_kb", "max_freq_mhz"):
+            if field_name in summary_overrides:
+                continue
             ids = aggregate_evidence_ids("fields", field_name)
             if ids:
                 chip_field_evidence[field_name] = ids
-        if ordering_evidence is None:
+        if ordering_evidence is None and "flash_kb" not in summary_overrides:
             ids = aggregate_evidence_ids("fields", "flash_kb")
             if ids:
                 chip_field_evidence["flash_kb"] = ids
-        if values.get("package_types") and package_evidence is None:
+        if values.get("package_types") and package_evidence is None and "package_types" not in summary_overrides:
             ids = aggregate_evidence_ids("fields", "package_types")
             if ids:
                 chip_field_evidence["package_types"] = ids
@@ -536,14 +748,18 @@ def _process_single_model(doc: dict[str, Any], collector: Collector, aliases: di
                 {"package_types": package_evidence.evidence_id},
             )
         if values.get("flash_kb") is not None:
-            flash_evidence = ordering_evidence or feature_evidence
-            flash_ids = [ordering_evidence.evidence_id] if ordering_evidence else aggregate_evidence_ids("fields", "flash_kb")
+            flash_evidence = ordering_evidence or (summary_evidence if "flash_kb" in summary_overrides else feature_evidence)
+            flash_ids = (
+                [ordering_evidence.evidence_id]
+                if ordering_evidence
+                else ([summary_evidence.evidence_id] if summary_evidence and "flash_kb" in summary_overrides else aggregate_evidence_ids("fields", "flash_kb"))
+            )
             collector.add("memory", {"chip_id": model, "memory_type": configured_output_value("memory_type", "flash", "Flash"), "size_kb": values["flash_kb"], "organization": None, "features": None}, flash_evidence.evidence_id, "A", {field: flash_ids or [flash_evidence.evidence_id] for field in ("chip_id", "memory_type", "size_kb")})
         if values.get("ram_kb") is not None:
-            ram_ids = aggregate_evidence_ids("fields", "ram_kb") or [feature_evidence.evidence_id]
+            ram_ids = ([summary_evidence.evidence_id] if summary_evidence and "ram_kb" in summary_overrides else aggregate_evidence_ids("fields", "ram_kb")) or [feature_evidence.evidence_id]
             collector.add("memory", {"chip_id": model, "memory_type": configured_output_value("memory_type", "ram", "SRAM_Internal"), "size_kb": values["ram_kb"], "organization": None, "features": None}, ram_ids[0], "A", {field: ram_ids for field in ("chip_id", "memory_type", "size_kb")})
         for peripheral_type, item in values.get("peripherals", {}).items():
-            peripheral_ids = aggregate_evidence_ids("peripherals", peripheral_type) or [feature_evidence.evidence_id]
+            peripheral_ids = ([summary_evidence.evidence_id] if summary_evidence and "peripherals" in summary_overrides else aggregate_evidence_ids("peripherals", peripheral_type)) or [feature_evidence.evidence_id]
             peripheral_row = {"chip_id": model, "peripheral_type": peripheral_type, "instance_count": item.get("count"), "channel_count": item.get("channel_count"), "max_resolution": item.get("resolution"), "max_frequency_mhz": None, "features": None}
             evidenced_fields = ["chip_id", "peripheral_type"] + [field for field in ("instance_count", "channel_count", "max_resolution") if peripheral_row.get(field) is not None]
             collector.add("peripherals", peripheral_row, peripheral_ids[0], "A", {field: peripheral_ids for field in evidenced_fields})
@@ -566,7 +782,7 @@ def _process_single_model(doc: dict[str, Any], collector: Collector, aliases: di
                 collector.add("electrical", {"chip_id": model, "param_name": configured_output_value("electrical_param", "temperature", "T_operating"), "min_value": operating["temperature_min"], "max_value": operating["temperature_max"], "unit": "°C", "conditions": None}, operating_evidence.evidence_id, "A")
 
         if not electrical_voltage_added and chip_row.get("voltage_min") is not None:
-            voltage_ids = aggregate_evidence_ids("fields", "voltage_min") or [feature_evidence.evidence_id]
+            voltage_ids = ([summary_evidence.evidence_id] if summary_evidence and "voltage_min" in summary_overrides else aggregate_evidence_ids("fields", "voltage_min")) or [feature_evidence.evidence_id]
             collector.add(
                 "electrical",
                 {
@@ -785,22 +1001,40 @@ def process_document(doc: dict[str, Any], collector: Collector, aliases: dict[st
     table_index = build_table_index(document_ir)
     filename_model = target_model(path, profile)
     seed_model = aliases.get(filename_model, filename_model)
+    product_option = re.search(r"(-[A-Z])$", seed_model)
+    structural_seed = seed_model[: -len(product_option.group(1))] if product_option else seed_model
     feature_tables = feature_candidate_tables(document_ir, table_index)
     if not feature_tables:
-        raise ValueError("full-document index found no STM32 feature-matrix candidate")
-    feature_table, _ = select_observations(
-        feature_tables, seed_model, FEATURE_RECIPE, ordering_config
-    )
+        return process_summary_document(doc, collector, profile, document_ir)
+    try:
+        feature_table, _ = select_observations(
+            feature_tables, structural_seed, FEATURE_RECIPE, ordering_config
+        )
+    except ValueError:
+        summary, _ = summary_values(texts, profile)
+        if all(summary.get(field) not in (None, [], "") for field in ("flash_kb", "ram_kb", "max_freq_mhz", "package_types", "voltage_min", "voltage_max")):
+            return process_summary_document(doc, collector, profile, document_ir)
+        raise
     first_grid = next(iter(table_grids(feature_table)), None)
     if first_grid is None:
         raise ValueError("STM32 feature matrix has no readable grid")
     models = [
         aliases.get(model, model)
-        for model in discover_model_variants(first_grid[2], seed_model, FEATURE_RECIPE, ordering_config)
+        for model in discover_model_variants(first_grid[2], structural_seed, FEATURE_RECIPE, ordering_config)
     ]
+    if product_option:
+        models = [model if model.endswith(product_option.group(1)) else model + product_option.group(1) for model in models]
     models.extend(
-        aliases.get(model, model)
-        for model in discover_device_summary_models(texts, ordering_config)
+        (
+            aliases.get(model, model) + product_option.group(1)
+            if product_option and not aliases.get(model, model).endswith(product_option.group(1))
+            else aliases.get(model, model)
+        )
+        for model in discover_device_summary_models(
+            texts,
+            ordering_config,
+            models[0] if models else seed_model,
+        )
     )
     models = list(dict.fromkeys(models))
 

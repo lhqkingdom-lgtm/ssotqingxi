@@ -51,6 +51,7 @@ def validate_schema(schema: dict[str, Any]) -> list[dict[str, Any]]:
     for sheet, config in sheets.items():
         fields = config.get("fields", [])
         key = config.get("key", [])
+        nullable_key_fields = config.get("nullable_key_fields", [])
         required = config.get("required", [])
         field_types = config.get("field_types", {})
         if not fields or len(fields) != len(set(fields)):
@@ -61,6 +62,8 @@ def validate_schema(schema: dict[str, Any]) -> list[dict[str, Any]]:
             unknown = [field for field in values if field not in fields]
             if unknown:
                 issues.append({"level": "error", "sheet": sheet, "message": f"{label} contains unknown fields {unknown}"})
+        if any(field not in key for field in nullable_key_fields):
+            issues.append({"level": "error", "sheet": sheet, "message": "nullable_key_fields must be a subset of key"})
         if set(field_types) != set(fields):
             issues.append({"level": "error", "sheet": sheet, "message": "field_types must describe every field exactly once"})
         for field, types in field_types.items():
@@ -93,6 +96,7 @@ def validate_data_contract(data: dict[str, list[dict[str, Any]]], schema: dict[s
         fields = config["fields"]
         field_set = set(fields)
         key_fields = config["key"]
+        nullable_key_fields = set(config.get("nullable_key_fields", []))
         seen: set[tuple[Any, ...]] = set()
         for index, row in enumerate(data[sheet], start=2):
             public_fields = [field for field in row if not field.startswith("_")]
@@ -117,7 +121,10 @@ def validate_data_contract(data: dict[str, list[dict[str, Any]]], schema: dict[s
                 if value is not None and isinstance(value, (int, float)) and not isinstance(value, bool) and not bounds[0] <= value <= bounds[1]:
                     issues.append({"level": "error", "sheet": sheet, "row": index, "message": f"{field} is outside canonical range {bounds}: {value}"})
             key = tuple(row.get(field) for field in key_fields)
-            if any(value in (None, "") for value in key):
+            if any(
+                row.get(field) in (None, "") and field not in nullable_key_fields
+                for field in key_fields
+            ):
                 issues.append({"level": "error", "sheet": sheet, "row": index, "message": f"blank key {key}"})
             elif key in seen:
                 issues.append({"level": "error", "sheet": sheet, "row": index, "message": f"duplicate key {key}"})

@@ -14,11 +14,13 @@ class OrderingCodeLegend:
     pin_count_codes: dict[str, int | list[int]]
     flash_code_kb: dict[str, float | int]
     package_type_codes: dict[str, str]
+    pinout_qualifier_codes: dict[str, str]
+    relation_sources: dict[str, dict[str, dict[str, object]]]
     evidence_pages: tuple[int, ...]
 
 
 SECTION_ALIASES = {
-    "pin_count": ("pincount", "numberofpins", "引脚数", "管脚数"),
+    "pin_count": ("pincount", "pinballcount", "numberofpins", "引脚数", "管脚数"),
     "flash": (
         "flashmemorysize",
         "flashsize",
@@ -29,6 +31,7 @@ SECTION_ALIASES = {
         "代码容量",
     ),
     "package": ("packagetype", "package", "封装类型", "封装形式"),
+    "pinout": ("dedicatedpinout", "pinoutoption", "专用引脚配置"),
 }
 
 SECTION_BOUNDARIES = (
@@ -60,6 +63,8 @@ def _section_for_line(line: str) -> str | None:
 
 
 def _memory_kb(value: str) -> float | int | None:
+    if re.search(r"\b0\s*[-–—]\s*\d+(?:\.\d+)?\s*(KBYTES?|KB|MBYTES?|MB)\b", value, re.I):
+        return 0
     match = re.search(r"(\d+(?:\.\d+)?)\s*(KBYTES?|KB|MBYTES?|MB)\b", value, re.I)
     if not match:
         return None
@@ -73,8 +78,15 @@ def parse_ordering_code_legend(page_texts: Iterable[str]) -> OrderingCodeLegend:
     pin_counts: dict[str, int | list[int]] = {}
     flash_sizes: dict[str, float | int] = {}
     package_types: dict[str, str] = {}
+    pinout_qualifiers: dict[str, str] = {}
+    relation_sources: dict[str, dict[str, dict[str, object]]] = {
+        "pin_count_codes": {},
+        "flash_code_kb": {},
+        "package_type_codes": {},
+        "pinout_qualifier_codes": {},
+    }
     pages: set[int] = set()
-    entry_pattern = re.compile(r"^\s*([A-Z0-9])\s*=\s*(.+?)\s*$", re.I)
+    entry_pattern = re.compile(r"^\s*([A-Z0-9]{1,3})\s*=\s*(.+?)\s*$", re.I)
 
     for page, text in enumerate(page_texts, start=1):
         normalized_page = compact(text).casefold()
@@ -106,7 +118,7 @@ def parse_ordering_code_legend(page_texts: Iterable[str]) -> OrderingCodeLegend:
                 pending_code = None
                 parsed_entry = True
             else:
-                standalone_code = re.match(r"^\s*([A-Z0-9])\s*(?:\(\d+\))?\s*$", line, re.I)
+                standalone_code = re.match(r"^\s*([A-Z0-9]{1,3})\s*(?:\(\d+\))?\s*$", line, re.I)
                 if section is not None and standalone_code is not None:
                     pending_code = standalone_code.group(1).upper()
                     continue
@@ -122,16 +134,48 @@ def parse_ordering_code_legend(page_texts: Iterable[str]) -> OrderingCodeLegend:
                 numbers = list(dict.fromkeys(int(item) for item in re.findall(r"\b(\d+)\b", meaning)))
                 if numbers:
                     pin_counts[code] = numbers[0] if len(numbers) == 1 else numbers
+                    relation_sources["pin_count_codes"][code] = {
+                        "page": page,
+                        "bbox": (0.0, 0.0, 0.0, 0.0),
+                        "raw_value": line,
+                    }
                     pages.add(page)
             elif section == "flash":
                 size = _memory_kb(meaning)
                 if size is not None:
                     flash_sizes[code] = size
+                    relation_sources["flash_code_kb"][code] = {
+                        "page": page,
+                        "bbox": (0.0, 0.0, 0.0, 0.0),
+                        "raw_value": line,
+                    }
                     pages.add(page)
             elif section == "package":
                 package = re.search(r"\b[A-Z][A-Z0-9-]{2,}\b", meaning.upper())
                 if package:
                     package_types[code] = package.group(0)
+                    relation_sources["package_type_codes"][code] = {
+                        "page": page,
+                        "bbox": (0.0, 0.0, 0.0, 0.0),
+                        "raw_value": line,
+                    }
+                    pages.add(page)
+            elif section == "pinout":
+                qualifier = re.search(r"\b([A-Z]{1,4})\s+CONFIGURATION\b", meaning.upper())
+                if qualifier:
+                    pinout_qualifiers[code] = qualifier.group(1).lower()
+                    relation_sources["pinout_qualifier_codes"][code] = {
+                        "page": page,
+                        "bbox": (0.0, 0.0, 0.0, 0.0),
+                        "raw_value": line,
+                    }
                     pages.add(page)
 
-    return OrderingCodeLegend(pin_counts, flash_sizes, package_types, tuple(sorted(pages)))
+    return OrderingCodeLegend(
+        pin_counts,
+        flash_sizes,
+        package_types,
+        pinout_qualifiers,
+        relation_sources,
+        tuple(sorted(pages)),
+    )

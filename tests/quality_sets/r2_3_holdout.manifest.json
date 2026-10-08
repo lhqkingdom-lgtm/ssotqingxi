@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "sets": {
+    "r2_3_holdout": {
+      "input_dir": "quality_corpus\\r2_3_holdout",
+      "files": [
+        {
+          "name": "stm32f205rb.pdf",
+          "bytes": 2940142,
+          "sha256": "774f5ff3acf8fdf57aaed4543da017f03576473abffe24b205a70d748752add5",
+          "vendor": "STMicroelectronics",
+          "family": "STM32F2",
+          "layout": "legacy-performance",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32f205rb.pdf"
+        },
+        {
+          "name": "stm32l475rc.pdf",
+          "bytes": 2792067,
+          "sha256": "91a2d0570b5239e66242803372f8289cd226a2833f78b3ef5153192089b35170",
+          "vendor": "STMicroelectronics",
+          "family": "STM32L4",
+          "layout": "modern-low-power",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32l475rc.pdf"
+        }
+      ]
+    }
+  }
+}

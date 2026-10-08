@@ -270,7 +270,30 @@ def run_extraction(
     timestamp = ingested_at or datetime.now().astimezone().isoformat(timespec="seconds")
     attach_ingestion_metadata(collector.data, evidences, ingested_by, timestamp)
     issues = validate(collector.data, schema)
-    issues.extend(validate_data_semantics(collector.data))
+    semantic_issues = validate_data_semantics(collector.data)
+    issues.extend(semantic_issues)
+    for record in documents:
+        models = set(record.get("models", []))
+        document_semantic_issues = [
+            issue
+            for issue in semantic_issues
+            if issue.get("key") and issue["key"][0] in models
+        ]
+        if not document_semantic_issues:
+            continue
+        record["status"] = "partial"
+        record.setdefault("sections", {})["semantic_validation"] = "partial"
+        item = {
+            "section": "semantic_validation",
+            "status": "partial",
+            "source_file": record.get("source_file"),
+            "pages": None,
+            "error_type": "SemanticContradiction",
+            "reason": f"{len(document_semantic_issues)} cross-section contradictions require review",
+            "issues": document_semantic_issues,
+        }
+        record.setdefault("review_items", []).append(item)
+        review_queue.append({"doc_id": record["doc_id"], "models": list(models), **item})
     issues.extend({
         "level": "error",
         "sheet": conflict.get("sheet"),

@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "sets": {
+    "r3_3_peripherals_blind_round8": {
+      "input_dir": "D:\\ssot\\quality_corpus\\r3_3_peripherals_blind_round8",
+      "files": [
+        {
+          "name": "CA51M151系列MCU用户手册_REV1.3（对应四强CA51F991U3X,SOP16,C&A ）.pdf",
+          "bytes": 6240440,
+          "sha256": "a5f63678d585c1e21eebdf3ff871e27638ede302c58296493b133aa1c3dac4a7",
+          "vendor": "Chipanalog",
+          "family": "CA51M151",
+          "layout": "family-manual",
+          "source_url": "local-inventory:D:/rag_mo/原始文档/CA51M151系列MCU用户手册_REV1.3（对应四强CA51F991U3X,SOP16,C&A ）.pdf"
+        },
+        {
+          "name": "CA51M550系列MCU用户手册_REV1.0(不带水印).pdf",
+          "bytes": 6368406,
+          "sha256": "a7725926a66b4e51423656b0bc01304aa9b78ef9f22a91a5f042947d5503e36c",
+          "vendor": "Chipanalog",
+          "family": "CA51M550",
+          "layout": "family-manual",
+          "source_url": "local-inventory:D:/rag_mo/原始文档/CA51M550系列MCU用户手册_REV1.0(不带水印).pdf"
+        },
+        {
+          "name": "stm32f103c4.pdf",
+          "bytes": 2068410,
+          "sha256": "31ab1fe3de6e6cf3e97ce9a2329794edc012d7e6ec52f8a69af672562d8363cd",
+          "vendor": "STMicroelectronics",
+          "family": "STM32F1",
+          "layout": "device-datasheet",
+          "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32f103c4.pdf"
+        },
+        {
+          "name": "stm32l4a6ag.pdf",
+          "bytes": 5780803,
+          "sha256": "21c6dbb622676390f9ca96802481ef6e57c7fb6eb62e7ea21221e65af4f1cd15",
+          "vendor": "STMicroelectronics",
+          "family": "STM32L4",
+          "layout": "device-datasheet",
+          "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32l4a6ag.pdf"
+        }
+      ]
+    }
+  }
+}

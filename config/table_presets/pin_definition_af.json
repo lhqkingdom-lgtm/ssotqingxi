@@ -4,8 +4,8 @@
   "topologies": {
     "pin_definition": {
       "required_header_terms": ["alternatefunctions"],
-      "required_header_groups": [["pin", "name"]],
-      "pin_name_aliases": ["pinname"],
+      "required_header_groups": [],
+      "pin_name_aliases": ["pinname", "name(functionafterreset)", "nameafterreset"],
       "pin_name_alias_groups": [["pin", "name"]],
       "pin_name_exclude": ["pinnumber", "lqfp", "tssop", "ufqfpn", "vfqfpn", "bga", "wlcsp"],
       "pin_name_preference": "rightmost",

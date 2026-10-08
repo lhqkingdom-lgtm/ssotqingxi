@@ -1,0 +1,94 @@
+{
+  "groups": [
+    {
+      "models": ["STM32C051D8"],
+      "source_file_contains": "stm32c051c8.pdf",
+      "evidence_page": 9,
+      "expected": {"ADC": {"channel_count": 9}, "SPI": {"instance_count": 4}, "I2C": {"instance_count": 2}, "UART": {"instance_count": 2}}
+    },
+    {
+      "models": ["STM32C051F6", "STM32C051F8"],
+      "source_file_contains": "stm32c051c8.pdf",
+      "evidence_page": 9,
+      "expected": {"ADC": {"channel_count": 13}, "SPI": {"instance_count": 4}, "I2C": {"instance_count": 2}, "UART": {"instance_count": 2}}
+    },
+    {
+      "models": ["STM32C051G6", "STM32C051G8"],
+      "source_file_contains": "stm32c051c8.pdf",
+      "evidence_page": 9,
+      "expected": {"ADC": {"channel_count": 15}, "SPI": {"instance_count": 4}, "I2C": {"instance_count": 2}, "UART": {"instance_count": 2}}
+    },
+    {
+      "models": ["STM32C051K6", "STM32C051K8"],
+      "source_file_contains": "stm32c051c8.pdf",
+      "evidence_page": 9,
+      "expected": {"ADC": {"channel_count": 16}, "SPI": {"instance_count": 4}, "I2C": {"instance_count": 2}, "UART": {"instance_count": 2}}
+    },
+    {
+      "models": ["STM32C051C6", "STM32C051C8"],
+      "source_file_contains": "stm32c051c8.pdf",
+      "evidence_page": 9,
+      "expected": {"ADC": {"channel_count": 19}, "SPI": {"instance_count": 4}, "I2C": {"instance_count": 2}, "UART": {"instance_count": 2}}
+    },
+    {
+      "models": ["STM32C071F8", "STM32C071FB"],
+      "source_file_contains": "stm32c071c8.pdf",
+      "evidence_pages": {"ADC": 11, "SPI": 10, "I2C": 10, "UART": 10},
+      "expected": {"ADC": {"channel_count": 11}, "SPI": {"instance_count": 4}, "I2C": {"instance_count": 2}, "UART": {"instance_count": 2}}
+    },
+    {
+      "models": ["STM32C071G8", "STM32C071GB"],
+      "source_file_contains": "stm32c071c8.pdf",
+      "evidence_pages": {"ADC": 11, "SPI": 10, "I2C": 10, "UART": 10},
+      "expected": {"ADC": {"channel_count": 13}, "SPI": {"instance_count": 4}, "I2C": {"instance_count": 2}, "UART": {"instance_count": 2}}
+    },
+    {
+      "models": ["STM32C071K8", "STM32C071KB"],
+      "source_file_contains": "stm32c071c8.pdf",
+      "evidence_pages": {"ADC": 11, "SPI": 10, "I2C": 10, "UART": 10},
+      "expected": {"ADC": {"channel_count": 14}, "SPI": {"instance_count": 4}, "I2C": {"instance_count": 2}, "UART": {"instance_count": 2}}
+    },
+    {
+      "models": ["STM32C071C8", "STM32C071CB"],
+      "source_file_contains": "stm32c071c8.pdf",
+      "evidence_pages": {"ADC": 11, "SPI": 10, "I2C": 10, "UART": 10},
+      "expected": {"ADC": {"channel_count": 17}, "SPI": {"instance_count": 4}, "I2C": {"instance_count": 2}, "UART": {"instance_count": 2}}
+    },
+    {
+      "models": ["STM32C071R8", "STM32C071RB"],
+      "source_file_contains": "stm32c071c8.pdf",
+      "evidence_pages": {"ADC": 11, "SPI": 10, "I2C": 10, "UART": 10},
+      "expected": {"ADC": {"channel_count": 19}, "SPI": {"instance_count": 4}, "I2C": {"instance_count": 2}, "UART": {"instance_count": 2}}
+    },
+    {
+      "models": ["STM32C091FB", "STM32C091FC", "STM32C092FB", "STM32C092FC"],
+      "source_file_contains": "stm32c092cc.pdf",
+      "evidence_page": 10,
+      "expected": {"ADC": {"channel_count": 11}, "SPI": {"instance_count": 6}, "I2C": {"instance_count": 2}, "UART": {"instance_count": 4}}
+    },
+    {
+      "models": ["STM32C091EC", "STM32C092EC", "STM32C091GB", "STM32C091GC", "STM32C092GB", "STM32C092GC"],
+      "source_file_contains": "stm32c092cc.pdf",
+      "evidence_page": 10,
+      "expected": {"ADC": {"channel_count": 13}, "SPI": {"instance_count": 6}, "I2C": {"instance_count": 2}, "UART": {"instance_count": 4}}
+    },
+    {
+      "models": ["STM32C091KB", "STM32C091KC", "STM32C092KB", "STM32C092KC"],
+      "source_file_contains": "stm32c092cc.pdf",
+      "evidence_page": 10,
+      "expected": {"ADC": {"channel_count": 14}, "SPI": {"instance_count": 6}, "I2C": {"instance_count": 2}, "UART": {"instance_count": 4}}
+    },
+    {
+      "models": ["STM32C091CB", "STM32C091CC", "STM32C092CB", "STM32C092CC"],
+      "source_file_contains": "stm32c092cc.pdf",
+      "evidence_page": 10,
+      "expected": {"ADC": {"channel_count": 17}, "SPI": {"instance_count": 6}, "I2C": {"instance_count": 2}, "UART": {"instance_count": 4}}
+    },
+    {
+      "models": ["STM32C091RB", "STM32C091RC", "STM32C092RB", "STM32C092RC"],
+      "source_file_contains": "stm32c092cc.pdf",
+      "evidence_page": 10,
+      "expected": {"ADC": {"channel_count": 19}, "SPI": {"instance_count": 6}, "I2C": {"instance_count": 2}, "UART": {"instance_count": 4}}
+    }
+  ]
+}

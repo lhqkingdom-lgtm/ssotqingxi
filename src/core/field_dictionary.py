@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import copy
 import json
+import re
 from pathlib import Path
 from typing import Any, Iterable
 
@@ -11,6 +12,22 @@ from core.text import compact
 REQUIRED_FIELDS = {"flash_kb", "ram_kb", "max_freq_mhz"}
 REQUIRED_UNITS = {"memory_kb", "frequency_mhz"}
 COUNT_FIELDS = {"instance_count", "channel_count", "mixed"}
+
+
+def _contains_alias(label: str, alias: str) -> bool:
+    compact_alias = compact(alias).casefold()
+    if not compact_alias:
+        return False
+    # Compact matching is useful for multi-word labels, but short ASCII
+    # acronyms must remain token-bounded. Otherwise removing spaces can invent
+    # a field across adjacent words ("thread certified" -> "...adcert...",
+    # which contains the artificial substring "adc").
+    if compact_alias.isascii() and compact_alias.isalnum() and len(compact_alias) <= 4:
+        return re.search(
+            rf"(?<![a-z0-9]){re.escape(compact_alias)}(?![a-z0-9])",
+            label.casefold(),
+        ) is not None
+    return compact_alias in compact(label).casefold()
 
 
 def load_field_dictionary(
@@ -70,13 +87,13 @@ def match_common_field(label: str, dictionary: dict[str, Any]) -> str | None:
             for group in rule.get("aliases_all", [])
         ]
         excludes = [compact(item).casefold() for item in rule.get("exclude_aliases", [])]
-        if any(item in normalized for item in excludes):
+        if any(_contains_alias(label, item) for item in rule.get("exclude_aliases", [])):
             continue
-        scores = [len(item) for item in aliases if item in normalized]
+        scores = [len(item) for item, raw in zip(aliases, rule.get("aliases", [])) if _contains_alias(label, raw)]
         scores.extend(
             sum(len(item) for item in group)
-            for group in conjunctions
-            if group and all(item in normalized for item in group)
+            for group, raw_group in zip(conjunctions, rule.get("aliases_all", []))
+            if group and all(_contains_alias(label, raw) for raw in raw_group)
         )
         if scores:
             matches.append((max(scores), field_name))

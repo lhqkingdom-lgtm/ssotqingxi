@@ -72,6 +72,15 @@ class ModelMatrixTests(unittest.TestCase):
             ["STM32L151CB", "STM32L151C8", "STM32L152R6"],
         )
 
+    def test_device_summary_rejects_family_placeholder_as_concrete_model(self) -> None:
+        pages = ["Table 1. Device summary\nSTM32L15xCC STM32L151CC"]
+        ordering = {
+            "pin_count_codes": {"C": 48},
+            "flash_code_kb": {"C": 256},
+        }
+
+        self.assertEqual(discover_device_summary_models(pages, ordering), ["STM32L151CC"])
+
     def test_wildcard_family_header_spans_empty_continuation_columns(self) -> None:
         rows = [
             ["Peripherals", "", "STM32F207Vx", "", "", "", "STM32F207Zx", "", "", ""],
@@ -130,6 +139,29 @@ class ModelMatrixTests(unittest.TestCase):
         ]
         ordering = {"flash_code_kb": {"G": 1024, "I": 2048}}
         self.assertEqual(select_model_column(rows, "STM32F767BI", RECIPE, ordering), 3)
+
+    def test_generic_mpu_family_selects_explicit_matrix_column_without_fake_suffix(self) -> None:
+        rows = [
+            ["Features", "STM32MP157CACxx", "STM32MP157AACxx"],
+            ["Embedded SRAM", "708 Kbytes", "708 Kbytes"],
+        ]
+        self.assertEqual(select_model_column(rows, "STM32MP157C", RECIPE, {}), 1)
+
+    def test_legacy_grouped_family_wildcard_uses_package_and_density(self) -> None:
+        rows = [
+            ["Peripheral", "STM32L15xCxxxA", "", "", "STM32L15xRxxxA", "", ""],
+            ["Flash memory in Kbytes", "32", "64", "128", "32", "64", "128"],
+            ["RAM in Kbytes", "16", "32", "32", "16", "32", "32"],
+        ]
+        ordering = {"flash_code_kb": {"6": 32, "8": 64, "B": 128}}
+        self.assertEqual(select_model_column(rows, "STM32L151C6-A", RECIPE, ordering), 1)
+        self.assertEqual(
+            discover_model_variants(rows, "STM32L151C6", RECIPE, ordering),
+            [
+                "STM32L151C6", "STM32L151C8", "STM32L151CB",
+                "STM32L151R6", "STM32L151R8", "STM32L151RB",
+            ],
+        )
 
     def test_vertical_model_header_can_be_read_in_reverse_character_order(self) -> None:
         rows = [

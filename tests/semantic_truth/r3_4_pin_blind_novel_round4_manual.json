@@ -1,0 +1,19 @@
+{
+  "expected": [
+    {"chip_id":"STM32H503CB","package_type":"LQFP48","pin_name":"PA0","pin_number":10,"function_name":"ADC1_INP0","evidence_pages":[53],"source_file_contains":"stm32h503eb.pdf"},
+    {"chip_id":"STM32H503CB","package_type":"UFQFPN48","pin_name":"PA0","pin_number":10,"function_name":"ADC1_INP0","evidence_pages":[53],"source_file_contains":"stm32h503eb.pdf"},
+    {"chip_id":"STM32H503EB","package_type":"WLCSP25","pin_name":"PA0","pin_number":"E5","function_name":"ADC1_INP0","evidence_pages":[53],"source_file_contains":"stm32h503eb.pdf"},
+    {"chip_id":"STM32H503KB","package_type":"UFQFPN32","pin_name":"PA0","pin_number":6,"function_name":"ADC1_INP0","evidence_pages":[53],"source_file_contains":"stm32h503eb.pdf"},
+    {"chip_id":"STM32H503RB","package_type":"LQFP64","pin_name":"PA0","pin_number":14,"function_name":"ADC1_INP0","evidence_pages":[53],"source_file_contains":"stm32h503eb.pdf"},
+    {"chip_id":"STM32U073M8","package_type":"LQFP80","pin_name":"PA0","pin_number":17,"function_name":"ADC1_IN4","evidence_pages":[32],"source_file_contains":"stm32u073m8.pdf"},
+    {"chip_id":"STM32U073M8","package_type":"UFBGA81","pin_name":"PA0","pin_number":"F3","function_name":"ADC1_IN4","evidence_pages":[32],"source_file_contains":"stm32u073m8.pdf"},
+    {"chip_id":"STM32U073MB","package_type":"LQFP80","pin_name":"PA0","pin_number":17,"function_name":"TIM2_CH1","evidence_pages":[32],"source_file_contains":"stm32u073m8.pdf"},
+    {"chip_id":"STM32U073MC","package_type":"UFBGA81","pin_name":"PA0","pin_number":"F3","function_name":"TIM2_CH1","evidence_pages":[32],"source_file_contains":"stm32u073m8.pdf"}
+  ],
+  "forbidden": [
+    {"chip_id":"STM32H503EB","package_type":"WLCSP25","pin_name":"PA0","pin_number":10,"function_name":"ADC1_INP0"},
+    {"chip_id":"STM32H503KB","package_type":"UFQFPN32","pin_name":"PA0","pin_number":"E5","function_name":"ADC1_INP0"},
+    {"chip_id":"STM32U073M8","package_type":"LQFP80","pin_name":"PA0","pin_number":"F3","function_name":"ADC1_IN4"},
+    {"chip_id":"STM32U073M8","package_type":"UFBGA81","pin_name":"PA0","pin_number":17,"function_name":"ADC1_IN4"}
+  ]
+}

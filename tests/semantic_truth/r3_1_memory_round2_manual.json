@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "review_method": "Visual comparison of every model row and memory field against CA51F3 pages 6/9, CA51F7 pages 5/7, and MiAi-60A pages 6/9 after the frozen first run.",
+  "memory_groups": [
+    {
+      "source_file_contains": "CA51F3",
+      "models": ["CA51F351S3", "CA51F351S4", "CA51F351P4", "CA51F351S6", "CA51F351P6"],
+      "expected": {"Flash": 8, "SRAM_External": 2, "SRAM_Internal": 0.25},
+      "evidence_pages": {"Flash": 9, "SRAM_External": 9, "SRAM_Internal": 6}
+    },
+    {
+      "source_file_contains": "CA51F3",
+      "models": ["CA51F3N2", "CA51F352S4", "CA51F352P4"],
+      "expected": {"Flash": 16, "SRAM_External": 2, "SRAM_Internal": 0.25},
+      "evidence_pages": {"Flash": 9, "SRAM_External": 9, "SRAM_Internal": 6}
+    },
+    {
+      "source_file_contains": "CA51F3",
+      "models": ["CA51F353P4", "CA51F353S6", "CA51F353P6"],
+      "expected": {"Flash": 32, "SRAM_External": 2, "SRAM_Internal": 0.25},
+      "evidence_pages": {"Flash": 9, "SRAM_External": 9, "SRAM_Internal": 6}
+    },
+    {
+      "source_file_contains": "CA51F7",
+      "models": ["CA51F752T3", "CA51F752S3"],
+      "expected": {"Flash": 16, "SRAM_External": 0.75, "SRAM_Internal": 0.25},
+      "evidence_pages": {"Flash": 7, "SRAM_External": 7, "SRAM_Internal": 5}
+    },
+    {
+      "source_file_contains": "MiAi-60A",
+      "models": ["MiAi-60A0S3", "MiAi-60A0T3", "MiAi-60A0S4", "MiAi-60A0N2"],
+      "expected": {"Flash": 64, "SRAM_External": 4, "SRAM_Internal": 0.25},
+      "evidence_pages": {"Flash": 9, "SRAM_External": 9, "SRAM_Internal": 6}
+    }
+  ]
+}

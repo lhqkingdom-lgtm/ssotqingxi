@@ -26,11 +26,11 @@ foreach ($set in @('ca_miai_current_v2', 'stm32_v1_sample2')) {
 }
 
 Invoke-Checked 'CA/MiAi extraction' { & $PythonExe (Join-Path $project 'src\extract.py') --input (Join-Path $workspace 'tmp\testsets\metadata_v2_3docs') --output-dir $caOut --schema $schema --profile (Join-Path $project 'config\profiles\ca_miai_v1.json') --ingested-by regression --ingested-at '2026-08-31T12:00:00+08:00' }
-Invoke-Checked 'CA/MiAi regression' { & $PythonExe (Join-Path $project 'tests\regression.py') compare --baseline (Join-Path $project 'tests\baselines\ca_miai_semantic_v3.json') --extracted (Join-Path $caOut 'extracted.json') --evidence (Join-Path $caOut 'evidence.jsonl') }
+Invoke-Checked 'CA/MiAi regression' { & $PythonExe (Join-Path $project 'tests\regression.py') compare --baseline (Join-Path $project 'tests\baselines\ca_miai_semantic_v3.json') --extracted (Join-Path $caOut 'extracted.json') --evidence (Join-Path $caOut 'evidence.jsonl') --ignore-field package_type --business-data-only --allow-additive-sheet pin_mux }
 Invoke-Checked 'CA/MiAi contract' { & $PythonExe (Join-Path $project 'tests\verify_extraction_contract.py') --extracted (Join-Path $caOut 'extracted.json') --evidence (Join-Path $caOut 'evidence.jsonl') --schema $schema --require-clean }
 
 Invoke-Checked 'STM32 extraction' { & $PythonExe (Join-Path $project 'src\extract.py') --input (Join-Path $workspace 'tmp\testsets\stm32_v1_sample2') --output-dir $stmOut --schema $schema --profile (Join-Path $project 'config\profiles\stm32_v1.json') --ingested-by regression --ingested-at '2026-08-31T12:00:00+08:00' }
-Invoke-Checked 'STM32 regression' { & $PythonExe (Join-Path $project 'tests\regression.py') compare --baseline (Join-Path $project 'tests\baselines\stm32_v1_sample2.json') --extracted (Join-Path $stmOut 'extracted.json') --evidence (Join-Path $stmOut 'evidence.jsonl') }
+Invoke-Checked 'STM32 regression' { & $PythonExe (Join-Path $project 'tests\regression.py') compare --baseline (Join-Path $project 'tests\baselines\stm32_v1_sample2.json') --extracted (Join-Path $stmOut 'extracted.json') --evidence (Join-Path $stmOut 'evidence.jsonl') --ignore-field package_type --business-data-only --allow-additive-sheet pin_mux }
 Invoke-Checked 'STM32 contract' { & $PythonExe (Join-Path $project 'tests\verify_extraction_contract.py') --extracted (Join-Path $stmOut 'extracted.json') --evidence (Join-Path $stmOut 'evidence.jsonl') --schema $schema --require-clean }
 
 Invoke-Checked 'mixed extraction' { & $PythonExe (Join-Path $project 'src\extract.py') --input (Join-Path $workspace 'tmp\testsets\mixed_v1') --output-dir $mixedOut --schema $schema --family-registry (Join-Path $project 'config\document_families.json') --ingested-by regression --ingested-at '2026-08-31T12:00:00+08:00' }

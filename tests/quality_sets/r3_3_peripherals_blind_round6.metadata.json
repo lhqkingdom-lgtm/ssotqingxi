@@ -1,0 +1,32 @@
+{
+  "files": [
+    {
+      "name": "CA51M151系列MCU用户手册_REV1.0_S0302.pdf",
+      "vendor": "Chipanalog",
+      "family": "CA51M151",
+      "layout": "family-manual",
+      "source_url": "local-inventory:D:/rag_mo/原始文档/CA51M151系列MCU用户手册_REV1.0_S0302.pdf"
+    },
+    {
+      "name": "CA51F992U3系列MCU用户手册_REV1.pdf",
+      "vendor": "Chipanalog",
+      "family": "CA51F992U3",
+      "layout": "family-manual",
+      "source_url": "local-inventory:D:/rag_mo/原始文档/CA51F992U3系列MCU用户手册_REV1.pdf"
+    },
+    {
+      "name": "stm32f102c8.pdf",
+      "vendor": "STMicroelectronics",
+      "family": "STM32F1",
+      "layout": "device-datasheet",
+      "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32f102c8.pdf"
+    },
+    {
+      "name": "stm32g473cb.pdf",
+      "vendor": "STMicroelectronics",
+      "family": "STM32G4",
+      "layout": "device-datasheet",
+      "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32g473cb.pdf"
+    }
+  ]
+}

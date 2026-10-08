@@ -32,6 +32,7 @@ Temperature range
         self.assertEqual(legend.pin_count_codes, {"E": 25, "G": 28})
         self.assertEqual(legend.flash_code_kb, {"8": 64, "B": 128})
         self.assertEqual(legend.package_type_codes, {"I": "UFBGA", "Y": "WLCSP"})
+        self.assertEqual(legend.pinout_qualifier_codes, {})
         self.assertEqual(legend.evidence_pages, (2,))
 
     def test_does_not_treat_unsectioned_code_examples_as_authoritative(self) -> None:
@@ -90,6 +91,19 @@ Y = WLCSP100
 
         self.assertEqual(legend.flash_code_kb, {"Y": 640, "G": 1024})
         self.assertEqual(legend.package_type_codes, {"Y": "WLCSP100"})
+
+    def test_zero_to_one_kbyte_ordering_range_represents_no_embedded_flash(self) -> None:
+        legend = parse_ordering_code_legend(
+            ["Ordering information\nPin/ball count\nX = 264\nFlash memory size\n0 = 0-1 Kbytes\nPackage\nH = VFBGA"]
+        )
+        self.assertEqual(legend.pin_count_codes, {"X": 264})
+        self.assertEqual(legend.flash_code_kb, {"0": 0})
+
+    def test_dedicated_pinout_qualifier_is_source_declared(self) -> None:
+        legend = parse_ordering_code_legend(
+            ["Ordering information\nDedicated pinout\nQ = Internal SMPS\nQG = GP configuration"]
+        )
+        self.assertEqual(legend.pinout_qualifier_codes, {"QG": "gp"})
 
 
 if __name__ == "__main__":

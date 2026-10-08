@@ -1,0 +1,32 @@
+{
+  "files": [
+    {
+      "name": "CA51F152S3系列MCU用户手册_REV1.1.pdf",
+      "vendor": "Chipanalog",
+      "family": "CA51F152",
+      "layout": "family-manual",
+      "source_url": "local-inventory:D:/rag_mo/原始文档/CA51F152S3系列MCU用户手册_REV1.1.pdf"
+    },
+    {
+      "name": "MiAi-6070A3 MCU用户手册_REV2.2.pdf",
+      "vendor": "Chipanalog",
+      "family": "MiAi-607",
+      "layout": "single-model-manual",
+      "source_url": "local-inventory:D:/rag_mo/原始文档/MiAi-6070A3 MCU用户手册_REV2.2.pdf"
+    },
+    {
+      "name": "stm32f071cb.pdf",
+      "vendor": "STMicroelectronics",
+      "family": "STM32F0",
+      "layout": "device-datasheet",
+      "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32f071cb.pdf"
+    },
+    {
+      "name": "stm32h573ai.pdf",
+      "vendor": "STMicroelectronics",
+      "family": "STM32H5",
+      "layout": "device-datasheet",
+      "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32h573ai.pdf"
+    }
+  ]
+}

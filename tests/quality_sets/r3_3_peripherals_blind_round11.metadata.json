@@ -1,0 +1,8 @@
+{
+  "files": [
+    {"name": "stm32f103rg.pdf", "vendor": "STMicroelectronics", "family": "STM32F1", "layout": "device-datasheet", "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32f103rg.pdf"},
+    {"name": "stm32f777bi.pdf", "vendor": "STMicroelectronics", "family": "STM32F7", "layout": "device-datasheet", "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32f777bi.pdf"},
+    {"name": "stm32l162qc.pdf", "vendor": "STMicroelectronics", "family": "STM32L1", "layout": "device-datasheet", "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32l162qc.pdf"},
+    {"name": "stm32wb5mmg.pdf", "vendor": "STMicroelectronics", "family": "STM32WB", "layout": "wireless-module-datasheet", "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32wb5mmg.pdf"}
+  ]
+}

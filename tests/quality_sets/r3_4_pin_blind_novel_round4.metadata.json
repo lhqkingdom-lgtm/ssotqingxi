@@ -1,0 +1,18 @@
+{
+  "files": [
+    {
+      "name": "stm32h503eb.pdf",
+      "vendor": "STMicroelectronics",
+      "family": "STM32H5",
+      "layout": "compact-multi-package-datasheet",
+      "source_url": "https://www.st.com/resource/en/datasheet/stm32h503eb.pdf"
+    },
+    {
+      "name": "stm32u073m8.pdf",
+      "vendor": "STMicroelectronics",
+      "family": "STM32U0",
+      "layout": "multi-density-device-datasheet",
+      "source_url": "https://www.st.com/resource/en/datasheet/stm32u073m8.pdf"
+    }
+  ]
+}

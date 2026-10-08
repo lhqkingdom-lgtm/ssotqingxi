@@ -1,5 +1,9 @@
 {
   "dictionary_version": 1,
+  "semantics": {
+    "upper_bound_any": ["up to", "maximum", "max.", "at most", "不超过", "最高"],
+    "absence_any": ["no", "n/a", "na", "-", "--", "—", "×", "✕", ""]
+  },
   "fields": {
     "chip_id": {
       "aliases": ["芯片型号", "器件型号", "产品型号", "devicepartnumber", "partnumber"],
@@ -12,13 +16,25 @@
       "unit": "memory_kb"
     },
     "ram_kb": {
-      "aliases": ["sram", "ram", "外部ram", "内部ram"],
+      "aliases": ["sram", "ram"],
       "exclude_aliases": ["backup", "cache"],
       "unit": "memory_kb"
     },
+    "ram_total_kb": {
+      "aliases": ["sramtotal", "totalsram", "ramtotal", "sram总容量", "ram总容量"],
+      "unit": "memory_kb"
+    },
+    "ram_internal_kb": {
+      "aliases": ["internalsram", "internalram", "内部sram", "内部ram"],
+      "unit": "memory_kb"
+    },
+    "ram_external_kb": {
+      "aliases": ["externalsram", "externalram", "外部sram", "外部ram"],
+      "unit": "memory_kb"
+    },
     "max_freq_mhz": {
-      "aliases": ["cpufrequency", "maximumcpufrequency", "max.cpufrequency", "cpu频率", "最高频率", "最高主频"],
-      "aliases_all": [["cpu", "frequency"]],
+      "aliases": ["cpufrequency", "maximumcpufrequency", "max.cpufrequency", "cpuspeed", "cpu频率", "最高频率", "最高主频"],
+      "aliases_all": [["cpu", "frequency"], ["cpu", "speed"]],
       "unit": "frequency_mhz"
     },
     "mtp_kb": {
@@ -30,9 +46,14 @@
       "unit": "memory_kb"
     },
     "operating_voltage": {
-      "aliases": ["工作电压", "电压范围", "operatingvoltage", "standardoperatingvoltage", "supplyvoltage"],
+      "aliases": ["工作电压", "电压范围", "operatingvoltage", "standardoperatingvoltage", "supplyvoltage", "vddrange", "voltagerange"],
       "exclude_aliases": ["corevoltage", "vcap", "vdd12", "dd12"],
       "unit": "voltage_v"
+    },
+    "operating_temperature": {
+      "aliases": ["工作温度", "工作环境温度", "环境温度", "operatingtemperature", "ambienttemperature", "temperaturerange"],
+      "exclude_aliases": ["storage", "储存", "结温", "junction", "suffix"],
+      "unit": null
     },
     "operating_conditions": {
       "aliases": ["工作环境", "工作条件", "operatingconditions", "workingconditions"],
@@ -66,17 +87,19 @@
       "aliases": ["pwm通道数量", "16bitpwm通道数量", "pwm"],
       "canonical": "PWM",
       "count_field": "channel_count",
+      "supports_resolution": true,
       "unit": null
     },
     "peripheral_adc": {
-      "aliases": ["adc通道数量", "12bitadc通道数量", "12位adc", "adcchannels", "adc"],
+      "aliases": ["adc通道数量", "12bitadc通道数量", "adcnumberofchannels", "12位adc", "adcchannels", "adc"],
       "exclude_aliases": ["vref", "reference"],
       "canonical": "ADC",
       "count_field": "mixed",
+      "supports_resolution": true,
       "unit": null
     },
     "peripheral_touch": {
-      "aliases": ["触摸按键数量", "触摸按键数", "电容式触摸按键", "touchkey", "touchchannels", "touch"],
+      "aliases": ["触摸按键数量", "触摸按键数", "电容式触摸按键", "触摸通道", "通道触摸", "touchkey", "touchchannels", "touch"],
       "canonical": "Touch",
       "count_field": "channel_count",
       "unit": null
@@ -86,10 +109,11 @@
     "memory_kb": {
       "aliases": {
         "BYTE": "BYTE", "BYTES": "BYTE", "B": "BYTE", "字节": "BYTE",
-        "K": "KB", "KB": "KB", "KBYTE": "KB", "KBYTES": "KB",
-        "M": "MB", "MB": "MB", "MBYTE": "MB", "MBYTES": "MB"
+        "K": "KB", "KB": "KB", "KBYTE": "KB", "KBYTES": "KB", "K字节": "KB",
+        "M": "MB", "MB": "MB", "MBYTE": "MB", "MBYTES": "MB", "M字节": "MB"
       },
       "factors": {"BYTE": 0.0009765625, "KB": 1, "MB": 1024},
+      "allow_count_multiplier": true,
       "output_unit": "KB"
     },
     "frequency_mhz": {

@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "sets": {
+    "r3_3_peripherals_blind_round2": {
+      "input_dir": "quality_corpus\\r3_3_peripherals_blind_round2",
+      "files": [
+        {
+          "name": "CA51F4系列MCU用户手册_REV1.0.pdf",
+          "bytes": 3931939,
+          "sha256": "14a5c91e22eab78b89600070cddd1b3dc74be1d72e96d6449de0d3dd0c9d4b3d",
+          "vendor": "Chipanalog",
+          "family": "CA51F4",
+          "layout": "family-manual",
+          "source_url": "local-inventory:D:/rag_mo/原始文档/CA51F4系列MCU用户手册_REV1.0.pdf"
+        },
+        {
+          "name": "MiAi-6015A31 MCU用户手册_REV1.1.pdf",
+          "bytes": 7624761,
+          "sha256": "a281245e274c2d6dce7b1b0f279ec01b4ddff37b5b4a6be73ea8f8e004c7af54",
+          "vendor": "Chipanalog",
+          "family": "MiAi-601",
+          "layout": "single-model-manual",
+          "source_url": "local-inventory:D:/rag_mo/原始文档/MiAi-6015A31 MCU用户手册_REV1.1.pdf"
+        },
+        {
+          "name": "stm32f072c8.pdf",
+          "bytes": 2158858,
+          "sha256": "b01391f094699aeb6a4d952b587c06d13a81a0d300161342efa0534f6695ef08",
+          "vendor": "STMicroelectronics",
+          "family": "STM32F0",
+          "layout": "device-datasheet",
+          "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32f072c8.pdf"
+        },
+        {
+          "name": "stm32l073v8.pdf",
+          "bytes": 2328618,
+          "sha256": "2453eed55752e9c793fde78a005c559473dba25551bbcdc5944cd1d7c15f7164",
+          "vendor": "STMicroelectronics",
+          "family": "STM32L0",
+          "layout": "device-datasheet",
+          "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32l073v8.pdf"
+        }
+      ]
+    }
+  }
+}

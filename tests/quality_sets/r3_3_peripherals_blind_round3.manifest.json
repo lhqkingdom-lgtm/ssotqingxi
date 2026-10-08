@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "sets": {
+    "r3_3_peripherals_blind_round3": {
+      "input_dir": "quality_corpus\\r3_3_peripherals_blind_round3",
+      "files": [
+        {
+          "name": "CA51F5系列MCU用户手册_REV2.2.pdf",
+          "bytes": 2484025,
+          "sha256": "494ee1af27013f863b69c84cd973b111dbcbdd44125c0adf4d6ff7b54f674860",
+          "vendor": "Chipanalog",
+          "family": "CA51F5",
+          "layout": "family-manual",
+          "source_url": "local-inventory:D:/rag_mo/原始文档/CA51F5系列MCU用户手册_REV2.2.pdf"
+        },
+        {
+          "name": "CA51M550系列MCU用户手册_REV1.0.pdf",
+          "bytes": 3426617,
+          "sha256": "d5ca7b2182ba1b21c655033b7a2ef4f2486578ba37b19d69d63afb56fb7d4e90",
+          "vendor": "Chipanalog",
+          "family": "CA51M550",
+          "layout": "family-manual",
+          "source_url": "local-inventory:D:/rag_mo/原始文档/CA51M550系列MCU用户手册_REV1.0.pdf"
+        },
+        {
+          "name": "stm32f078cb.pdf",
+          "bytes": 2089487,
+          "sha256": "454d1aba411e9c3253b80865e096129f49fe9c1d7ff47b1b09a7a6b8b0a3dc8f",
+          "vendor": "STMicroelectronics",
+          "family": "STM32F0",
+          "layout": "device-datasheet",
+          "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32f078cb.pdf"
+        },
+        {
+          "name": "stm32h743vi.pdf",
+          "bytes": 7075281,
+          "sha256": "f6e620179006c8c4d497b477ba065edc89c6dd9ac24d9debb3362910651f42ee",
+          "vendor": "STMicroelectronics",
+          "family": "STM32H7",
+          "layout": "device-datasheet",
+          "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32h743vi.pdf"
+        }
+      ]
+    }
+  }
+}

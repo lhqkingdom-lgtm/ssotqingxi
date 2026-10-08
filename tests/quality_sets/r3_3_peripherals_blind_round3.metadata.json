@@ -1,0 +1,32 @@
+{
+  "files": [
+    {
+      "name": "CA51F5系列MCU用户手册_REV2.2.pdf",
+      "vendor": "Chipanalog",
+      "family": "CA51F5",
+      "layout": "family-manual",
+      "source_url": "local-inventory:D:/rag_mo/原始文档/CA51F5系列MCU用户手册_REV2.2.pdf"
+    },
+    {
+      "name": "CA51M550系列MCU用户手册_REV1.0.pdf",
+      "vendor": "Chipanalog",
+      "family": "CA51M550",
+      "layout": "family-manual",
+      "source_url": "local-inventory:D:/rag_mo/原始文档/CA51M550系列MCU用户手册_REV1.0.pdf"
+    },
+    {
+      "name": "stm32f078cb.pdf",
+      "vendor": "STMicroelectronics",
+      "family": "STM32F0",
+      "layout": "device-datasheet",
+      "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32f078cb.pdf"
+    },
+    {
+      "name": "stm32h743vi.pdf",
+      "vendor": "STMicroelectronics",
+      "family": "STM32H7",
+      "layout": "device-datasheet",
+      "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32h743vi.pdf"
+    }
+  ]
+}

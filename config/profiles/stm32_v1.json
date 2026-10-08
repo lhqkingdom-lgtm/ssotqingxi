@@ -21,6 +21,7 @@
   "model": {
     "pattern": "STM32[A-Z]{1,2}[0-9A-Z]{4,12}", "concatenation_boundary": "(?=STM32)",
     "skip_suffixes": ["XX"],
+    "wildcard_markers": ["X"],
     "exact": [{"prefix": "STM32", "min_suffix_length": 6, "require_alpha": true, "require_digit": true}],
     "series": [{"kind": "regex", "pattern": "^(STM32[A-Z]{1,2}[0-9]{2,3})", "group": 1}],
     "filename_rules": [
@@ -30,7 +31,7 @@
     "aliases_file": "../stm32_aliases.json"
   },
   "syntax": {
-    "package_pattern": "(?:LQFP|TSSOP|UFQFPN|VFQFPN|TFBGA|UFBGA|LFBGA|VFBGA|WLCSP|BGA)\\s*\\d+",
+    "package_pattern": "(?:LQFP|TSSOP|UFQFPN|UFQPN|VFQFPN|TFBGA|UFBGA|LFBGA|VFBGA|WLCSP|LGA|BGA)\\s*\\d+(?:\\s*\\+\\s*\\d+)?",
     "pin_pattern": "P[A-Z]\\d{1,2}"
   },
   "normalization": {"function_aliases": {"IIC": "I2C", "EVENT-OUT": "EVENTOUT"}},
@@ -48,6 +49,7 @@
       {
         "id": "ordering_codes",
         "component": "ordering_code_legend",
+        "required": false,
         "config": {
           "required_relations": ["pin_count_codes", "flash_code_kb", "package_type_codes"]
         }
@@ -55,6 +57,7 @@
       {
         "id": "model_catalog",
         "component": "model_catalog",
+        "required": false,
         "depends_on": ["ordering_codes"],
         "config": {
           "title_any": ["device summary"],
@@ -72,9 +75,24 @@
         "config": {
           "variants": [
             {
+              "layout": "models_in_columns",
+              "title_any": ["device features", "features and peripheral counts"],
+              "title_optional_when_model_header_matches": true,
+              "catalog_section": "model_catalog",
+              "locator": {"required_all": ["flash", "ram"]},
+              "fields": {
+                "flash_kb": {"parser": "quantity", "reducer": "max", "required": true},
+                "ram_kb": {"parser": "quantity", "reducer": "sum_distinct_regions", "required": true},
+                "max_freq_mhz": {"parser": "quantity", "reducer": "max", "required": true},
+                "operating_voltage": {"parser": "range", "qualifiers": ["not_absolute_maximum"], "required": true},
+                "package_types": {"parser": "package_names", "fallback": "document_model_relation", "required": true}
+              }
+            },
+            {
               "layout": "models_from_catalog",
               "title_any": ["device features", "features and peripheral counts"],
-              "locator": {"required_all": ["flash", "sram"]},
+              "title_optional_when_model_header_matches": true,
+              "locator": {"required_all": ["ram"]},
               "catalog_section": "model_catalog",
               "ordering_section": "ordering_codes",
               "density_relation": {
@@ -84,29 +102,106 @@
               },
               "fields": {
                 "flash_kb": {"parser": "quantity", "reducer": "max", "required": true},
-                "ram_kb": {"parser": "quantity", "reducer": "max", "required": true},
+                "ram_kb": {"parser": "quantity", "reducer": "sum_distinct_regions", "required": true},
                 "max_freq_mhz": {"parser": "quantity", "reducer": "max", "required": true},
                 "operating_voltage": {"parser": "range", "qualifiers": ["not_absolute_maximum"], "required": true},
-                "package_types": {"parser": "package_names", "required": true}
+                "package_types": {"parser": "package_names", "fallback": "document_model_relation", "required": true}
               }
             },
             {
               "layout": "models_in_grouped_columns",
               "title_any": ["device features", "features and peripheral counts"],
-              "locator": {"required_all": ["flash", "sram"]},
+              "locator": {"required_all": ["flash", "ram"]},
+              "ordering_section": "ordering_codes",
+              "alignment_relations": [
+                {"relation": "flash_code_kb", "code_offset": -1, "field": "flash_kb"},
+                {"relation": "pin_count_codes", "code_offset": -2, "row_any": ["number of pins", "pin count", "package"]}
+              ],
               "grouped_header": {
-                "prefix_pattern": "(STM32[A-Z0-9]+_)",
+                "prefix_pattern": "(STM32[A-Z0-9]+_?)",
                 "suffix_pattern": "_([A-Z][0-9A-Z])",
                 "separator_pattern": "[_\\s]+"
               },
               "fields": {
                 "flash_kb": {"parser": "quantity", "reducer": "max", "required": true},
+                "ram_kb": {"parser": "quantity", "reducer": "sum_distinct_regions", "required": true},
+                "max_freq_mhz": {"parser": "quantity", "reducer": "max", "required": true},
+                "operating_voltage": {"parser": "range", "qualifiers": ["not_absolute_maximum"], "required": true},
+                "package_types": {"parser": "package_names", "fallback": "document_model_relation", "required": true}
+              }
+            },
+            {
+              "layout": "models_in_text_summary",
+              "scan_page_count": 2,
+              "require_single_model": true,
+              "fields": {
+                "flash_kb": {"parser": "quantity", "reducer": "max", "required": true},
                 "ram_kb": {"parser": "quantity", "reducer": "max", "required": true},
                 "max_freq_mhz": {"parser": "quantity", "reducer": "max", "required": true},
-                "operating_voltage": {"parser": "range", "qualifiers": ["not_absolute_maximum"], "required": true}
+                "operating_voltage": {"parser": "range", "qualifiers": ["not_absolute_maximum"], "required": true},
+              "package_types": {"parser": "package_names", "fallback": "document_model_relation", "required": true}
               }
             }
           ]
+        }
+      },
+      {
+        "id": "memory",
+        "component": "memory_projection",
+        "depends_on": ["models"],
+        "config": {
+          "model_section": "models",
+          "mappings": [
+            {"source_field": "flash_kb", "memory_type": "Flash"},
+            {"source_field": "ram_kb", "memory_type": "SRAM_Internal"}
+          ]
+        }
+      },
+      {
+        "id": "electrical",
+        "component": "electrical_projection",
+        "depends_on": ["models"],
+        "config": {
+          "model_section": "models",
+          "mappings": [
+            {
+              "semantic": "operating_voltage",
+              "param_name": "VDD",
+              "unit": "V",
+              "evidence_fields": ["operating_voltage", "operating_conditions"]
+            }
+          ]
+        }
+      },
+      {
+        "id": "peripherals",
+        "component": "peripheral_projection",
+        "depends_on": ["models"],
+        "config": {
+          "model_section": "models",
+          "fields": {
+            "peripheral_spi": {"value_parser": "sum_explicit_addends", "reducer": "max"},
+            "peripheral_i2c": {"value_parser": "first_integer", "reducer": "max"},
+            "peripheral_uart": {"value_parser": "sum_components", "reducer": "sum"},
+            "peripheral_adc": {
+              "value_parser": "adc_instance_count",
+              "reducer": "sum_distinct_labels",
+              "channel_value_parser": "adc_channel_count",
+              "channel_reducer": "max",
+              "resolution_from_label": true
+            }
+          }
+        }
+      },
+      {
+        "id": "pins",
+        "component": "pin_projection",
+        "depends_on": ["models", "ordering_codes"],
+        "config": {
+          "model_section": "models",
+          "recipe_preset": "pin_relations",
+          "ordering_section": "ordering_codes",
+          "pin_count_relation": {"relation": "pin_count_codes", "offset": -2}
         }
       }
     ]

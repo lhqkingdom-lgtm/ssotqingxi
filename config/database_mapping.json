@@ -1,0 +1,115 @@
+{
+  "mapping_version": 1,
+  "target": {
+    "database_type": "postgresql",
+    "database": "cpdb-test",
+    "schema": "public"
+  },
+  "audit": {
+    "source_reviewed_field": "is_reviewed",
+    "reviewer_field": "reviewer",
+    "status_field": "audit_status",
+    "unreviewed_status": "draft",
+    "reviewed_status": "approved",
+    "reviewer_required_for": ["approved", "rejected"]
+  },
+  "unpersisted_metadata": ["ingested_at"],
+  "tables": {
+    "chips": {
+      "target_table": "ssot_mcu_chips",
+      "database_managed_columns": ["updated_at"],
+      "column_order": ["chip_id", "series", "core", "flash_kb", "ram_kb", "max_freq_mhz", "package_types", "voltage_min", "voltage_max", "updated_at", "source_doc_name", "source_page", "submitter", "reviewer", "audit_status"],
+      "columns": [
+        {"source": "chip_id", "target": "chip_id"},
+        {"source": "series", "target": "series"},
+        {"source": "core", "target": "core"},
+        {"source": "flash_kb", "target": "flash_kb"},
+        {"source": "ram_kb", "target": "ram_kb", "transform": "external_ram_kb"},
+        {"source": "max_freq_mhz", "target": "max_freq_mhz"},
+        {"source": "package_types", "target": "package_types", "transform": "jsonb"},
+        {"source": "voltage_min", "target": "voltage_min"},
+        {"source": "voltage_max", "target": "voltage_max"},
+        {"source": "pdf_source_file", "target": "source_doc_name"},
+        {"source": "evidence_pages", "target": "source_page"},
+        {"source": "ingested_by", "target": "submitter"}
+      ]
+    },
+    "pin_mux": {
+      "target_table": "ssot_mcu_pin_mux",
+      "column_order": ["chip_id", "pin_name", "pin_number", "function_name", "is_supported", "af_code", "default_function", "constraints", "source_doc_name", "source_page", "submitter", "reviewer", "audit_status"],
+      "columns": [
+        {"source": "chip_id", "target": "chip_id"},
+        {"source": "pin_name", "target": "pin_name"},
+        {"source": "pin_number", "target": "pin_number", "transform": "nullable_integer"},
+        {"source": "function_name", "target": "function_name"},
+        {"source": "is_supported", "target": "is_supported"},
+        {"source": "af_code", "target": "af_code", "transform": "af_integer"},
+        {"source": "default_function", "target": "default_function"},
+        {
+          "source": "constraints",
+          "target": "constraints",
+          "transform": "jsonb",
+          "merge_fields": [
+            {"source": "package_type", "target": "package_type"},
+            {"source": "pin_number", "target": "physical_pin_designator"},
+            {"source": "af_code", "target": "source_af_code"}
+          ]
+        },
+        {"source": "pdf_source_file", "target": "source_doc_name"},
+        {"source": "evidence_pages", "target": "source_page"},
+        {"source": "ingested_by", "target": "submitter"}
+      ]
+    },
+    "peripherals": {
+      "target_table": "ssot_mcu_peripherals",
+      "column_order": ["chip_id", "peripheral_type", "instance_count", "max_resolution", "max_frequency_mhz", "features", "source_doc_name", "source_page", "submitter", "reviewer", "audit_status"],
+      "columns": [
+        {"source": "chip_id", "target": "chip_id"},
+        {"source": "peripheral_type", "target": "peripheral_type"},
+        {"source": "instance_count", "target": "instance_count"},
+        {"source": "max_resolution", "target": "max_resolution"},
+        {"source": "max_frequency_mhz", "target": "max_frequency_mhz"},
+        {
+          "source": "features",
+          "target": "features",
+          "transform": "jsonb",
+          "merge_fields": [
+            {"source": "channel_count", "target": "channel_count"}
+          ]
+        },
+        {"source": "pdf_source_file", "target": "source_doc_name"},
+        {"source": "evidence_pages", "target": "source_page"},
+        {"source": "ingested_by", "target": "submitter"}
+      ]
+    },
+    "electrical": {
+      "target_table": "ssot_mcu_electrical",
+      "column_order": ["chip_id", "param_name", "min_value", "max_value", "unit", "conditions", "source_doc_name", "source_page", "submitter", "reviewer", "audit_status"],
+      "columns": [
+        {"source": "chip_id", "target": "chip_id"},
+        {"source": "param_name", "target": "param_name"},
+        {"source": "min_value", "target": "min_value"},
+        {"source": "max_value", "target": "max_value"},
+        {"source": "unit", "target": "unit"},
+        {"source": "conditions", "target": "conditions", "transform": "jsonb"},
+        {"source": "pdf_source_file", "target": "source_doc_name"},
+        {"source": "evidence_pages", "target": "source_page"},
+        {"source": "ingested_by", "target": "submitter"}
+      ]
+    },
+    "memory": {
+      "target_table": "ssot_mcu_memory",
+      "column_order": ["chip_id", "memory_type", "size_kb", "organization", "features", "source_doc_name", "source_page", "submitter", "reviewer", "audit_status"],
+      "columns": [
+        {"source": "chip_id", "target": "chip_id"},
+        {"source": "memory_type", "target": "memory_type"},
+        {"source": "size_kb", "target": "size_kb"},
+        {"source": "organization", "target": "organization"},
+        {"source": "features", "target": "features", "transform": "jsonb"},
+        {"source": "pdf_source_file", "target": "source_doc_name"},
+        {"source": "evidence_pages", "target": "source_page"},
+        {"source": "ingested_by", "target": "submitter"}
+      ]
+    }
+  }
+}

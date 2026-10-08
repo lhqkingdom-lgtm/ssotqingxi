@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "sets": {
+    "r2_3_postfix_round6": {
+      "input_dir": "D:\\ssot\\quality_corpus\\r2_3_postfix_round6",
+      "files": [
+        {
+          "name": "stm32f101vf.pdf",
+          "bytes": 1843255,
+          "sha256": "e5abb35fc7fda921e64f3463b8f3342ebb1153edf6365ec61fb88c30e1d1be96",
+          "vendor": "STMicroelectronics",
+          "family": "STM32F1",
+          "layout": "legacy-mainstream",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32f101vf.pdf"
+        },
+        {
+          "name": "stm32l082kb.pdf",
+          "bytes": 1905092,
+          "sha256": "0b2887ec33e3c9298ed0d97167c825069180e268efb0f5f83d51c0c7bb352a7f",
+          "vendor": "STMicroelectronics",
+          "family": "STM32L0",
+          "layout": "ultra-low-power",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32l082kb.pdf"
+        }
+      ]
+    }
+  }
+}

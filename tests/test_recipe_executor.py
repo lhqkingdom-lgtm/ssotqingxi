@@ -83,6 +83,34 @@ class RecipeExecutorTests(unittest.TestCase):
         result = reduce_values(mapped, recipe, package_pattern=r"LQFP\s*\d+")
         self.assertEqual(result["peripherals"]["ADC"], {"count": 10, "resolution": 12})
 
+    def test_channel_summary_with_explicit_channel_suffix_keeps_leading_instances(self) -> None:
+        recipe = {
+            "peripherals": {
+                "ADC": {
+                    "value_parser": "adc_instance_count",
+                    "reducer": "max",
+                    "channel_value_parser": "adc_channel_count",
+                    "channel_reducer": "max",
+                    "resolution_from_label": True,
+                }
+            }
+        }
+        mapped = [MappedCell(
+            "peripheral:ADC",
+            "12-bit ADC / Number of channels",
+            "2\n10 channels",
+            10,
+            3,
+            "Number of channels",
+        )]
+
+        result = reduce_values(mapped, recipe, package_pattern=PACKAGE_PATTERN)
+
+        self.assertEqual(
+            result["peripherals"]["ADC"],
+            {"count": 2, "channel_count": 10, "resolution": 12},
+        )
+
     def test_adc_value_written_as_channel_count_means_one_instance(self) -> None:
         recipe = {
             "peripherals": {
@@ -112,10 +140,103 @@ class RecipeExecutorTests(unittest.TestCase):
         result = reduce_values(mapped, RECIPE, package_pattern=PACKAGE_PATTERN)
         self.assertEqual(result["peripherals"]["ADC"], {"count": 3, "resolution": 12})
 
+    def test_distinct_adc_resolution_rows_sum_instances_without_duplicate_rows(self) -> None:
+        recipe = {
+            "peripherals": {
+                "ADC": {
+                    "value_parser": "adc_instance_count",
+                    "reducer": "sum_distinct_labels",
+                    "channel_value_parser": "adc_channel_count",
+                    "channel_reducer": "max",
+                    "resolution_from_label": True,
+                }
+            }
+        }
+        mapped = [
+            MappedCell("peripheral:ADC", "ADC / 12-bit ADC", "1", 8, 2, "12-bit ADC"),
+            MappedCell("peripheral:ADC", "ADC / 14-bit ADC", "1", 8, 2, "14-bit ADC"),
+            MappedCell("peripheral:ADC", "ADC / 14-bit ADC", "1", 9, 2, "14-bit ADC"),
+        ]
+
+        result = reduce_values(mapped, recipe, package_pattern=PACKAGE_PATTERN)
+
+        self.assertEqual(result["peripherals"]["ADC"]["count"], 2)
+        self.assertEqual(result["peripherals"]["ADC"]["resolution"], 14)
+
+    def test_adc_summary_does_not_turn_resolution_or_channel_count_into_instances(self) -> None:
+        recipe = {
+            "peripherals": {
+                "ADC": {
+                    "value_parser": "adc_instance_count",
+                    "reducer": "sum",
+                    "channel_value_parser": "adc_channel_count",
+                    "channel_reducer": "max",
+                    "resolution_from_label": True,
+                }
+            }
+        }
+        mapped = [
+            MappedCell("peripheral:ADC", "内置12位ADC", "内置12位ADC", 1, 0, "内置12位ADC"),
+            MappedCell("peripheral:ADC", "支持26路12位SAR ADC", "支持26路12位SAR ADC", 8, 0, "支持26路12位SAR ADC"),
+        ]
+        result = reduce_values(mapped, recipe, package_pattern=PACKAGE_PATTERN)
+        self.assertEqual(
+            result["peripherals"]["ADC"],
+            {"count": None, "channel_count": 26, "resolution": 12},
+        )
+
+    def test_configured_bare_adc_role_moves_unlabelled_matrix_value_to_channels(self) -> None:
+        recipe = {
+            "peripherals": {
+                "ADC": {
+                    "value_parser": "adc_instance_count",
+                    "channel_value_parser": "adc_channel_count",
+                    "bare_numeric_role": "channel_count",
+                    "resolution_from_label": True,
+                }
+            }
+        }
+        mapped = [MappedCell("peripheral:ADC", "12位 ADC", "7", 7, 1, "12位 ADC")]
+        result = reduce_values(mapped, recipe, package_pattern=PACKAGE_PATTERN)
+        self.assertEqual(
+            result["peripherals"]["ADC"],
+            {"count": None, "channel_count": 7, "resolution": 12},
+        )
+
     def test_external_plus_internal_adc_channels_keep_external_count(self) -> None:
         mapped = [MappedCell("peripheral:ADC", "12-bit ADC channels (ext. + int.)", "19 + 2", 9, 8, "12-bit ADC channels (ext. + int.)")]
         result = reduce_values(mapped, RECIPE, package_pattern=PACKAGE_PATTERN)
         self.assertEqual(result["peripherals"]["ADC"], {"count": None, "channel_count": 19, "resolution": 12})
+
+    def test_leading_adc_instance_is_kept_before_parenthesized_channel_breakdown(self) -> None:
+        mapped = [MappedCell(
+            "peripheral:ADC",
+            "12-bit ADC (number of channels)",
+            "1 (10 ext. + 3 int.)",
+            11,
+            1,
+            "12-bit ADC (number of channels)",
+        )]
+        result = reduce_values(mapped, RECIPE, package_pattern=PACKAGE_PATTERN)
+        self.assertEqual(
+            result["peripherals"]["ADC"],
+            {"count": 1, "channel_count": 10, "resolution": 12},
+        )
+
+    def test_trailing_numeric_footnote_is_not_an_adc_business_value(self) -> None:
+        mapped = [MappedCell(
+            "peripheral:ADC",
+            "12-bit synchronized ADC Number of channels",
+            "1\n16(2)",
+            12,
+            1,
+            "12-bit synchronized ADC Number of channels",
+        )]
+        result = reduce_values(mapped, RECIPE, package_pattern=PACKAGE_PATTERN)
+        self.assertEqual(
+            result["peripherals"]["ADC"],
+            {"count": 1, "channel_count": 16, "resolution": 12},
+        )
 
     def test_adc_instances_and_channels_are_distinct_outputs(self) -> None:
         recipe = {
@@ -166,6 +287,37 @@ class RecipeExecutorTests(unittest.TestCase):
         ]
         result = reduce_values(mapped, RECIPE, package_pattern=PACKAGE_PATTERN)
         self.assertEqual(result["peripherals"]["ADC"], {"count": 5, "channel_count": 42, "resolution": 12})
+
+    def test_named_adc_channel_classes_preserve_instances_and_sum_channels(self) -> None:
+        label = "16-bit ADCs Number of Direct channels Number of Fast channels Number of Slow channels"
+        mapped = [
+            MappedCell("peripheral:ADC", label, "3", 21, 1, label),
+            MappedCell("peripheral:ADC", label, "2\n3\n11", 21, 1, label),
+        ]
+        result = reduce_values(mapped, RECIPE, package_pattern=PACKAGE_PATTERN)
+        self.assertEqual(result["peripherals"]["ADC"], {"count": 3, "channel_count": 16, "resolution": 16})
+
+    def test_shared_adc_label_pairs_instance_row_before_channel_row(self) -> None:
+        label = "12-bit ADC Number of channels"
+        mapped = [
+            MappedCell("peripheral:ADC", label, "3", 18, 1, label),
+            MappedCell("peripheral:ADC", label, "24", 18, 1, label),
+        ]
+
+        result = reduce_values(mapped, RECIPE, package_pattern=PACKAGE_PATTERN)
+
+        self.assertEqual(result["peripherals"]["ADC"], {"count": 3, "channel_count": 24, "resolution": 12})
+
+    def test_package_alternative_adc_channels_keep_maximum_projection(self) -> None:
+        label = "12-bit synchronized ADC Number of channels"
+        mapped = [
+            MappedCell("peripheral:ADC", label, "1", 11, 2, label),
+            MappedCell("peripheral:ADC", label, "20/19 channels(1)", 11, 2, label),
+        ]
+
+        result = reduce_values(mapped, RECIPE, package_pattern=PACKAGE_PATTERN)
+
+        self.assertEqual(result["peripherals"]["ADC"], {"count": 1, "channel_count": 20, "resolution": 12})
 
     def test_split_ram_and_serial_rows_are_aggregated(self) -> None:
         mapped = [
@@ -224,6 +376,78 @@ class RecipeExecutorTests(unittest.TestCase):
         mapped = [MappedCell("peripheral:UART", "USART/UART", "4/2", 16, 5)]
         reduced = reduce_values(mapped, RECIPE, package_pattern=PACKAGE_PATTERN)
         self.assertEqual(reduced["peripherals"]["UART"]["count"], 6)
+
+    def test_additive_peripheral_counts_continue_after_bracketed_footnote(self) -> None:
+        recipe = {
+            "peripherals": {
+                "SPI": {"value_parser": "sum_explicit_addends", "reducer": "max"}
+            }
+        }
+        mapped = [
+            MappedCell(
+                "peripheral:SPI",
+                "Communication interfaces / SPI",
+                "2 [1] + 4 extra through USARTs",
+                10,
+                1,
+            )
+        ]
+
+        reduced = reduce_values(mapped, recipe, package_pattern=PACKAGE_PATTERN)
+
+        self.assertEqual(reduced["peripherals"]["SPI"]["count"], 6)
+
+    def test_slash_qualified_mode_count_is_not_added_to_interface_count(self) -> None:
+        recipe = {
+            "peripherals": {
+                "SPI": {"value_parser": "sum_explicit_addends", "reducer": "max"}
+            }
+        }
+        mapped = [
+            MappedCell(
+                "peripheral:SPI",
+                "Communication interfaces / SPI / I2S",
+                "6/3 (simplex)(2)",
+                17,
+                1,
+            )
+        ]
+
+        reduced = reduce_values(mapped, recipe, package_pattern=PACKAGE_PATTERN)
+
+        self.assertEqual(reduced["peripherals"]["SPI"]["count"], 6)
+
+    def test_merged_serial_subrows_preserve_all_aligned_counts(self) -> None:
+        mapped = [
+            MappedCell(
+                "peripheral:UART",
+                "Communication interfaces / USART(1)/UART UART LPUART",
+                "3/2 (2)\n2\n1",
+                19,
+                2,
+            )
+        ]
+
+        reduced = reduce_values(mapped, RECIPE, package_pattern=PACKAGE_PATTERN)
+
+        self.assertEqual(reduced["peripherals"]["UART"]["count"], 6)
+
+    def test_package_qualified_uart_alternatives_ignore_package_pin_digits(self) -> None:
+        mapped = [
+            MappedCell("peripheral:UART", "USART", "3", 15, 2),
+            MappedCell(
+                "peripheral:UART",
+                "UART",
+                "0 in QFP48 1 in QFN48",
+                15,
+                2,
+            ),
+            MappedCell("peripheral:UART", "LPUART", "1", 15, 2),
+        ]
+
+        reduced = reduce_values(mapped, RECIPE, package_pattern=PACKAGE_PATTERN)
+
+        self.assertEqual(reduced["peripherals"]["UART"]["count"], 5)
 
 
 if __name__ == "__main__":

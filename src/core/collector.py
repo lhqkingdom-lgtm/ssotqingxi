@@ -77,7 +77,11 @@ class Collector:
         normalized["_source_rank"] = self.current_source_rank
         key_fields = self.schema["sheets"][sheet]["key"]
         key = tuple(normalized.get(field) for field in key_fields)
-        if any(value in (None, "") for value in key):
+        nullable_key_fields = set(self.schema["sheets"][sheet].get("nullable_key_fields", []))
+        if any(
+            normalized.get(field) in (None, "") and field not in nullable_key_fields
+            for field in key_fields
+        ):
             return
         existing = self.index[sheet].get(key)
         if existing is None:
@@ -92,6 +96,7 @@ class Collector:
             if transaction_key not in transaction["inserted"] and transaction_key not in transaction["before"]:
                 transaction["before"][transaction_key] = deepcopy(existing)
         differences = {}
+        merge_fields = self.schema["sheets"][sheet].get("merge_fields", {})
         for field in fields:
             old = existing.get(field)
             new = normalized.get(field)
@@ -100,7 +105,15 @@ class Collector:
                 if field in normalized["_field_evidence"]:
                     existing["_field_evidence"][field] = list(normalized["_field_evidence"][field])
             elif new not in (None, "") and old not in (None, "") and old != new:
-                differences[field] = {"existing": old, "incoming": new}
+                policy = merge_fields.get(field)
+                if policy == "union" and isinstance(old, list) and isinstance(new, list):
+                    existing[field] = list(dict.fromkeys([*old, *new]))
+                    current = existing["_field_evidence"].setdefault(field, [])
+                    for incoming_id in normalized["_field_evidence"].get(field, []):
+                        if incoming_id not in current:
+                            current.append(incoming_id)
+                else:
+                    differences[field] = {"existing": old, "incoming": new}
             elif new not in (None, "", []) and old == new:
                 current = existing["_field_evidence"].setdefault(field, [])
                 for incoming_id in normalized["_field_evidence"].get(field, []):

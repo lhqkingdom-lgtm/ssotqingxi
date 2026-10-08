@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "sets": {
+    "r2_3_postfix_round2": {
+      "input_dir": "D:\\ssot\\quality_corpus\\r2_3_postfix_round2",
+      "files": [
+        {
+          "name": "stm32f215re.pdf",
+          "bytes": 2827848,
+          "sha256": "081e0a9e956467f5ad369a141a0406f830f20051841ac0398f1e929f0afd621f",
+          "vendor": "STMicroelectronics",
+          "family": "STM32F2",
+          "layout": "legacy-performance",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32f215re.pdf"
+        },
+        {
+          "name": "stm32l496ae.pdf",
+          "bytes": 5754421,
+          "sha256": "07777c1c9ca126d7865d9dd8be38d3686d6b9442ed445f098bb6fa5f1d554860",
+          "vendor": "STMicroelectronics",
+          "family": "STM32L4",
+          "layout": "modern-low-power",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32l496ae.pdf"
+        }
+      ]
+    }
+  }
+}

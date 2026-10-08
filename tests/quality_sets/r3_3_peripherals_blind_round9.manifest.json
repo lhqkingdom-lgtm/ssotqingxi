@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "sets": {
+    "r3_3_peripherals_blind_round9": {
+      "input_dir": "D:\\ssot\\quality_corpus\\r3_3_peripherals_blind_round9",
+      "files": [
+        {
+          "name": "stm32c031c4.pdf",
+          "bytes": 2527456,
+          "sha256": "896fc5601df00779e650ff8e9d52ac8f800ce14d404d19f976383ae205053f47",
+          "vendor": "STMicroelectronics",
+          "family": "STM32C0",
+          "layout": "device-datasheet",
+          "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32c031c4.pdf"
+        },
+        {
+          "name": "stm32f105r8.pdf",
+          "bytes": 2189218,
+          "sha256": "ca4bad652e5eb36d504c70cfd482c494307ce460b2d6b6f3fb3c45e0bd871d12",
+          "vendor": "STMicroelectronics",
+          "family": "STM32F1",
+          "layout": "device-datasheet",
+          "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32f105r8.pdf"
+        },
+        {
+          "name": "stm32l071v8.pdf",
+          "bytes": 2186205,
+          "sha256": "f413c7ce36b98e6c9b0a354c9bdd0912120017eda187756794874a41d01cce15",
+          "vendor": "STMicroelectronics",
+          "family": "STM32L0",
+          "layout": "device-datasheet",
+          "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32l071v8.pdf"
+        },
+        {
+          "name": "stm32wb50cg.pdf",
+          "bytes": 2043789,
+          "sha256": "1a958afbeb3bd671467c87337813a7e454ba8d1946f709a721ae2938e09dc5e4",
+          "vendor": "STMicroelectronics",
+          "family": "STM32WB",
+          "layout": "wireless-device-datasheet",
+          "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32wb50cg.pdf"
+        }
+      ]
+    }
+  }
+}

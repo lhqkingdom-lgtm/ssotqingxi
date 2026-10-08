@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from core.field_dictionary import load_field_dictionary, load_table_recipe, match_common_field, peripheral_count_field
-from core.units import convert_number
+from core.units import convert_number, convert_values
 
 
 DICTIONARY = ROOT / "config" / "common_field_dictionary.json"
@@ -24,6 +24,14 @@ class CommonFieldDictionaryTests(unittest.TestCase):
         self.assertEqual(match_common_field("Flash memory (Kbyte)", dictionary), "flash_kb")
         self.assertEqual(match_common_field("片上工作区 (Kbyte)", dictionary), "ram_kb")
         self.assertEqual(match_common_field("MTP Flash capacity", dictionary), "mtp_kb")
+
+    def test_short_acronym_alias_does_not_cross_word_boundaries(self) -> None:
+        dictionary = load_field_dictionary(DICTIONARY)
+
+        self.assertIsNone(match_common_field("OpenThread certified", dictionary))
+        self.assertEqual(match_common_field("12-bit ADC", dictionary), "peripheral_adc")
+        self.assertEqual(match_common_field("12bit ADC Number of channels", dictionary), "peripheral_adc")
+        self.assertEqual(match_common_field("USART/UART", dictionary), "peripheral_uart")
 
     def test_recipe_requires_and_receives_shared_fields_and_units(self) -> None:
         recipe = load_table_recipe(RECIPE, {"ram_kb": ["CCM RAM"]})
@@ -55,6 +63,31 @@ class CommonFieldDictionaryTests(unittest.TestCase):
         self.assertEqual(convert_number("2 MB", memory), 2048)
         self.assertEqual(convert_number("48000 kHz", frequency), 48)
         self.assertIsNone(convert_number("48", frequency))
+
+    def test_compound_localized_memory_unit_keeps_its_scale_prefix(self) -> None:
+        dictionary = load_field_dictionary(DICTIONARY)
+        memory = dictionary["units"]["memory_kb"]
+        self.assertEqual(convert_values("18K 字节", memory), [18])
+        self.assertEqual(convert_values("2M 字节", memory), [2048])
+
+    def test_declared_count_multiplier_converts_banked_capacity(self) -> None:
+        dictionary = load_field_dictionary(DICTIONARY)
+        memory = dictionary["units"]["memory_kb"]
+        self.assertEqual(convert_values("2 x 512 Kbytes", memory), [1024])
+        self.assertEqual(convert_values("2 × 1 Mbyte", memory), [2048])
+
+    def test_conditional_capacity_ignores_numbers_inside_model_identifiers(self) -> None:
+        dictionary = load_field_dictionary(DICTIONARY)
+        memory = dictionary["units"]["memory_kb"]
+
+        self.assertEqual(
+            convert_values(
+                "1 (for QZ575xG) - 2 (for QZ575xI)",
+                memory,
+                "Flash memory (Mbytes)",
+            ),
+            [1024, 2048],
+        )
 
     def test_peripheral_count_semantics_are_dictionary_driven(self) -> None:
         dictionary = load_field_dictionary(DICTIONARY)

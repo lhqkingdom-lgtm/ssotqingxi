@@ -18,6 +18,7 @@ class PinDefinitionIR:
     source_cell_id: str
     page: int
     bbox: BBox | None
+    af_code: str | None = None
 
 
 @dataclass(frozen=True)
@@ -32,6 +33,7 @@ class ResolvedPinMuxIR:
         item = self.definition
         return {
             "chip_id": item.chip_id,
+            "package_type": item.package_type,
             "pin_name": item.pin_name,
             "pin_number": item.pin_number,
             "function_name": item.function_name,
@@ -87,7 +89,7 @@ def resolve_pin_mux(
         result.append(
             ResolvedPinMuxIR(
                 definition=definition,
-                af_code=getattr(observation, "af_code", None),
+                af_code=getattr(observation, "af_code", definition.af_code),
                 af_source_table_id=getattr(observation, "source_table_id", None),
                 af_source_cell_id=getattr(observation, "source_cell_id", None),
                 af_page=getattr(observation, "page", None),

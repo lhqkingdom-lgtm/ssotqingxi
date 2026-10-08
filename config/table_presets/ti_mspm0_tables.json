@@ -1,0 +1,19 @@
+{
+  "preset_version": 1,
+  "preset_id": "ti_mspm0_tables",
+  "topologies": {
+    "pin_definition": {
+      "layout": "multi_package_columns",
+      "required_any": ["pin attributes", "pin function"],
+      "minimum_pin_tokens": 3,
+      "identity_header_aliases": ["pin name"],
+      "default_function_header_aliases": ["pin name"],
+      "default_function_fallback": "GPIO",
+      "function_header_aliases": ["digital [pin function]", "digital pin function"],
+      "function_separator_pattern": "[/\\n]+",
+      "function_code_pattern": "\\[\\s*(\\d+)\\s*\\]",
+      "function_annotation_prefixes": ["default"],
+      "continuation_position_tolerance": 0.035
+    }
+  }
+}

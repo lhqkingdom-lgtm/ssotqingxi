@@ -1,0 +1,18 @@
+{
+  "files": [
+    {
+      "name": "stm32h523rc.pdf",
+      "vendor": "STMicroelectronics",
+      "family": "STM32H5",
+      "layout": "device-datasheet",
+      "source_url": "https://www.st.com/resource/en/datasheet/stm32h523rc.pdf"
+    },
+    {
+      "name": "stm32wba52kg.pdf",
+      "vendor": "STMicroelectronics",
+      "family": "STM32WBA",
+      "layout": "wireless-device-datasheet",
+      "source_url": "https://www.st.com/resource/en/datasheet/stm32wba52kg.pdf"
+    }
+  ]
+}

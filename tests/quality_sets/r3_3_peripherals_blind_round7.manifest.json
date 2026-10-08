@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "sets": {
+    "r3_3_peripherals_blind_round7": {
+      "input_dir": "D:\\ssot\\quality_corpus\\r3_3_peripherals_blind_round7",
+      "files": [
+        {
+          "name": "SQ-CA51F950系列MCU用户手册_REV1.0.pdf",
+          "bytes": 8853486,
+          "sha256": "e534b54f60c16e6b818fcf5405e9bac1ecf1b28b0ed0fb0714438b2dea2bfc60",
+          "vendor": "Chipanalog",
+          "family": "CA51F950",
+          "layout": "family-manual",
+          "source_url": "local-inventory:D:/rag_mo/原始文档/SQ-CA51F950系列MCU用户手册_REV1.0.pdf"
+        },
+        {
+          "name": "stm32f765bi.pdf",
+          "bytes": 3549741,
+          "sha256": "c8996762772dd1b02dd3cc40aa17d9e5962134d0354f59fcf8fe0d14090918e1",
+          "vendor": "STMicroelectronics",
+          "family": "STM32F7",
+          "layout": "device-datasheet",
+          "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32f765bi.pdf"
+        },
+        {
+          "name": "stm32l100rc.pdf",
+          "bytes": 1644788,
+          "sha256": "566075fb46f44c84196b2824bf2a5e9e2a6c93da8c8fd52bf2c5664a409f33b1",
+          "vendor": "STMicroelectronics",
+          "family": "STM32L1",
+          "layout": "device-datasheet",
+          "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32l100rc.pdf"
+        },
+        {
+          "name": "stm32u575ag.pdf",
+          "bytes": 4789425,
+          "sha256": "f3de0b5e62ad45ed46bdaf8dbebec358edae1fd3305c558c5835589085454345",
+          "vendor": "STMicroelectronics",
+          "family": "STM32U5",
+          "layout": "device-datasheet",
+          "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32u575ag.pdf"
+        }
+      ]
+    }
+  }
+}

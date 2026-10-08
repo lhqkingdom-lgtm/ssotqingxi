@@ -1,0 +1,32 @@
+{
+  "files": [
+    {
+      "name": "SQ-CA51F950系列MCU用户手册_REV1.0.pdf",
+      "vendor": "Chipanalog",
+      "family": "CA51F950",
+      "layout": "family-manual",
+      "source_url": "local-inventory:D:/rag_mo/原始文档/SQ-CA51F950系列MCU用户手册_REV1.0.pdf"
+    },
+    {
+      "name": "stm32f765bi.pdf",
+      "vendor": "STMicroelectronics",
+      "family": "STM32F7",
+      "layout": "device-datasheet",
+      "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32f765bi.pdf"
+    },
+    {
+      "name": "stm32l100rc.pdf",
+      "vendor": "STMicroelectronics",
+      "family": "STM32L1",
+      "layout": "device-datasheet",
+      "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32l100rc.pdf"
+    },
+    {
+      "name": "stm32u575ag.pdf",
+      "vendor": "STMicroelectronics",
+      "family": "STM32U5",
+      "layout": "device-datasheet",
+      "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32u575ag.pdf"
+    }
+  ]
+}

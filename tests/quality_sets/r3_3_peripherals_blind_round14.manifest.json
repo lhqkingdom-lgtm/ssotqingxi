@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "sets": {
+    "r3_3_peripherals_blind_round14": {
+      "input_dir": "D:\\ssot\\quality_corpus\\r3_3_peripherals_blind_round14",
+      "files": [
+        {
+          "name": "stm32c051c8.pdf",
+          "bytes": 2585296,
+          "sha256": "8b625f8bc8db18361803cf8e1a96e260dcba4ceac9dcaa684e03b55e94b16e05",
+          "vendor": "STMicroelectronics",
+          "family": "STM32C0",
+          "layout": "device-datasheet",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32c051c8.pdf"
+        },
+        {
+          "name": "stm32c071c8.pdf",
+          "bytes": 2745559,
+          "sha256": "143ef3551f99ae754d59cb54376509ad6efe6dd649dcc86d60896ddd23daeb8b",
+          "vendor": "STMicroelectronics",
+          "family": "STM32C0",
+          "layout": "device-datasheet",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32c071c8.pdf"
+        },
+        {
+          "name": "stm32c092cc.pdf",
+          "bytes": 2867541,
+          "sha256": "1be32e83660766462c14b32699c5231fe834ceab6f638b09538568a4afea244b",
+          "vendor": "STMicroelectronics",
+          "family": "STM32C0",
+          "layout": "device-datasheet",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32c092cc.pdf"
+        }
+      ]
+    }
+  }
+}

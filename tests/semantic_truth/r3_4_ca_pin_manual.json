@@ -1,0 +1,22 @@
+{
+  "expected": [
+    {"chip_id":"MiAi-6099A1","pin_name":"P0.5","pin_number":1,"function_name":"ADC5","default_function":"通用双向 I/O 口","evidence_pages":[15],"source_file_contains":"MiAi-6099A1"},
+    {"chip_id":"MiAi-6099A2","pin_name":"P0.5","pin_number":3,"function_name":"ADC5","default_function":"通用双向 I/O 口","evidence_pages":[15],"source_file_contains":"MiAi-6099A1"},
+    {"chip_id":"MiAi-6099A3","pin_name":"P0.5","pin_number":3,"function_name":"ADC5","default_function":"通用双向 I/O 口","evidence_pages":[15],"source_file_contains":"MiAi-6099A1"},
+    {"chip_id":"MiAi-6099A4","pin_name":"P0.5","pin_number":7,"function_name":"ADC5","default_function":"通用双向 I/O 口","evidence_pages":[15],"source_file_contains":"MiAi-6099A1"},
+    {"chip_id":"MiAi-6099A5","pin_name":"P0.5","pin_number":7,"function_name":"ADC5","default_function":"通用双向 I/O 口","evidence_pages":[15],"source_file_contains":"MiAi-6099A1"},
+    {"chip_id":"MiAi-6099A6","pin_name":"P0.5","pin_number":1,"function_name":"ADC5","default_function":"通用双向 I/O 口","evidence_pages":[15],"source_file_contains":"MiAi-6099A1"},
+    {"chip_id":"MJ6030A6","pin_name":"P1.6","pin_number":10,"function_name":"ADC_CH6","default_function":"通用双向 IO 口","evidence_pages":[14],"source_file_contains":"MiAi-603"},
+    {"chip_id":"MJ6030A6","pin_name":"P0.5","pin_number":18,"function_name":"TK14&LED14","default_function":"通用双向 IO 口","evidence_pages":[15],"source_file_contains":"MiAi-603"},
+    {"chip_id":"CA32F0156L1","pin_name":"PA0","pin_number":1,"function_name":"TIM3_CH4","default_function":"高阻","evidence_pages":[17],"source_file_contains":"CA32F0156"},
+    {"chip_id":"CA32F0156L1","pin_name":"PB14","pin_number":29,"function_name":"SEG2","default_function":"高阻","evidence_pages":[19],"source_file_contains":"CA32F0156"},
+    {"chip_id":"CA32F0156L2","pin_name":"PB14","pin_number":33,"function_name":"SEG2","default_function":"高阻","evidence_pages":[19],"source_file_contains":"CA32F0156"},
+    {"chip_id":"CA32F0156N6","pin_name":"PB14","pin_number":33,"function_name":"SEG2","default_function":"高阻","evidence_pages":[19],"source_file_contains":"CA32F0156"}
+  ],
+  "forbidden": [
+    {"chip_id":"MiAi-6099A4","pin_name":"P0.5","pin_number":1,"function_name":"ADC5"},
+    {"chip_id":"MiAi-6099A1","pin_name":"P0.5","pin_number":7,"function_name":"ADC5"},
+    {"chip_id":"CA32F0156L1","pin_name":"PB14","pin_number":33,"function_name":"SEG2"},
+    {"chip_id":"CA32F0156L2","pin_name":"PB14","pin_number":29,"function_name":"SEG2"}
+  ]
+}

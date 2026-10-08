@@ -16,6 +16,22 @@ SCHEMA = {
 
 
 class CollectorTransactionTests(unittest.TestCase):
+    def test_package_is_part_of_pin_identity(self) -> None:
+        schema = {
+            "sheets": {
+                "pin_mux": {
+                    "fields": ["chip_id", "package_type", "pin_name", "function_name", "pin_number"],
+                    "key": ["chip_id", "package_type", "pin_name", "function_name"],
+                }
+            }
+        }
+        collector = Collector(schema)
+        common = {"chip_id": "DEVICE", "pin_name": "PA0", "function_name": "ADC_IN0"}
+        collector.add("pin_mux", {**common, "package_type": "LQFP48", "pin_number": 10}, "EV-1")
+        collector.add("pin_mux", {**common, "package_type": "UFBGA48", "pin_number": "A2"}, "EV-2")
+        self.assertEqual(len(collector.data["pin_mux"]), 2)
+        self.assertEqual(collector.conflicts, [])
+
     def test_restore_discards_partial_document_rows_and_conflicts(self) -> None:
         collector = Collector(SCHEMA)
         collector.add("chips", {"chip_id": "KEPT", "flash_kb": 32}, "EV-KEPT")
@@ -67,6 +83,24 @@ class CollectorTransactionTests(unittest.TestCase):
         self.assertEqual(conflict["incoming_candidate"]["flash_kb"], 64)
         self.assertEqual(conflict["existing_candidate"]["_evidence_ids"], ["EV-OLD"])
         self.assertEqual(conflict["incoming_candidate"]["_evidence_ids"], ["EV-NEW"])
+
+    def test_schema_declared_union_field_merges_without_hiding_scalar_conflicts(self) -> None:
+        schema = {
+            "sheets": {
+                "chips": {
+                    "fields": ["chip_id", "flash_kb", "packages"],
+                    "key": ["chip_id"],
+                    "merge_fields": {"packages": "union"},
+                }
+            }
+        }
+        collector = Collector(schema)
+        collector.add("chips", {"chip_id": "DEVICE", "flash_kb": 32, "packages": ["A"]}, "EV-1")
+        collector.add("chips", {"chip_id": "DEVICE", "flash_kb": 32, "packages": ["A", "B"]}, "EV-2")
+
+        self.assertEqual(collector.data["chips"][0]["packages"], ["A", "B"])
+        self.assertEqual(collector.conflicts, [])
+        self.assertEqual(collector.data["chips"][0]["_field_evidence"]["packages"], ["EV-1", "EV-2"])
 
 
 if __name__ == "__main__":

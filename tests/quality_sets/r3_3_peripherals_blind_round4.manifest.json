@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "sets": {
+    "r3_3_peripherals_blind_round4": {
+      "input_dir": "quality_corpus\\r3_3_peripherals_blind_round4",
+      "files": [
+        {
+          "name": "CA51F905系列MCU用户手册_REV2.0.pdf",
+          "bytes": 4348285,
+          "sha256": "48d078a38231eab7d24c9b2c9b67d5b26e3e836827b169426c11906eddec9522",
+          "vendor": "Chipanalog",
+          "family": "CA51F905",
+          "layout": "family-manual",
+          "source_url": "local-inventory:D:/rag_mo/原始文档/CA51F905系列MCU用户手册_REV2.0.pdf"
+        },
+        {
+          "name": "MiAi-0169ASP MCU用户手册_REV1.0.pdf",
+          "bytes": 664093,
+          "sha256": "56af84d91f015a777d137a8c77554c72a5ea372c1c57055bacf94c8140828d6a",
+          "vendor": "Chipanalog",
+          "family": "MiAi-0169",
+          "layout": "single-model-manual",
+          "source_url": "local-inventory:D:/rag_mo/原始文档/MiAi-0169ASP MCU用户手册_REV1.0.pdf"
+        },
+        {
+          "name": "stm32g071c8.pdf",
+          "bytes": 3287914,
+          "sha256": "a83ee1377da65257fe5e7d09a2da8027ecff1bce0594a2176b18cddca47fa7cc",
+          "vendor": "STMicroelectronics",
+          "family": "STM32G0",
+          "layout": "device-datasheet",
+          "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32g071c8.pdf"
+        },
+        {
+          "name": "stm32l081cz.pdf",
+          "bytes": 1732755,
+          "sha256": "532497d05b12f2188c129a53091a163ef4b73eb477c73f1d671d4a234edd9c39",
+          "vendor": "STMicroelectronics",
+          "family": "STM32L0",
+          "layout": "device-datasheet",
+          "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32l081cz.pdf"
+        }
+      ]
+    }
+  }
+}

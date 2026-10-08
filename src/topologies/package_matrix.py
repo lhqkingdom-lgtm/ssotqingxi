@@ -48,13 +48,13 @@ def parse_package_names(text: str, package_pattern: str) -> list[str]:
                 variant_values.append(value)
         values_by_variant.append(variant_values)
     if len(values_by_variant) < 2:
-        return values
+        values_by_variant.append(list(values_by_variant[0]))
     dewrapped_values, wrapped_values = values_by_variant
     parsed = {
         value: re.fullmatch(r"([A-Z]+)(\d+)(.*)", value)
         for value in values
     }
-    return [
+    filtered = [
         value
         for value in values
         if not any(
@@ -69,7 +69,79 @@ def parse_package_names(text: str, package_pattern: str) -> list[str]:
             and len(parsed[other].group(2)) > len(parsed[value].group(2))
             for other in values
         )
+        and not (
+            value in dewrapped_values
+            and value not in wrapped_values
+            and parsed[value] is not None
+            and bool(parsed[value].group(3))
+            and any(
+                parsed[other] is not None
+                and other in wrapped_values
+                and parsed[other].group(1) == parsed[value].group(1)
+                and parsed[other].group(2) == parsed[value].group(2)
+                and not parsed[other].group(3)
+                for other in values
+            )
+            and any(
+                parsed[other] is not None
+                and other in wrapped_values
+                and other != value
+                and parsed[other].group(1).startswith(parsed[value].group(3))
+                for other in values
+            )
+        )
+        and not (
+            value in dewrapped_values
+            and value not in wrapped_values
+            and parsed[value] is not None
+            and any(
+                parsed[other] is not None
+                and other in wrapped_values
+                and len(parsed[other].group(1)) > len(parsed[value].group(1))
+                and parsed[other].group(1).endswith(parsed[value].group(1))
+                and parsed[other].group(2) == parsed[value].group(2)
+                and parsed[other].group(3) == parsed[value].group(3)
+                for other in values
+            )
+        )
     ]
+    # Rotated PDF tables can expose every cell in reverse character order
+    # (for example ``001PFQL``). Direction is a property of extraction, not a
+    # package/vendor rule, so inspect reversed text with the same grammar.
+    # Preserve whitespace while reversing. Dewrapping first can fuse adjacent
+    # package names and manufacture a suffix/prefix across their boundary.
+    for variant in (clean(text)[::-1],):
+        for match in re.finditer(package_pattern, variant, re.I):
+            value = compact(match.group(0)).upper()
+            if value not in filtered:
+                filtered.append(value)
+    # Some tables print the lead/ball count before the package kind (``64
+    # LQFP``). Normalize only candidates that satisfy the profile's package
+    # grammar after reversal; dimensions such as ``12 mm`` therefore cannot
+    # become package identities.
+    for direction in (clean(text), clean(text)[::-1]):
+        for grouped in re.finditer(
+            r"(?<![A-Z0-9])(\d{2,4})\s+([A-Z][A-Z0-9]*(?:\s*[,/]\s*[A-Z][A-Z0-9]*)+)",
+            direction,
+            re.I,
+        ):
+            for kind in re.split(r"\s*[,/]\s*", grouped.group(2)):
+                candidate = f"{kind}{grouped.group(1)}"
+                if re.fullmatch(package_pattern, candidate, re.I):
+                    value = compact(candidate).upper()
+                    if value not in filtered:
+                        filtered.append(value)
+        for match in re.finditer(
+            r"(?<![A-Z0-9])(\d{2,4})\s+([A-Z][A-Z0-9]{1,15})(?![A-Z0-9])",
+            direction,
+            re.I,
+        ):
+            candidate = f"{match.group(2)}{match.group(1)}"
+            if re.fullmatch(package_pattern, candidate, re.I):
+                value = compact(candidate).upper()
+                if value not in filtered:
+                    filtered.append(value)
+    return filtered
 
 
 def find_package_values(

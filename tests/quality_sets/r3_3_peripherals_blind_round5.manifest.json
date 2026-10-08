@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "sets": {
+    "r3_3_peripherals_blind_round5": {
+      "input_dir": "D:\\ssot\\quality_corpus\\r3_3_peripherals_blind_round5",
+      "files": [
+        {
+          "name": "CA51F155系列MCU用户手册_REV1.0(锦锐正品规格书).pdf",
+          "bytes": 9566818,
+          "sha256": "5791c3e671151ec4ff9f31485b5780030723a3b19521411545c5bac8b606dc1d",
+          "vendor": "Chipanalog",
+          "family": "CA51F155",
+          "layout": "family-manual",
+          "source_url": "local-inventory:D:/rag_mo/原始文档/CA51F155系列MCU用户手册_REV1.0(锦锐正品规格书).pdf"
+        },
+        {
+          "name": "CA51F991系列MCU用户手册_REV1.pdf",
+          "bytes": 3361260,
+          "sha256": "f47c33f1b8f83ba0785616eb2702c413fc7d45d25d5ebed2233a88de6ae5ce45",
+          "vendor": "Chipanalog",
+          "family": "CA51F991",
+          "layout": "family-manual",
+          "source_url": "local-inventory:D:/rag_mo/原始文档/CA51F991系列MCU用户手册_REV1.pdf"
+        },
+        {
+          "name": "stm32f303cb.pdf",
+          "bytes": 2208566,
+          "sha256": "46c415ce4e7e8ebdf8b2e7aff3e5c8735ee8f565064ab45d13604b94f5074528",
+          "vendor": "STMicroelectronics",
+          "family": "STM32F3",
+          "layout": "device-datasheet",
+          "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32f303cb.pdf"
+        },
+        {
+          "name": "stm32l151rc.pdf",
+          "bytes": 2130556,
+          "sha256": "5e6d5674cd06c1088d8cff4a0daba2283ea6d022277c94899326fe0298b928e6",
+          "vendor": "STMicroelectronics",
+          "family": "STM32L1",
+          "layout": "device-datasheet",
+          "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32l151rc.pdf"
+        }
+      ]
+    }
+  }
+}

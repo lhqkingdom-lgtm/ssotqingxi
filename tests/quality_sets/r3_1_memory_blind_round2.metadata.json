@@ -1,0 +1,25 @@
+{
+  "files": [
+    {
+      "name": "CA51F3系列MCU用户手册 REV 2.3.pdf",
+      "vendor": "Chipanalog",
+      "family": "CA51F3",
+      "layout": "unseen-ca51-family-table",
+      "source_url": "local-inventory:D:/rag_mo/原始文档/CA51F3系列MCU用户手册 REV 2.3.pdf"
+    },
+    {
+      "name": "CA51F7系列MCU用户手册_REV2.2.pdf",
+      "vendor": "Chipanalog",
+      "family": "CA51F7",
+      "layout": "unseen-ca51-family-table",
+      "source_url": "local-inventory:D:/rag_mo/原始文档/CA51F7系列MCU用户手册_REV2.2.pdf"
+    },
+    {
+      "name": "MiAi-60A系列MCU用户手册_REV2.0（MiAi-60A0T3）.pdf",
+      "vendor": "Chipanalog",
+      "family": "MiAi-60A",
+      "layout": "unseen-miai-family-table",
+      "source_url": "local-inventory:D:/rag_mo/原始文档/MiAi-60A系列MCU用户手册_REV2.0（MiAi-60A0T3）.pdf"
+    }
+  ]
+}

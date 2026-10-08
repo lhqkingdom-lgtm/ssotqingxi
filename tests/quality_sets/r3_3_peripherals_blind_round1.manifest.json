@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "sets": {
+    "r3_3_peripherals_blind_round1": {
+      "input_dir": "quality_corpus\\r3_3_peripherals_blind_round1",
+      "files": [
+        {
+          "name": "CA51F152S3系列MCU用户手册_REV1.1.pdf",
+          "bytes": 6037917,
+          "sha256": "4a715e7b416948838e989112c4bdcc3b308358d180132e63a668ad766ce57727",
+          "vendor": "Chipanalog",
+          "family": "CA51F152",
+          "layout": "family-manual",
+          "source_url": "local-inventory:D:/rag_mo/原始文档/CA51F152S3系列MCU用户手册_REV1.1.pdf"
+        },
+        {
+          "name": "MiAi-6070A3 MCU用户手册_REV2.2.pdf",
+          "bytes": 1551552,
+          "sha256": "793b901181486e34ff68b8d2db7864f88db6167f7554cc8b1d1f9a5a54f6550c",
+          "vendor": "Chipanalog",
+          "family": "MiAi-607",
+          "layout": "single-model-manual",
+          "source_url": "local-inventory:D:/rag_mo/原始文档/MiAi-6070A3 MCU用户手册_REV2.2.pdf"
+        },
+        {
+          "name": "stm32f071cb.pdf",
+          "bytes": 2095080,
+          "sha256": "054f3806403d430582b66fa566abf19d7fa0531f2ed24db054044ec2b1a0f6a6",
+          "vendor": "STMicroelectronics",
+          "family": "STM32F0",
+          "layout": "device-datasheet",
+          "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32f071cb.pdf"
+        },
+        {
+          "name": "stm32h573ai.pdf",
+          "bytes": 5808159,
+          "sha256": "c5da8110c5896b2aca27051ae877e78f4248204f7ccc0992245b812285506141",
+          "vendor": "STMicroelectronics",
+          "family": "STM32H5",
+          "layout": "device-datasheet",
+          "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32h573ai.pdf"
+        }
+      ]
+    }
+  }
+}

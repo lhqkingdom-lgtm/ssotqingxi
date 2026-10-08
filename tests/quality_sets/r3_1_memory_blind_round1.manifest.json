@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "sets": {
+    "r3_1_memory_blind_round1": {
+      "input_dir": "quality_corpus\\r3_1_memory_blind_round1",
+      "files": [
+        {
+          "name": "CA51F005系列MCU用户手册_REV2.0（CA51F005T3）.pdf",
+          "bytes": 3111665,
+          "sha256": "9aec9c2c8adcbbcc9ff3da8091b10992cf9369e7dd1a3887a3d2445c0ce3409d",
+          "vendor": "Chipanalog",
+          "family": "CA51F005",
+          "layout": "unseen-ca51-model-table",
+          "source_url": "local-inventory:D:/rag_mo/原始文档/CA51F005系列MCU用户手册_REV2.0（CA51F005T3）.pdf"
+        },
+        {
+          "name": "MiAi-6040A8 MCU用户手册_REV1.0.pdf",
+          "bytes": 2158958,
+          "sha256": "3055e6fcb9a588a75caa4d237c2f29e13754b4d5cb0748ba9c6b1acd4f1dad74",
+          "vendor": "Chipanalog",
+          "family": "MiAi-604",
+          "layout": "unseen-miai-model-table",
+          "source_url": "local-inventory:D:/rag_mo/原始文档/MiAi-6040A8 MCU用户手册_REV1.0.pdf"
+        },
+        {
+          "name": "MiAi-6050A1、MiAi-6050A3 MCU用户手册_REV2.2.pdf",
+          "bytes": 1741156,
+          "sha256": "a70b2be3614108d3e558cc8920839f8d93ac3643af81a2b89bdac76583b2c399",
+          "vendor": "Chipanalog",
+          "family": "MiAi-605",
+          "layout": "unseen-miai-multi-model-table",
+          "source_url": "local-inventory:D:/rag_mo/原始文档/MiAi-6050A1、MiAi-6050A3 MCU用户手册_REV2.2.pdf"
+        }
+      ]
+    }
+  }
+}

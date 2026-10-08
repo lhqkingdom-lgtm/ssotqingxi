@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "sets": {
+    "r2_3_postfix_round3": {
+      "input_dir": "D:\\ssot\\quality_corpus\\r2_3_postfix_round3",
+      "files": [
+        {
+          "name": "stm32f358cc.pdf",
+          "bytes": 2190163,
+          "sha256": "a43070cb13b2b19539d869ed225457e72a4218714cb484ea80d13e84e11e630e",
+          "vendor": "STMicroelectronics",
+          "family": "STM32F3",
+          "layout": "mixed-signal",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32f358cc.pdf"
+        },
+        {
+          "name": "stm32l471qe.pdf",
+          "bytes": 3084962,
+          "sha256": "2a91fd04e079361938576644b910a978826692fc64e8ab836a979cf02f2417fa",
+          "vendor": "STMicroelectronics",
+          "family": "STM32L4",
+          "layout": "modern-low-power",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32l471qe.pdf"
+        }
+      ]
+    }
+  }
+}

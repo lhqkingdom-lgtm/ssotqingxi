@@ -77,6 +77,7 @@
         "concatenation_boundary": {"type": "string"},
         "strip_prefixes": {"type": "array", "items": {"type": "string"}},
         "skip_suffixes": {"type": "array", "items": {"type": "string"}},
+        "wildcard_markers": {"type": "array", "items": {"type": "string", "minLength": 1}},
         "exact": {"type": "array", "items": {"type": "object"}},
         "series": {"type": "array", "items": {"type": "object"}},
         "filename_rules": {"type": "array", "items": {"type": "object"}},

@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "sets": {
+    "r3_4_pin_blind_novel_round2": {
+      "input_dir": "quality_corpus\\r3_4_pin_blind_novel_round2",
+      "files": [
+        {
+          "name": "stm32h523rc.pdf",
+          "bytes": 4774716,
+          "sha256": "364dabd19a0bc277439986940ab53d0941de4d8e1c0419dd079e55b9dd2eaec6",
+          "vendor": "STMicroelectronics",
+          "family": "STM32H5",
+          "layout": "device-datasheet",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32h523rc.pdf"
+        },
+        {
+          "name": "stm32wba52kg.pdf",
+          "bytes": 2494436,
+          "sha256": "e44baa915bf154bfafb57c7e625013dc6a4041b89f5be01cc0416205db29a071",
+          "vendor": "STMicroelectronics",
+          "family": "STM32WBA",
+          "layout": "wireless-device-datasheet",
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32wba52kg.pdf"
+        }
+      ]
+    }
+  }
+}

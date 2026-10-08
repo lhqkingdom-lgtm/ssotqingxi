@@ -15,7 +15,7 @@
   },
   "dictionary": {
     "base": "../common_field_dictionary.json",
-    "aliases": {"flash_kb": ["flashrom容量"], "ram_kb": ["外部sram", "sram容量"]}
+    "aliases": {"flash_kb": ["flashrom容量"], "ram_kb": ["sram容量"], "ram_external_kb": ["外部sram"]}
   },
   "model": {
     "pattern": "(?:CA(?:32|51)[FM]\\d+[A-Z0-9]*|(?:MiAi|MIAI|MJ)[-‐–—]?\\d+[A-Z0-9]*|SQ[-‐–—]?CA51F\\d+[A-Z0-9]*)",
@@ -59,6 +59,7 @@
               "fields": {
                 "flash_kb": {"reducer": "max"},
                 "ram_kb": {"reducer": "max"},
+                "ram_external_kb": {"reducer": "max"},
                 "max_freq_mhz": {"reducer": "max"},
                 "operating_conditions": {},
                 "package_types": {}
@@ -71,12 +72,148 @@
               "fields": {
                 "flash_kb": {"reducer": "max"},
                 "ram_kb": {"reducer": "max"},
+                "ram_external_kb": {"reducer": "max"},
+                "ram_internal_kb": {"reducer": "max"},
+                "mtp_kb": {"reducer": "max"},
+                "eeprom_kb": {"reducer": "max"},
                 "max_freq_mhz": {"reducer": "max"},
                 "operating_voltage": {},
+                "operating_temperature": {},
                 "package_types": {}
+              }
+            },
+            {
+              "layout": "models_in_text_summary",
+              "scan_page_count": 10,
+              "require_single_model": true,
+              "fields": {
+                "flash_kb": {"reducer": "max", "required": true},
+                "max_freq_mhz": {"reducer": "max"},
+                "operating_voltage": {},
+                "operating_temperature": {},
+                "package_types": {"required": true}
               }
             }
           ]
+        }
+      },
+      {
+        "id": "document_memory",
+        "component": "document_quantities",
+        "required": false,
+        "config": {
+          "fields": ["ram_internal_kb", "ram_external_kb", "mtp_kb", "eeprom_kb"],
+          "scan_page_count": 12,
+          "association_window": 24
+        }
+      },
+      {
+        "id": "document_conditions",
+        "component": "document_ranges",
+        "required": false,
+        "config": {
+          "fields": ["operating_voltage", "operating_temperature"],
+          "scan_page_count": 12
+        }
+      },
+      {
+        "id": "conditions_table",
+        "component": "operating_conditions",
+        "required": false,
+        "config": {
+          "scope": "document",
+          "table_any": ["直流供电电压", "supplyvoltage", "operatingvoltage"],
+          "primary_voltage_symbols": ["VDD", "VCC"],
+          "temperature_any": ["工作环境温度", "工作温度", "ambienttemperature", "operatingtemperature"],
+          "temperature_exclude_any": ["储存", "storage", "结温", "junction"]
+        }
+      },
+      {
+        "id": "document_peripherals",
+        "component": "document_values",
+        "required": false,
+        "config": {
+          "fields": [
+            "peripheral_uart", "peripheral_i2c", "peripheral_spi",
+            "peripheral_pwm", "peripheral_adc", "peripheral_touch"
+          ],
+          "scan_page_count": 12,
+          "association_window": 12,
+          "statement_any": ["支持", "内置", "集成", "最多", "channels"],
+          "scope_exclude_any": ["不同型号会有不同", "depending on device", "depending on package"]
+        }
+      },
+      {
+        "id": "memory",
+        "component": "memory_projection",
+        "depends_on": ["models", "document_memory"],
+        "config": {
+          "model_section": "models",
+          "mappings": [
+            {"source_field": "flash_kb", "memory_type": "Flash"},
+            {"source_field": "mtp_kb", "memory_type": "MTP"},
+            {"source_field": "ram_kb", "memory_type": "SRAM_Total"},
+            {"source_field": "ram_internal_kb", "memory_type": "SRAM_Internal", "source_section": "document_memory"},
+            {"source_field": "ram_external_kb", "memory_type": "SRAM_External", "fallback_section": "document_memory"},
+            {"source_field": "eeprom_kb", "memory_type": "EEPROM", "source_section": "document_memory"}
+          ]
+        }
+      },
+      {
+        "id": "electrical",
+        "component": "electrical_projection",
+        "depends_on": ["models", "document_conditions", "conditions_table"],
+        "config": {
+          "model_section": "models",
+          "mappings": [
+            {
+              "semantic": "operating_voltage",
+              "param_name": "VDD",
+              "unit": "V",
+              "evidence_fields": ["operating_voltage", "operating_conditions"],
+              "fallback_section": "document_conditions"
+            },
+            {
+              "semantic": "operating_temperature",
+              "param_name": "T_operating",
+              "unit": "°C",
+              "evidence_fields": ["operating_temperature", "operating_conditions"],
+              "fallback_section": "conditions_table"
+            }
+          ]
+        }
+      },
+      {
+        "id": "peripherals",
+        "component": "peripheral_projection",
+        "depends_on": ["models", "document_peripherals"],
+        "config": {
+          "model_section": "models",
+          "fallback_section": "document_peripherals",
+          "fields": {
+            "peripheral_uart": {"value_parser": "first_integer", "reducer": "sum"},
+            "peripheral_i2c": {"value_parser": "first_integer", "reducer": "sum"},
+            "peripheral_spi": {"value_parser": "first_integer", "reducer": "sum"},
+            "peripheral_pwm": {"value_parser": "first_integer", "reducer": "sum", "resolution_from_label": true},
+            "peripheral_adc": {
+              "value_parser": "adc_instance_count",
+              "reducer": "sum",
+              "channel_value_parser": "adc_channel_count",
+              "channel_reducer": "max",
+              "bare_numeric_role": "channel_count",
+              "resolution_from_label": true
+            },
+            "peripheral_touch": {"value_parser": "first_integer", "reducer": "sum"}
+          }
+        }
+      },
+      {
+        "id": "pins",
+        "component": "pin_projection",
+        "depends_on": ["models"],
+        "config": {
+          "model_section": "models",
+          "recipe_preset": "family_tables"
         }
       }
     ]

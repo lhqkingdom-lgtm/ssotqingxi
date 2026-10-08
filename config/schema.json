@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "sheet_order": ["chips", "pin_mux", "peripherals", "electrical", "memory"],
   "metadata_fields": ["pdf_source_file", "evidence_pages", "ingested_by", "ingested_at", "is_reviewed"],
   "allow_additional_public_fields": false,
@@ -7,6 +7,7 @@
     "chips": {
       "fields": ["chip_id", "series", "core", "flash_kb", "ram_kb", "max_freq_mhz", "package_types", "voltage_min", "voltage_max", "pdf_source_file", "evidence_pages", "ingested_by", "ingested_at", "is_reviewed"],
       "key": ["chip_id"],
+      "merge_fields": {"package_types": "union"},
       "required": ["chip_id", "pdf_source_file", "evidence_pages", "ingested_by", "ingested_at", "is_reviewed"],
       "field_types": {
         "chip_id": ["string"], "series": ["string"], "core": ["string", "integer"],
@@ -16,15 +17,16 @@
         "ingested_at": ["iso_datetime"], "is_reviewed": ["boolean"]
       },
       "canonical_units": {"flash_kb": "KB", "ram_kb": "KB", "max_freq_mhz": "MHz", "voltage_min": "V", "voltage_max": "V"},
-      "ranges": {"flash_kb": [0.001, 1048576], "ram_kb": [0.001, 1048576], "max_freq_mhz": [0.01, 1000000], "voltage_min": [-1, 20], "voltage_max": [0, 20]},
+      "ranges": {"flash_kb": [0, 1048576], "ram_kb": [0.001, 1048576], "max_freq_mhz": [0.01, 1000000], "voltage_min": [-1, 20], "voltage_max": [0, 20]},
       "ordered_pairs": [["voltage_min", "voltage_max"]]
     },
     "pin_mux": {
-      "fields": ["chip_id", "pin_name", "pin_number", "function_name", "is_supported", "af_code", "default_function", "constraints", "pdf_source_file", "evidence_pages", "ingested_by", "ingested_at", "is_reviewed"],
-      "key": ["chip_id", "pin_name", "function_name"],
+      "fields": ["chip_id", "package_type", "pin_name", "pin_number", "function_name", "is_supported", "af_code", "default_function", "constraints", "pdf_source_file", "evidence_pages", "ingested_by", "ingested_at", "is_reviewed"],
+      "key": ["chip_id", "package_type", "pin_name", "function_name"],
+      "nullable_key_fields": ["package_type"],
       "required": ["chip_id", "pin_name", "pin_number", "function_name", "is_supported", "pdf_source_file", "evidence_pages", "ingested_by", "ingested_at", "is_reviewed"],
       "field_types": {
-        "chip_id": ["string"], "pin_name": ["string"], "pin_number": ["pin_designator"],
+        "chip_id": ["string"], "package_type": ["string"], "pin_name": ["string"], "pin_number": ["pin_designator"],
         "function_name": ["string"], "is_supported": ["boolean"], "af_code": ["string"],
         "default_function": ["string"], "constraints": ["string"], "pdf_source_file": ["string"],
         "evidence_pages": ["string"], "ingested_by": ["string"], "ingested_at": ["iso_datetime"],
@@ -70,7 +72,7 @@
         "is_reviewed": ["boolean"]
       },
       "canonical_units": {"size_kb": "KB"},
-      "ranges": {"size_kb": [0.001, 1048576]},
+      "ranges": {"size_kb": [0, 1048576]},
       "ignored_fields": ["organization", "features"]
     }
   },
@@ -98,7 +100,7 @@
     "voltage_max": [0.0, 20.0],
     "temperature": [-100.0, 200.0],
     "frequency_mhz": [0.01, 1000.0],
-    "memory_kb": [0.001, 1048576.0],
+    "memory_kb": [0, 1048576.0],
     "pin_number": [1, 1000]
   }
 }

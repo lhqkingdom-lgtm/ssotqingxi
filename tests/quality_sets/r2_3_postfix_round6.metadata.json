@@ -1,0 +1,18 @@
+{
+  "files": [
+    {
+      "name": "stm32f101vf.pdf",
+      "vendor": "STMicroelectronics",
+      "family": "STM32F1",
+      "layout": "legacy-mainstream",
+      "source_url": "https://www.st.com/resource/en/datasheet/stm32f101vf.pdf"
+    },
+    {
+      "name": "stm32l082kb.pdf",
+      "vendor": "STMicroelectronics",
+      "family": "STM32L0",
+      "layout": "ultra-low-power",
+      "source_url": "https://www.st.com/resource/en/datasheet/stm32l082kb.pdf"
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "files": [
+    {
+      "name": "CA51F4系列MCU用户手册_REV1.0.pdf",
+      "vendor": "Chipanalog",
+      "family": "CA51F4",
+      "layout": "family-manual",
+      "source_url": "local-inventory:D:/rag_mo/原始文档/CA51F4系列MCU用户手册_REV1.0.pdf"
+    },
+    {
+      "name": "MiAi-6015A31 MCU用户手册_REV1.1.pdf",
+      "vendor": "Chipanalog",
+      "family": "MiAi-601",
+      "layout": "single-model-manual",
+      "source_url": "local-inventory:D:/rag_mo/原始文档/MiAi-6015A31 MCU用户手册_REV1.1.pdf"
+    },
+    {
+      "name": "stm32f072c8.pdf",
+      "vendor": "STMicroelectronics",
+      "family": "STM32F0",
+      "layout": "device-datasheet",
+      "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32f072c8.pdf"
+    },
+    {
+      "name": "stm32l073v8.pdf",
+      "vendor": "STMicroelectronics",
+      "family": "STM32L0",
+      "layout": "device-datasheet",
+      "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32l073v8.pdf"
+    }
+  ]
+}

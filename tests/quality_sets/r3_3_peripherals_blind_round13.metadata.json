@@ -1,0 +1,7 @@
+{
+  "files": [
+    {"name": "stm32l151vd-x.pdf", "vendor": "STMicroelectronics", "family": "STM32L1", "layout": "device-datasheet", "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32l151vd-x.pdf"},
+    {"name": "stm32l162vc.pdf", "vendor": "STMicroelectronics", "family": "STM32L1", "layout": "device-datasheet", "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32l162vc.pdf"},
+    {"name": "stm32l162vd.pdf", "vendor": "STMicroelectronics", "family": "STM32L1", "layout": "device-datasheet", "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32l162vd.pdf"}
+  ]
+}

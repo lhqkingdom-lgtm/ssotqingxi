@@ -1,0 +1,21 @@
+{
+  "review_basis": "Manual visual and text review of package headers, pin-definition rows, and AF matrices. Legacy output was not used as truth.",
+  "expected": [
+    {"chip_id":"STM32H753VI","package_type":"LQFP100","pin_name":"PA0","pin_number":22,"function_name":"TIM2_CH1","af_code":"AF1","default_function":"PA0","evidence_pages":[68,89],"source_file_contains":"stm32h753vi.pdf"},
+    {"chip_id":"STM32H753VI","package_type":"TFBGA100","pin_name":"PA0","pin_number":"G2","function_name":"TIM2_CH1","af_code":"AF1","default_function":"PA0","evidence_pages":[68,89],"source_file_contains":"stm32h753vi.pdf"},
+    {"chip_id":"STM32H753II","package_type":"UFBGA176+25","pin_name":"PA0","pin_number":"N3","function_name":"TIM2_CH1","af_code":"AF1","default_function":"PA0","evidence_pages":[68,89],"source_file_contains":"stm32h753vi.pdf"},
+    {"chip_id":"STM32H753XI","package_type":"TFBGA240+25","pin_name":"PA9","pin_number":"D15","function_name":"USART1_TX","af_code":"AF7","default_function":"PA9","evidence_pages":[80,89],"source_file_contains":"stm32h753vi.pdf"},
+    {"chip_id":"STM32U083CC","package_type":"LQFP48","pin_name":"PA0","pin_number":10,"function_name":"TIM2_CH1","af_code":"AF1","default_function":"PA0","evidence_pages":[32,37],"source_file_contains":"stm32u083kc.pdf"},
+    {"chip_id":"STM32U083CC","package_type":"UFQFPN48","pin_name":"PA0","pin_number":10,"function_name":"TIM2_CH1","af_code":"AF1","default_function":"PA0","evidence_pages":[32,37],"source_file_contains":"stm32u083kc.pdf"},
+    {"chip_id":"STM32U083RC","package_type":"LQFP64","pin_name":"PA9","pin_number":42,"function_name":"USART1_TX","af_code":"AF7","default_function":"PA9","evidence_pages":[34,37],"source_file_contains":"stm32u083kc.pdf"},
+    {"chip_id":"STM32U083RC","package_type":"UFBGA64","pin_name":"PA9","pin_number":"C7","function_name":"USART1_TX","af_code":"AF7","default_function":"PA9","evidence_pages":[34,37],"source_file_contains":"stm32u083kc.pdf"},
+    {"chip_id":"STM32U083MC","package_type":"LQFP80","pin_name":"PB14","pin_number":41,"function_name":"USART3_RTS","af_code":"AF7","default_function":"PB14","evidence_pages":[34,38],"source_file_contains":"stm32u083kc.pdf"},
+    {"chip_id":"STM32U083MC","package_type":"UFBGA81","pin_name":"PB14","pin_number":"J9","function_name":"USART3_RTS","af_code":"AF7","default_function":"PB14","evidence_pages":[34,38],"source_file_contains":"stm32u083kc.pdf"}
+  ],
+  "forbidden": [
+    {"chip_id":"STM32H753VI","package_type":"TFBGA100","pin_name":"PA0","pin_number":22,"function_name":"TIM2_CH1"},
+    {"chip_id":"STM32H753II","package_type":"UFBGA176+25","pin_name":"PA0","pin_number":40,"function_name":"TIM2_CH1"},
+    {"chip_id":"STM32U083RC","package_type":"UFBGA64","pin_name":"PA9","pin_number":42,"function_name":"USART1_TX"},
+    {"chip_id":"STM32U083CC","package_type":"UFBGA48","pin_name":"PA0","pin_number":10,"function_name":"TIM2_CH1"}
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "sets": {
+    "r3_3_peripherals_blind_round13": {
+      "input_dir": "D:\\ssot\\quality_corpus\\r3_3_peripherals_blind_round13",
+      "files": [
+        {
+          "name": "stm32l151vd-x.pdf",
+          "bytes": 1826651,
+          "sha256": "245e0b433e2986d0b1ff5e31da4f92644a7dd05854a78ff5a6ff69421960e512",
+          "vendor": "STMicroelectronics",
+          "family": "STM32L1",
+          "layout": "device-datasheet",
+          "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32l151vd-x.pdf"
+        },
+        {
+          "name": "stm32l162vc.pdf",
+          "bytes": 1983865,
+          "sha256": "ceb725bba6f903f3f0c549a67123c658fe9d65d3265c0bb82c30f5b4dec713af",
+          "vendor": "STMicroelectronics",
+          "family": "STM32L1",
+          "layout": "device-datasheet",
+          "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32l162vc.pdf"
+        },
+        {
+          "name": "stm32l162vd.pdf",
+          "bytes": 2300807,
+          "sha256": "ac73f6becca6d3dd3680f4c7bfc4d09fe4cef6baf05dce6b852734f9c97b6488",
+          "vendor": "STMicroelectronics",
+          "family": "STM32L1",
+          "layout": "device-datasheet",
+          "source_url": "local-inventory:D:/rag_mo/STM32/STM32/stm32l162vd.pdf"
+        }
+      ]
+    }
+  }
+}

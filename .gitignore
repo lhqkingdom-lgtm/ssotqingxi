@@ -1,9 +1,12 @@
 # Runtime output and transient state
 /output/*
 !/output/.gitkeep
+/outputs/
 /logs/
 /tmp/
 /quality_corpus/
+/.codex_tmp/
+/庄生交接文档/
 
 # Local dependency links and caches
 /node_modules/

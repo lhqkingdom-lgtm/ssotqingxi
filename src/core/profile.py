@@ -83,6 +83,14 @@ class DocumentProfile:
     def config_version(self) -> str:
         return str(self.payload["config_version"])
 
+    @property
+    def wildcard_markers(self) -> tuple[str, ...]:
+        return tuple(
+            compact(str(item)).upper()
+            for item in self.payload["model"].get("wildcard_markers", [])
+            if compact(str(item))
+        )
+
     def topology_preset(self, name: str) -> Path:
         reference = self.payload.get("topologies", {}).get("presets", {}).get(name)
         if not reference:
@@ -121,6 +129,8 @@ class DocumentProfile:
             if not upper.startswith(prefix):
                 continue
             suffix = upper[len(prefix) :]
+            if any(marker in suffix for marker in self.wildcard_markers):
+                return False
             if "min_total_length" in rule and len(upper) < int(rule["min_total_length"]):
                 return False
             if len(suffix) < int(rule.get("min_suffix_length", 0)):

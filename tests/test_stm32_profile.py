@@ -33,6 +33,12 @@ class Stm32ProfileTests(unittest.TestCase):
         self.assertEqual(target_model(Path("STM32F072_C8_2.pdf"), profile), "STM32F072C8")
         self.assertEqual(target_model(Path("STM32L552_CET3QTR.pdf"), profile), "STM32L552CE")
         self.assertEqual(target_model(Path("STM32WB55_CEQ7XXX.pdf"), profile), "STM32WB55CE")
+        self.assertEqual(target_model(Path("stm32l151c6-a.pdf"), profile), "STM32L151C6-A")
+
+    def test_wildcard_headers_are_not_concrete_models(self) -> None:
+        profile = load_profile(PROFILE_PATH)
+        self.assertEqual(profile.model_tokens("STM32F102C4", exact_only=True), ["STM32F102C4"])
+        self.assertEqual(profile.model_tokens("STM32F102Cx", exact_only=True), [])
 
     def test_model_codes(self) -> None:
         self.assertEqual(model_codes("STM32C031C4"), ("C", "4"))
@@ -40,6 +46,13 @@ class Stm32ProfileTests(unittest.TestCase):
         self.assertEqual(model_codes("STM32WB55CC"), ("C", "C"))
         self.assertEqual(model_codes("STM32G0B1KB"), ("K", "B"))
         self.assertEqual(model_codes("STM32L4R5ZI"), ("Z", "I"))
+        self.assertEqual(
+            model_codes(
+                "STM32N657X0H3Q",
+                {"pin_count_codes": {"X": 264}, "flash_code_kb": {"0": 0}},
+            ),
+            ("X", "0"),
+        )
 
     def test_generic_mpu_family_name_is_not_misread_as_ordering_codes(self) -> None:
         with self.assertRaisesRegex(ValueError, "unsupported STM32 model code"):
@@ -107,6 +120,24 @@ class Stm32ProfileTests(unittest.TestCase):
         self.assertEqual(package_column(headers, package_types=["LQFP100"]), 1)
         self.assertEqual(package_column(headers, package_types=["LQFP128"]), 2)
 
+    def test_package_column_accepts_one_missing_vertical_prefix_glyph_only_with_exact_count(self) -> None:
+        self.assertEqual(package_column(["001GBFU"], package_types=["UFBGA100"]), 0)
+        self.assertIsNone(package_column(["441GBFU"], package_types=["UFBGA100"]))
+
+    def test_bga_family_qualifiers_are_not_conflated(self) -> None:
+        self.assertIsNone(package_column(["LFBGA100"], package_types=["UFBGA100"]))
+        self.assertEqual(package_column(["BGA100"], package_types=["UFBGA100"]), 0)
+
+    def test_package_column_prefers_simple_qualifier_over_compound_variant(self) -> None:
+        self.assertEqual(
+            package_column(
+                ["WLCSP81_ext-smps", "WLCSP81_smps"],
+                package_types=["WLCSP81"],
+                qualifier_preferences=["unqualified", "gp", "smps", "n"],
+            ),
+            1,
+        )
+
     def test_package_column_does_not_use_broad_fuzzy_matching(self) -> None:
         self.assertIsNone(package_column(["LPFQ100"], package_types=["LQFP100"]))
 
@@ -139,6 +170,29 @@ class Stm32ProfileTests(unittest.TestCase):
             ),
             2,
         )
+
+    def test_pin_header_depth_accepts_number_name_header_without_repeated_pin_caption(self) -> None:
+        rows = [
+            ["Number", None, "Name (function after reset)", "Alternate functions"],
+            ["84PFQL", "001AGBFU", None, None],
+            ["1", "C1", "PE2", "TRACECLK"],
+        ]
+        self.assertEqual(
+            infer_pin_header_depth(
+                rows,
+                header_terms=("alternatefunctions",),
+                header_term_groups=(),
+                package_targets=("LQFP48",),
+                pin_count=48,
+            ),
+            2,
+        )
+
+    def test_package_pattern_keeps_power_variant_outside_physical_package_identity(self) -> None:
+        profile = load_profile(PROFILE_PATH)
+        match = profile.package_re.search("UFQFPN48 SMPS")
+        self.assertIsNotNone(match)
+        self.assertEqual(match.group(0), "UFQFPN48")
 
     def test_pin_header_depth_has_no_fixed_row_fallback(self) -> None:
         rows = [
@@ -174,6 +228,16 @@ class Stm32ProfileTests(unittest.TestCase):
                 qualifier_preferences=["unqualified", "gp", "smps", "n"],
             ),
             0,
+        )
+
+    def test_short_variant_qualifier_can_follow_numeric_package_count(self) -> None:
+        self.assertEqual(
+            package_column(
+                ["VFBGA169", "VFBGA169GP"],
+                package_types=["VFBGA169"],
+                qualifier_preferences=["gp", "unqualified"],
+            ),
+            1,
         )
 
     def test_ambiguous_package_columns_have_no_first_column_fallback(self) -> None:
@@ -228,12 +292,62 @@ class Stm32ProfileTests(unittest.TestCase):
             pdf,
             model="STM32L4R5VI",
             pin_pattern=re.compile(r"P[A-Z]\d+"),
+            package_pattern=re.compile(r"(?:LQFP|UFBGA)\d+(?:\+\d+)?"),
             normalize_function=lambda value: value,
             series_identity="STM32L4R5",
             recipe=recipe,
             package_types=["LQFP100"],
         )
         self.assertEqual(extracted[0]["rows"][0].pin_number, 10)
+
+    def test_split_parent_pin_and_child_name_header_uses_complete_depth(self) -> None:
+        rows = [
+            ["Pin (UFQFPN48)", "", "Alternate functions"],
+            ["Number", "Name (function after reset)", "AF0"],
+            ["1", "PA0", "TIM2_CH1"],
+        ]
+
+        class FakeTable:
+            bbox = (0, 0, 100, 100)
+            table_id = "split-pin-table"
+
+            def extract(self):
+                return rows
+
+            def column_header_paths(self, depth):
+                paths = {
+                    0: ("Pin (UFQFPN48)", "Number"),
+                    1: ("Pin (UFQFPN48)", "Name (function after reset)"),
+                    2: ("Alternate functions", "AF0"),
+                }
+                return {column: path[:depth] for column, path in paths.items()}
+
+            def cell_id(self, row, column):
+                return f"cell-{row}-{column}"
+
+        recipe = {
+            "required_header_terms": ["alternatefunctions"],
+            "required_header_groups": [["pin", "name"]],
+            "pin_name_aliases": ["pinname", "name(functionafterreset)"],
+            "pin_name_alias_groups": [["pin", "name"]],
+            "pin_name_exclude": ["pinnumber", "ufqfpn"],
+            "pin_name_preference": "rightmost",
+            "function_aliases": ["alternatefunctions"],
+            "default_function_aliases": ["mainfunction"],
+            "column_qualifier_preferences": ["unqualified"],
+        }
+        pdf = SimpleNamespace(pages=[SimpleNamespace(find_tables=lambda: [FakeTable()])])
+        extracted = extract_pin_definitions(
+            pdf,
+            model="STM32WB50CG",
+            pin_pattern=re.compile(r"P[A-Z]\d+"),
+            package_pattern=re.compile(r"(?:UFQFPN|UFBGA)\d+(?:\+\d+)?"),
+            normalize_function=lambda value: value,
+            series_identity="STM32WB50",
+            recipe=recipe,
+            package_types=["UFQFPN48"],
+        )
+        self.assertEqual(extracted[0]["rows"][0].pin_name, "PA0")
 
     def test_rotated_pin_name_header_can_match_term_conjunction(self) -> None:
         self.assertTrue(header_matches("retfa...pin(functionreset)nameafter", ["pinname"], [["pin", "name"]]))

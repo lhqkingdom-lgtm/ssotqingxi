@@ -1,0 +1,7 @@
+{
+  "files": [
+    {"name": "stm32c051c8.pdf", "vendor": "STMicroelectronics", "family": "STM32C0", "layout": "device-datasheet", "source_url": "https://www.st.com/resource/en/datasheet/stm32c051c8.pdf"},
+    {"name": "stm32c071c8.pdf", "vendor": "STMicroelectronics", "family": "STM32C0", "layout": "device-datasheet", "source_url": "https://www.st.com/resource/en/datasheet/stm32c071c8.pdf"},
+    {"name": "stm32c092cc.pdf", "vendor": "STMicroelectronics", "family": "STM32C0", "layout": "device-datasheet", "source_url": "https://www.st.com/resource/en/datasheet/stm32c092cc.pdf"}
+  ]
+}

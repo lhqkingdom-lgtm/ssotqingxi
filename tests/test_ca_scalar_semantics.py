@@ -130,6 +130,18 @@ class CaScalarSemanticsTests(unittest.TestCase):
         values = parse_basic_defaults("支持 2 个 UART")
         self.assertEqual(values["peripherals"]["UART"], {"count": 2})
 
+    def test_chinese_adc_classifier_means_converter_instances(self) -> None:
+        values = parse_basic_defaults("集成两个12位ADC")
+        self.assertEqual(values["peripherals"]["ADC"], {"count": 2, "resolution": 12})
+
+    def test_adc_channel_classifier_does_not_become_instance_count(self) -> None:
+        values = parse_basic_defaults("支持26路12位SAR ADC")
+        self.assertEqual(values["peripherals"]["ADC"], {"channel_count": 26, "resolution": 12})
+
+    def test_arabic_adc_classifier_means_converter_instances(self) -> None:
+        values = parse_basic_defaults("内置 2 个 12 位 ADC")
+        self.assertEqual(values["peripherals"]["ADC"], {"count": 2, "resolution": 12})
+
 
 if __name__ == "__main__":
     unittest.main()

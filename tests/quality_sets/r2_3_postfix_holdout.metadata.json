@@ -1,0 +1,18 @@
+{
+  "files": [
+    {
+      "name": "stm32f415rg.pdf",
+      "vendor": "STMicroelectronics",
+      "family": "STM32F4",
+      "layout": "legacy-performance",
+      "source_url": "https://www.st.com/resource/en/datasheet/stm32f415rg.pdf"
+    },
+    {
+      "name": "stm32l486jg.pdf",
+      "vendor": "STMicroelectronics",
+      "family": "STM32L4",
+      "layout": "modern-low-power",
+      "source_url": "https://www.st.com/resource/en/datasheet/stm32l486jg.pdf"
+    }
+  ]
+}
